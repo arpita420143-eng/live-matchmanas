@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stream</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body { background: #0b0e14; color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 10px; }
+        .container { max-width: 600px; margin: auto; background: #161b22; padding: 15px; border-radius: 12px; border: 1px solid #30363d; }
+        video { width: 100%; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .btn { background: #ce1126; color: white; padding: 15px; display: block; margin-top: 20px; text-decoration: none; border-radius: 8px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 style="color: #58a6ff;">STAR SPORTS HINDI LIVE</h2>
+        <video id="video" controls autoplay poster="https://via.placeholder.com/800x450/000000/FFFFFF?text=Connecting+to+Server..."></video>
+        <a href="https://t.me/AapkaChannel" class="btn">🚀 Join Telegram For Updates</a>
+    </div>
+    <script>
+        var video = document.getElementById('video');
+        // Screen 1000040451.jpg wala m3u8 link yahan hai
+        var videoSrc = 'https://aps11.playlist.live-video.net/v1/playlist/CrgFYZX2O_TLM_yJLdScWcqtRLhWmdO6oUHgxZ-4WpRmYvrhw6MQVHOiVwJFfqCwwKN9hF7tcQoAFNzqQi3GQSDt_54w1aSVwzyJqXBjPMCXfRAGlsnN_A1wSCdMY8nxKVb-GugspGQjYMQOly-M9-41Lx2k0nZ7_kVvxHEdqhm0pkKfpyBqRoVmjUzS-RIgZKx-V-z4yDp9ELQWMCJ3MViwd-96ToGgRNAcyEaW73fnAiJ4d_83Jvqtk3aI57vCjNIk11aGD1H_RDjRkTyx3L8XKfU-bTjHcgmP6yKK4lfo6IuXmNLAb2fa5_YZkcGY0zNb9g_uaCHBB3iH7d7wufyRsh3OkMHVxg_LyX5ukpVaPpeqfEhtr3NYmU9mrUOgfenCXGhtxGysvFcD5vHbV2-wRrcx589qefkDqdmHtxUAD7YBTHRklnu7vW3woTBxtX2vKyvekVDIZI37RmeDNCBx73UoHzTQON66KakES8D_8z6NewjouGqs0AyjpkFQvoMAAlxq-Cfq8c1PAgUOAQrJzQE7pbfoBvi_Om5R1nNt7CDW1KowoJprVyrDqTQVZ4A8d60DDnDeg5mX-IGRK1zPO98vOraOeQWB1fmeFyCBx-kFHUqy3JAZ6yYP54WXu5XnZ519wy_ZidleZzQBhOzNRjZoPhbY7QDmDzHW1lcvyrCIkZgmmFBR2sRLgJ_LKjJ1ZWfd1NIoVECe9yls1KvOppKtGr6ihinLpRnsZdUCqLtqU8oOi6AVeyibFE-okyPWB5ha552R5_syVJi4JdRNE4ZBxwPLEiR9BfQ6VP-rM1-0rcycmJU3eVTUxGa4APKpz59eJiq1B31TcMEcl6hnUw8tZCWQcghKDulEc7JChMmjxNEPFRe4gPpl5R0X5TufGlY7nJVjxdyVAkfoGZTt6akb7rzx1UewGgz17h39wd4sekDG-iQgASoJdXMtd2VzdC0yMJQO.m3u8'; 
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+        }
+    </script>
+</body>
+</html>

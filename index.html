@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Match Manas Pro Live</title>
-    
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.16.3/controls.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.16.3/shaka-player.ui.js"></script>
+    <title>Match Manas Live</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
     
     <style>
         /* --- BROADCASTER THEME --- */
@@ -15,7 +14,7 @@
             font-family: 'Segoe UI', sans-serif; text-align: center;
         }
 
-        /* Header */
+        /* Gradient Header */
         .header {
             background: linear-gradient(135deg, #b71540, #0c2461);
             padding: 20px 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.6);
@@ -26,6 +25,20 @@
         }
         .header span { color: #f6b93b; }
 
+        /* News Ticker */
+        .news-ticker {
+            background: #e55039; color: white; font-size: 14px; font-weight: bold;
+            padding: 8px 0; white-space: nowrap; overflow: hidden;
+            border-bottom: 2px solid #b71540;
+        }
+        .ticker-content {
+            display: inline-block; animation: scroll-left 15s linear infinite;
+        }
+        @keyframes scroll-left {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
         /* Container */
         .container { max-width: 900px; margin: 20px auto; padding: 10px; }
 
@@ -35,12 +48,11 @@
             border: 1px solid #4b6584; box-shadow: 0 0 25px rgba(0, 229, 255, 0.1);
         }
 
-        /* Live Info Bar */
+        /* Live Info Bar & Quality Selector */
         .live-info-bar {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 10px; padding: 0 5px;
         }
-
         .live-badge {
             background-color: #ff0000; color: white; padding: 4px 10px;
             border-radius: 4px; font-weight: bold; font-size: 11px;
@@ -48,31 +60,26 @@
             animation: blink 1.5s infinite;
         }
         .live-dot { width: 6px; height: 6px; background: white; border-radius: 50%; }
-
-        /* Controls Row */
+        
+        /* 🔥 QUALITY SELECTOR CSS 🔥 */
         .controls-right { display: flex; align-items: center; gap: 10px; }
-        
-        /* Quality Dropdown Style */
-        .quality-select {
-            background: #333; color: white; border: 1px solid #777;
-            padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;
-            outline: none; cursor: pointer; height: 26px;
-            display: none; 
-        }
-
         .viewer-count { color: #ccc; font-size: 12px; font-weight: 600; }
+        
+        .quality-select {
+            background: #333; color: white; border: 1px solid #555;
+            border-radius: 5px; padding: 2px 5px; font-size: 11px;
+            outline: none; cursor: pointer;
+        }
 
-        /* Video Wrapper */
+        /* Video */
         .video-wrapper {
-            width: 100%; 
-            aspect-ratio: 16/9; 
-            background: #000; 
-            border-radius: 8px; 
-            overflow: hidden;
+            position: relative; width: 100%; padding-bottom: 56.25%; height: 0;
+            background: #000; border-radius: 8px; overflow: hidden;
+        }
+        .video-wrapper video, .video-wrapper iframe, .no-signal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
         }
         
-        video { width: 100%; height: 100%; }
-
         /* Buttons */
         .btn-container {
             margin-top: 25px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;
@@ -86,6 +93,24 @@
         }
         .btn-tg { background: linear-gradient(90deg, #1fa2ff, #12d8fa); }
 
+        /* Upcoming Matches */
+        .schedule-box {
+            margin-top: 30px; text-align: left; background: #131824;
+            padding: 20px; border-radius: 15px; border: 1px solid #2f3542;
+        }
+        .section-title {
+            color: #f6b93b; font-size: 16px; margin-bottom: 15px;
+            text-transform: uppercase; font-weight: bold;
+            border-left: 4px solid #f6b93b; padding-left: 10px;
+        }
+        .match-card {
+            display: flex; justify-content: space-between; background: #1e272e;
+            padding: 12px; border-radius: 8px; margin-bottom: 10px;
+            align-items: center; border-left: 3px solid #00d2d3;
+        }
+        .match-info { font-size: 13px; font-weight: bold; color: #eee; }
+        .match-time { font-size: 11px; color: #aaa; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; }
+
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
 </head>
@@ -95,103 +120,125 @@
         <h1>🔥 Match Manas <span>Live</span> 🔥</h1>
     </div>
 
+    <div class="news-ticker">
+        <div class="ticker-content">
+            📢 BREAKING: India vs Pakistan Match Live! • Join Telegram for Links • Server Status: Stable 🟢
+        </div>
+    </div>
+
     <div class="container">
         <div class="player-box">
             <div class="live-info-bar">
                 <div class="live-badge"><div class="live-dot"></div> LIVE</div>
                 
                 <div class="controls-right">
-                    <select id="qualitySelect" class="quality-select">
+                    <select id="qualitySelect" class="quality-select" style="display:none;">
                         <option value="-1">Auto</option>
                     </select>
-
-                    <div class="viewer-count">👁 <span id="viewers">21,450</span> Watching</div>
+                    <div class="viewer-count">👁 <span id="viewers">21,450</span></div>
                 </div>
             </div>
 
-            <div class="video-wrapper" data-shaka-player-container style="max-width:100%">
-                <video data-shaka-player id="video" autoplay muted></video>
-            </div>
+            <div class="video-wrapper" id="singleVideoBox"></div>
         </div>
 
         <div class="btn-container">
             <a href="https://youtube.com/@mkssports3" class="btn">📺 YouTube</a>
             <a href="https://t.me/MKSSports_3" class="btn btn-tg">✈ Telegram</a>
         </div>
+
+        <div class="schedule-box">
+            <div class="section-title">📅 Upcoming Matches</div>
+            <div class="match-card">
+                <div class="match-info">🇮🇳 India vs 🇦🇺 Australia</div>
+                <div class="match-time">Today, 7:00 PM</div>
+            </div>
+            <div class="match-card" style="border-left-color: #ff9f43;">
+                <div class="match-info">🏏 IPL 2025: CSK vs RCB</div>
+                <div class="match-time">Coming Soon</div>
+            </div>
+        </div>
     </div>
 
     <script>
         // ==========================================
-        // 🔥 NEW STAR SPORTS LINK ADDED HERE 🔥
+        // 🔥 LINK UPDATE SECTION 🔥
         // ==========================================
-        const liveLink = "https://Jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD2_BTS/output/dash/Star_Sports_HD2_BTS-video=8219600-1061036621405.dash?__hdnea__=st=1768378922~exp=1768465322~acl=/*~hmac=16d56cfe4d293bb30d4ad9816ab22333736ea9fe5915b6baad55bda1aee232c5";
+        const liveLink = "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/cb403e1a7b7b6f8a9a9f3d6cd1f341f2d15560d2513adc356faa5e9d57612e24daf6a89fb11af06d429f0fc61d533314156cdb6880284398872eb85031770716e7f0b77bd99d027bf781537e35d6017f50e00c16d124532a97b94a59cc7d9469151fed3e6b541984a946a87555db830c9b6752f3c9a01d256d0606c4084d92f50df8a0f84d36802efeec4957942b46f9825cced015b29ed55f9853fb29a34dc1c7e0e88246d3c4c87cac54b57a5a0e60399f832cc2c80ae38ad76c3c987465174f53b6eecba74a6ccb45150dfcaa9abd63ad40978d17ab0a58d3964762fe52a345e86c8eef4aa9acc9b028231897b490e5bac29fc4abe83c32c706b1c2bb9f1b78e86b826dc7350c8c0252f2014fe616a4f035dcda0296bd685213cf9d4e9a89b3b93dd1e7bafd08c5ddfd94314301364a52c6158e9363ce31863889c01733534440edcb009fc6eb7308371fd6d41ef60612b5dfc4b6f43f6a8432480bb9308115553c9d7d2c5df53df59f0b698b0d03917a68a80f7bd314bcf007dd93f6c94a7bb9d7cc47bf48eab601ddbf428a652e560fb6bd7d0b16022d9eb9325469379211b293e7ee75000ce9b7feffc6522a0e7642015bc5b1b102f6e4a7081312d35c2f64067246c37eb82bb32d460227c51b939c017b8b032b4fb3f3df3cab817863d79ef9588e112d8e0f56a685099b2bb585/54/384x216_734654/index.m3u8";
         // ==========================================
 
         function updateViewers() {
-            const min = 2000; const max = 25000;
+            const min = 20000; const max = 25000;
             let count = Math.floor(Math.random() * (max - min + 1)) + min;
             document.getElementById("viewers").innerText = count.toLocaleString();
         }
         setInterval(updateViewers, 3000); updateViewers();
 
-        async function initApp() {
-            shaka.polyfill.installAll(); 
+        function initSinglePlayer(url) {
+            const container = document.getElementById('singleVideoBox');
+            const qualitySelect = document.getElementById('qualitySelect');
+            container.innerHTML = ""; 
 
-            if (shaka.Player.isBrowserSupported()) {
-                const video = document.getElementById('video');
-                const ui = video['ui'];
-                const controls = ui.getControls();
-                const player = controls.getPlayer();
-                const qualitySelect = document.getElementById('qualitySelect');
+            if (!url) { container.innerHTML = '<div class="no-signal">Waiting...</div>'; return; }
 
-                // Error listener
-                player.addEventListener('error', (e) => console.error(e));
+            // MPD (DASH) support
+            if (url.includes('.mpd')) {
+                const video = document.createElement('video');
+                video.controls = true; video.autoplay = true; video.muted = false; video.playsInline = true;
+                container.appendChild(video);
+                var player = dashjs.MediaPlayer().create();
+                player.initialize(video, url, true);
+                qualitySelect.style.display = 'none'; // Dash quality selector not implemented here
+            } 
+            // HLS (.m3u8) Support with Quality Selector
+            else if (url.includes('.m3u8')) {
+                const video = document.createElement('video');
+                video.controls = true; video.autoplay = true; video.muted = false; video.playsInline = true;
+                container.appendChild(video);
 
-                try {
-                    await player.load(liveLink);
-                    console.log("Star Sports Loaded");
+                if (Hls.isSupported()) {
+                    var hls = new Hls();
+                    hls.loadSource(url);
+                    hls.attachMedia(video);
                     
-                    const tracks = player.getVariantTracks();
-                    const uniqueTracks = [];
-                    const heights = new Set();
-                    
-                    tracks.sort((a, b) => b.height - a.height);
+                    // 🔥 QUALITY LEVEL LOGIC 🔥
+                    hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                        const levels = hls.levels;
+                        // Only show selector if multiple qualities exist
+                        if (levels.length > 1) {
+                            qualitySelect.style.display = 'block';
+                            qualitySelect.innerHTML = '<option value="-1">Auto</option>';
+                            
+                            levels.forEach((level, index) => {
+                                const height = level.height;
+                                const label = height ? `${height}p` : `Level ${index}`;
+                                qualitySelect.innerHTML += `<option value="${index}">${label}</option>`;
+                            });
 
-                    tracks.forEach(track => {
-                        // DASH streams me kabhi kabhi height null hoti hai audio ke liye, usse filter kar rahe hain
-                        if (track.height && !heights.has(track.height)) {
-                            uniqueTracks.push(track);
-                            heights.add(track.height);
+                            // Switch Quality on Change
+                            qualitySelect.onchange = function() {
+                                hls.currentLevel = parseInt(this.value);
+                            };
+                        } else {
+                            qualitySelect.style.display = 'none';
                         }
                     });
 
-                    if (uniqueTracks.length > 0) {
-                        qualitySelect.style.display = 'block';
-                        qualitySelect.innerHTML = '<option value="-1">Auto</option>';
-                        uniqueTracks.forEach(track => {
-                            const option = document.createElement('option');
-                            option.value = track.id; 
-                            option.text = track.height + 'p';
-                            qualitySelect.appendChild(option);
-                        });
-
-                        qualitySelect.addEventListener('change', (e) => {
-                            if (e.target.value == -1) {
-                                player.configure({ abr: { enabled: true } });
-                            } else {
-                                player.configure({ abr: { enabled: false } });
-                                const track = tracks.find(t => t.id == e.target.value);
-                                if (track) player.selectVariantTrack(track, true);
-                            }
-                        });
-                    }
-
-                } catch (error) {
-                    console.error('Error:', error);
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = url;
+                    qualitySelect.style.display = 'none'; // iPhone auto-handles quality
                 }
+            } else {
+                // Iframe/YouTube
+                const iframe = document.createElement('iframe');
+                iframe.src = url;
+                iframe.setAttribute('allowfullscreen', 'true');
+                iframe.setAttribute('allow', 'autoplay; encrypted-media');
+                container.appendChild(iframe);
+                qualitySelect.style.display = 'none';
             }
         }
-        document.addEventListener('shaka-ui-loaded', initApp);
+        initSinglePlayer(liveLink);
     </script>
 </body>
 </html>

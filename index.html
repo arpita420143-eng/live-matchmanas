@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas Endgame</title>
+    <title>Match Manas Celebration</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        :root { --bg: #000; --card: #121212; --primary: #3a86ff; --accent: #ff0055; --text: #fff; --glass: rgba(255, 255, 255, 0.05); }
+        :root { --bg: #000; --card: #121212; --primary: #3a86ff; --accent: #ff0055; --text: #fff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; padding-bottom: 20px; }
 
@@ -17,37 +17,55 @@
         .header {
             display: flex; justify-content: space-between; align-items: center;
             background: linear-gradient(180deg, rgba(0,0,0,0.9), transparent);
-            padding: 15px; position: absolute; top: 0; width: 100%; z-index: 50;
+            padding: 15px; position: absolute; top: 0; width: 100%; z-index: 50; pointer-events: none;
         }
-        .logo { font-weight: 900; font-size: 16px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .live-tag { background: red; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; animation: pulse 1s infinite; box-shadow: 0 0 10px red; }
+        .logo { font-weight: 900; font-size: 16px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); pointer-events: auto; }
+        .live-tag { background: red; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; animation: pulse 1s infinite; pointer-events: auto; }
 
-        /* VIDEO PLAYER */
+        /* VIDEO PLAYER CONTAINER */
         .video-box {
             position: sticky; top: 0; z-index: 40; width: 100%; aspect-ratio: 16/9;
-            background: #000; border-bottom: 1px solid #333;
+            background: #000; border-bottom: 1px solid #333; overflow: hidden;
         }
-        iframe, video { width: 100%; height: 100%; border: none; }
+        iframe, video { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
 
-        /* TICKER (NEWS) */
-        .ticker-wrap {
-            width: 100%; background: #111; border-bottom: 1px solid #222;
-            overflow: hidden; white-space: nowrap; padding: 8px 0;
+        /* 🔥 REACTION OVERLAY (FLOATING EMOJIS) 🔥 */
+        .reaction-layer {
+            position: absolute; bottom: 15px; right: 10px; z-index: 60;
+            display: flex; gap: 8px; flex-direction: column;
         }
+        .react-btn {
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.3);
+            width: 35px; height: 35px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; cursor: pointer; backdrop-filter: blur(4px);
+            transition: transform 0.1s;
+        }
+        .react-btn:active { transform: scale(0.8); background: rgba(255,255,255,0.2); }
+        
+        /* Floating Animation */
+        .floating-emoji {
+            position: absolute; bottom: 50px; right: 20px; font-size: 28px;
+            animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 55;
+        }
+        @keyframes floatUp { 
+            0% { transform: translateY(0) scale(1); opacity: 1; } 
+            100% { transform: translateY(-150px) scale(1.5); opacity: 0; } 
+        }
+
+        /* TICKER */
+        .ticker-wrap { width: 100%; background: #111; overflow: hidden; white-space: nowrap; padding: 8px 0; border-bottom: 1px solid #222; }
         .ticker { display: inline-block; animation: marquee 20s linear infinite; font-size: 12px; color: #aaa; }
         .ticker span { color: var(--primary); font-weight: bold; margin: 0 10px; }
 
-        /* DYNAMIC SCORECARD (Compact) */
-        .mini-score {
-            background: #1a1a1a; padding: 15px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #333;
-        }
+        /* MINI SCORE */
+        .mini-score { background: #1a1a1a; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
         .team-grp { text-align: center; width: 20%; }
         .flag { font-size: 24px; display: block; }
-        .t-code { font-size: 12px; font-weight: bold; color: #888; margin-top: 2px; }
+        .t-code { font-size: 12px; font-weight: bold; color: #888; }
         .center-score { text-align: center; flex: 1; }
-        .big-score { font-size: 24px; font-weight: 900; color: #fff; letter-spacing: 1px; }
-        .overs { font-size: 12px; color: var(--primary); font-weight: 600; margin-top: 2px; }
+        .big-score { font-size: 24px; font-weight: 900; color: #fff; }
+        .overs { font-size: 12px; color: var(--primary); font-weight: 600; }
 
         /* TABS */
         .tabs { display: flex; background: #000; border-bottom: 1px solid #222; position: sticky; top: 56.25vw; z-index: 30; }
@@ -58,45 +76,22 @@
         .section { display: none; padding: 15px; animation: fadeIn 0.4s; }
         .section.active { display: block; }
 
-        /* POLL CARD */
-        .poll-card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
-        .poll-title { font-size: 12px; color: #aaa; margin-bottom: 10px; font-weight: bold; }
-        .poll-opt {
-            background: #222; padding: 10px; border-radius: 8px; margin-bottom: 8px;
-            display: flex; justify-content: space-between; align-items: center; cursor: pointer; border: 1px solid #333;
-        }
-        .poll-opt:active { background: #333; }
-        .poll-bar { height: 4px; background: #333; border-radius: 2px; margin-top: 10px; overflow: hidden; }
-        .poll-fill { height: 100%; background: var(--primary); width: 0%; transition: 1s; }
-
-        /* SOCIAL BUTTONS (Bigger & Better) */
+        /* SOCIAL & POLL */
         .social-row { display: flex; gap: 10px; margin-bottom: 20px; }
-        .s-btn {
-            flex: 1; padding: 14px; border-radius: 10px; text-decoration: none; color: white;
-            font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: transform 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .s-btn:active { transform: scale(0.95); }
+        .s-btn { flex: 1; padding: 12px; border-radius: 10px; text-decoration: none; color: white; font-weight: bold; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .yt { background: linear-gradient(135deg, #ff0000, #990000); }
         .tg { background: linear-gradient(135deg, #0088cc, #005580); }
 
-        /* STATS TABLE */
-        .stats-table { width: 100%; border-collapse: collapse; }
+        .stats-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .stats-table td { padding: 10px 0; border-bottom: 1px solid #222; font-size: 13px; color: #ccc; }
-        .stats-table .highlight { color: white; font-weight: bold; }
-        .stats-table .val { text-align: right; color: var(--primary); font-weight: bold; }
+        .highlight { color: white; font-weight: bold; }
+        .val { text-align: right; color: var(--primary); font-weight: bold; }
 
-        /* COMMENTARY & CHAT */
+        /* CHAT */
         .chat-box { height: 300px; overflow-y: auto; display: flex; flex-direction: column-reverse; }
         .msg { display: flex; gap: 10px; margin-bottom: 12px; }
         .av { width: 32px; height: 32px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: #fff; }
-        .txt { background: #222; padding: 8px 12px; border-radius: 0 12px 12px 12px; color: #ddd; font-size: 13px; line-height: 1.4; border: 1px solid #333; }
-        
-        .comm-item { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; }
-        .comm-ball { font-weight: bold; color: var(--accent); font-size: 13px; min-width: 35px; }
-        .comm-desc { font-size: 13px; color: #ccc; line-height: 1.4; }
-
-        /* INPUT */
+        .txt { background: #222; padding: 8px 12px; border-radius: 0 12px 12px 12px; color: #ddd; font-size: 13px; border: 1px solid #333; }
         .input-bar { display: flex; gap: 10px; margin-top: 10px; }
         .inp { flex: 1; background: #1a1a1a; border: 1px solid #333; padding: 12px; border-radius: 30px; color: white; outline: none; }
         .send-btn { width: 45px; height: 45px; border-radius: 50%; background: var(--primary); border: none; color: white; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
@@ -113,146 +108,16 @@
         <div class="live-tag">● LIVE</div>
     </div>
 
-    <div class="video-box" id="playerContainer"></div>
-
-    <div class="ticker-wrap">
-        <div class="ticker">
-            <span>🔥 BREAKING: Rohit Sharma hits a massive six!</span> • 
-            <span>📊 Match Update: India needs 45 runs in 30 balls</span> • 
-            <span>🌧️ Weather: Clear Sky</span> • 
-            <span>⚡ Subscribe to Match Manas for HD Stream</span>
+    <div class="video-box" id="playerContainer">
+        </div>
+    
+    <div style="position:relative; margin-top:-60px; z-index:60; pointer-events:none; height:60px;">
+        <div class="reaction-layer" style="pointer-events:auto; bottom:20px;">
+            <div class="react-btn" onclick="triggerReaction('❤️')">❤️</div>
+            <div class="react-btn" onclick="triggerReaction('🔥')">🔥</div>
+            <div class="react-btn" onclick="triggerCelebration()">🎉</div>
         </div>
     </div>
 
-    <div class="mini-score">
-        <div class="team-grp"><span class="flag">🇮🇳</span><div class="t-code">IND ❤️</div></div>
-        <div class="center-score">
-            <div class="big-score" id="mainScore">0/0 ❤️</div>
-            <div class="overs">0.0 Overs ❤️</div>
-        </div>
-        <div class="team-grp"><span class="flag">🇳🇿</span><div class="t-code">NZ ❤️</div></div>
-    </div>
-
-    <div class="tabs">
-        <div class="tab active" onclick="setTab('live', this)">Match Center</div>
-        <div class="tab" onclick="setTab('comm', this)">Commentary</div>
-        <div class="tab" onclick="setTab('chat', this)">Live Chat</div>
-    </div>
-
-    <div id="live" class="section active">
+    <div
         
-        <div class="social-row">
-            <a href="https://youtube.com/@mkssports3" class="s-btn yt"><i class="fab fa-youtube"></i> YouTube</a>
-            <a href="https://t.me/MKSSports_3" class="s-btn tg"><i class="fab fa-telegram"></i> Telegram</a>
-        </div>
-
-        <div class="poll-card">
-            <div class="poll-title">WHO WILL WIN?</div>
-            <div class="poll-opt" onclick="vote(1)">
-                <span>🇮🇳 India</span> <span id="p1">50%</span>
-            </div>
-            <div class="poll-bar"><div class="poll-fill" id="bar1" style="width:50%"></div></div>
-            
-            <div class="poll-opt" onclick="vote(2)" style="margin-top:15px">
-                <span>🇳🇿 New Zealand</span> <span id="p2">50%</span>
-            </div>
-            <div class="poll-bar"><div class="poll-fill" id="bar2" style="width:50%; background:#aaa;"></div></div>
-        </div>
-
-        <div class="poll-card">
-            <div style="font-size:11px; color:#666; font-weight:bold; margin-bottom:10px;">LIVE SCORECARD</div>
-            <table class="stats-table">
-                <tr><td class="highlight">🏏 Rohit Sharma ❤️</td><td class="val">45 (28) ❤️</td></tr>
-                <tr><td>S. Gill ❤️</td><td class="val" style="color:#888;">12 (10) ❤️</td></tr>
-                <tr><td class="highlight" style="padding-top:15px;">🥎 Trent Boult ❤️</td><td class="val" style="padding-top:15px;">1-32 (4.2) ❤️</td></tr>
-            </table>
-        </div>
-    </div>
-
-    <div id="comm" class="section">
-        <div class="comm-item">
-            <div class="comm-ball">4.2</div>
-            <div class="comm-desc">FOUR! Short ball and pulled away magnificently by Rohit.</div>
-        </div>
-        <div class="comm-item">
-            <div class="comm-ball">4.1</div>
-            <div class="comm-desc">No run, defended back to the bowler. Good line and length.</div>
-        </div>
-        <div class="comm-item">
-            <div class="comm-ball">3.6</div>
-            <div class="comm-desc">WICKET! Edged and taken! Big breakthrough for NZ.</div>
-        </div>
-    </div>
-
-    <div id="chat" class="section">
-        <div class="chat-box" id="chatList"></div>
-        <div class="input-bar">
-            <input type="text" id="chatInput" class="inp" placeholder="Type message...">
-            <button class="send-btn" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <script>
-        // ==========================================
-        // 🔥 LINK & SCORE UPDATE 🔥
-        // ==========================================
-        const streamLink = "https://www.youtube.com/live/GLlHqWwWMms?si=feAM_NfBI9q2_40n";
-        document.getElementById("mainScore").innerText = "0/0"; // ❤️ Update Score
-        // ==========================================
-
-        function initPlayer(url) {
-            const box = document.getElementById('playerContainer');
-            if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                let vId = url.includes('/live/') ? url.split('/live/')[1].split('?')[0] : url.split('v=')[1].split('&')[0];
-                box.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?autoplay=1&mute=0&rel=0&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-            } else if (url.includes('.m3u8')) {
-                const vid = document.createElement('video');
-                vid.controls = true; vid.autoplay = true; vid.style.width = "100%"; vid.style.height = "100%";
-                box.appendChild(vid);
-                if (Hls.isSupported()) { const hls = new Hls(); hls.loadSource(url); hls.attachMedia(vid); }
-                else { vid.src = url; }
-            } else { box.innerHTML = `<iframe src="${url}" allowfullscreen></iframe>`; }
-        }
-        initPlayer(streamLink);
-
-        function setTab(id, el) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            el.classList.add('active');
-        }
-
-        // Poll Logic
-        function vote(opt) {
-            if(opt === 1) {
-                document.getElementById('bar1').style.width = "85%"; document.getElementById('p1').innerText = "85%";
-                document.getElementById('bar2').style.width = "15%"; document.getElementById('p2').innerText = "15%";
-            } else {
-                document.getElementById('bar1').style.width = "20%"; document.getElementById('p1').innerText = "20%";
-                document.getElementById('bar2').style.width = "80%"; document.getElementById('p2').innerText = "80%";
-            }
-        }
-
-        // Chat Logic
-        const chats = [{n:"Rahul", m:"India Win! 🇮🇳"}, {n:"ViratFan", m:"Kohli OP 🔥"}, {n:"Sky", m:"Sixer!"}];
-        function addFake() {
-            const c = document.getElementById('chatList');
-            const d = chats[Math.floor(Math.random()*chats.length)];
-            const el = document.createElement('div'); el.className = 'msg';
-            el.innerHTML = `<div class="av">${d.n[0]}</div><div class="txt"><span style="color:#aaa; font-size:10px; display:block;">${d.n}</span>${d.m}</div>`;
-            c.prepend(el);
-        }
-        setInterval(addFake, 1500);
-
-        function sendMsg() {
-            const inp = document.getElementById('chatInput');
-            if(!inp.value) return;
-            const c = document.getElementById('chatList');
-            const el = document.createElement('div'); el.className = 'msg';
-            el.innerHTML = `<div class="av" style="background:var(--primary);">Y</div><div class="txt" style="background:#1a2e4d; border-color:#3a86ff;">${inp.value}</div>`;
-            c.prepend(el);
-            inp.value = "";
-        }
-    </script>
-</body>
-</html>

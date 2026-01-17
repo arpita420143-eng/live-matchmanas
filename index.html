@@ -212,11 +212,11 @@
         }
 
         function updateViewers() {
-            const min = 5000; const max = 25000;
+            const min = 50; const max = 1000;
             let count = Math.floor(Math.random() * (max - min + 1)) + min;
             document.getElementById("viewers").innerText = count.toLocaleString();
         }
-        setInterval(updateViewers, 5000);
+        setInterval(updateViewers, 500);
         updateViewers();
     </script>
 </body>

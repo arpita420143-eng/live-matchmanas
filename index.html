@@ -15,7 +15,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* --- HEADER --- */
+        /* HEADER */
         .header {
             display: flex; justify-content: space-between; align-items: center;
             background: linear-gradient(180deg, #1a1a1a, #000); padding: 15px 20px;
@@ -26,12 +26,11 @@
         .logo span { color: var(--primary); -webkit-text-fill-color: var(--primary); }
         .live-tag { background: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; box-shadow: 0 0 10px var(--primary); animation: pulse 1.5s infinite; }
 
-        /* --- VIDEO CONTAINER --- */
+        /* VIDEO PLAYER */
         .video-wrapper { position: relative; width: 100%; background: #000; z-index: 40; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .video-box { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; overflow: hidden; }
         iframe, video { width: 100%; height: 100%; border: none; }
-
-        /* VIEWER OVERLAY (Top Right) */
+        
         .video-overlay-views {
             position: absolute; top: 15px; right: 15px;
             background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
@@ -43,60 +42,47 @@
         .watching-text { font-size: 10px; font-weight: 600; color: #ddd; text-transform: uppercase; letter-spacing: 0.5px; }
         .live-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); animation: pulse 1s infinite; }
 
-        /* --- 🔥 NEW DESIGN: REACTION SECTION 🔥 --- */
+        /* 🔥 NEWS TICKER (Chalti hui patti) 🔥 */
+        .news-ticker {
+            background: var(--primary); color: white;
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            padding: 8px 0; overflow: hidden; white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 35;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .ticker-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
+        
+        /* REACTION SECTION */
         .reaction-container {
-            padding: 25px 15px;
-            background: linear-gradient(to bottom, #111, #050505);
-            display: flex; justify-content: center; gap: 30px;
-            border-bottom: 1px solid #222;
-            /* Subtle red glow underneath */
+            padding: 20px 15px; background: linear-gradient(to bottom, #111, #050505);
+            display: flex; justify-content: center; gap: 30px; border-bottom: 1px solid #222;
             box-shadow: inset 0 -15px 30px -15px rgba(230, 36, 41, 0.15);
         }
         .react-btn {
-            /* Bigger, glowing buttons */
-            width: 60px; height: 60px; font-size: 28px;
-            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
-            border: 2px solid rgba(230, 36, 41, 0.5); /* Red border */
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
+            width: 60px; height: 60px; font-size: 28px; background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+            border: 2px solid rgba(230, 36, 41, 0.5); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
             box-shadow: 0 0 15px rgba(230, 36, 41, 0.2), inset 0 0 10px rgba(0,0,0,0.5);
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.2s;
         }
         .react-btn:active { transform: scale(0.9); box-shadow: 0 0 5px rgba(230, 36, 41, 0.5); }
         .floating-emoji { position: fixed; bottom: 30%; right: 30px; font-size: 40px; animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 100; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
 
-        /* --- 🔥 NEW DESIGN: SCOREBOARD 🔥 --- */
+        /* SCOREBOARD */
         .match-card-pro {
-            margin: 5px 15px 20px 15px;
-            background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
-            border-radius: 20px;
-            padding: 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            border: 2px solid rgba(230, 36, 41, 0.3); /* Subtle red outline */
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            position: relative; overflow: hidden;
+            margin: 5px 15px 20px 15px; background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
+            border-radius: 20px; padding: 20px; display: flex; justify-content: space-between; align-items: center;
+            border: 2px solid rgba(230, 36, 41, 0.3); box-shadow: 0 10px 25px rgba(0,0,0,0.5); position: relative; overflow: hidden;
         }
-        /* Shine effect */
         .match-card-pro::before { content: ''; position: absolute; top: 0; left: -50%; width: 100%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent); transform: skewX(-20deg); pointer-events: none; }
-        
         .team-pro { text-align: center; flex: 1; z-index: 2; }
         .flag-pro { font-size: 42px; display: block; margin-bottom: 8px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); }
         .t-name-pro { font-weight: 900; font-size: 18px; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        
-        /* The Centerpiece VS */
-        .vs-center-pro {
-            flex: 0.8; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2;
-        }
-        .vs-box {
-            background: var(--primary); padding: 8px 20px;
-            transform: skew(-12deg); /* Sporty slant */
-            box-shadow: 0 0 20px rgba(230, 36, 41, 0.6);
-            border: 3px solid #fff;
-        }
-        .vs-text { font-size: 22px; font-weight: 900; color: #fff; transform: skew(12deg); /* Un-slant text */ }
+        .vs-center-pro { flex: 0.8; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
+        .vs-box { background: var(--primary); padding: 8px 20px; transform: skew(-12deg); box-shadow: 0 0 20px rgba(230, 36, 41, 0.6); border: 3px solid #fff; }
+        .vs-text { font-size: 22px; font-weight: 900; color: #fff; transform: skew(12deg); }
 
-        /* --- BUTTONS --- */
+        /* BUTTONS */
         .action-area { padding: 10px 15px; display: flex; flex-direction: column; gap: 12px; }
         .big-btn { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 14px; border-radius: 12px; text-decoration: none; color: white; font-weight: 800; font-size: 15px; text-transform: uppercase; transition: transform 0.2s; position: relative; overflow: hidden; }
         .big-btn:active { transform: scale(0.98); }
@@ -104,6 +90,7 @@
         .btn-tg { background: linear-gradient(135deg, #0088cc, #005580); box-shadow: 0 4px 15px rgba(0, 136, 204, 0.2); border: 1px solid #3399ff; }
         .big-btn i { font-size: 20px; }
 
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
         @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1); } 100% { opacity: 1; transform: scale(1); } }
         @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-250px) scale(1.5); opacity: 0; } }
     </style>
@@ -124,6 +111,12 @@
         </div>
     </div>
 
+    <div class="news-ticker">
+        <div class="ticker-content">
+            📢 WELCOME TO MKS SPORTS LIVE • WATCH HD CRICKET STREAM FREE • JOIN OUR TELEGRAM CHANNEL FOR MORE LINKS • DON'T FORGET TO SUBSCRIBE YOUTUBE • ENJOY THE MATCH! 📢
+        </div>
+    </div>
+
     <div class="reaction-container">
         <div class="react-btn" onclick="triggerReaction('❤️')">❤️</div>
         <div class="react-btn" onclick="triggerReaction('🔥')">🔥</div>
@@ -135,13 +128,11 @@
             <span class="flag-pro">🏏</span>
             <div class="t-name-pro">JSK</div>
         </div>
-        
         <div class="vs-center-pro">
             <div class="vs-box">
                 <div class="vs-text">VS</div>
             </div>
         </div>
-
         <div class="team-pro">
             <span class="flag-pro">🏏</span>
             <div class="t-name-pro">PR</div>
@@ -160,7 +151,6 @@
     <script>
         const streamLink = "https://tgs1.myluck1.top:8088/mobile/stream5_240p/playlist.m3u8?vidictid=204707278658&id=18&pk=ae85b3ec0f635ab534b3b39a7e88b37f4fd9513ca22bc57b2206fec7a7a5e8f76f9db76673ebf3cb5670a5787da7d423d6cd49f84bd7dc4947eee8e805444206";
 
-        // --- VIEWER LOGIC (500 - 5000) ---
         function updateViewers() {
             const min = 500; const max = 5000;
             let count = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -172,13 +162,11 @@
         function initPlayer(url) {
             const box = document.getElementById('playerContainer');
             box.innerHTML = ''; 
-            
             if (url.includes('.m3u8')) {
                 const vid = document.createElement('video');
                 vid.controls = true; vid.autoplay = true; vid.playsInline = true;
                 vid.style.width="100%"; vid.style.height="100%";
                 box.appendChild(vid);
-                
                 if (Hls.isSupported()) { 
                     const hls = new Hls(); hls.loadSource(url); hls.attachMedia(vid);
                     hls.on(Hls.Events.MANIFEST_PARSED, function() { vid.play().catch(e => console.log(e)); });

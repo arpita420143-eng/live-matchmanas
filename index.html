@@ -34,7 +34,6 @@
         .video-box { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; }
         iframe, video { width: 100%; height: 100%; border: none; }
         
-        /* Overlay Views */
         .video-overlay-views { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 5px; pointer-events: none; }
         .view-count { font-size: 11px; font-weight: 800; color: #fff; }
         .live-dot { width: 6px; height: 6px; background: red; border-radius: 50%; box-shadow: 0 0 5px red; }
@@ -45,24 +44,21 @@
 
         /* 4. SERVER LIST (Compact & Vertical) */
         .server-section {
-            padding: 10px 15px; /* Padding kam ki */
-            display: flex; flex-direction: column; gap: 8px; /* Gap kam kiya */
+            padding: 10px 15px; display: flex; flex-direction: column; gap: 8px;
             background: #0a0a0a; border-bottom: 1px solid #222;
         }
         .server-label { font-size: 10px; color: #aaa; font-weight: 700; margin-bottom: 2px; text-transform: uppercase; }
         
         .server-btn-large {
-            width: 100%; padding: 10px 12px; /* Button chhota kiya */
-            background: #1a1a1a; border: 1px solid #333; border-radius: 8px;
-            color: white; font-size: 12px; /* Font chhota kiya */ font-weight: 700;
+            width: 100%; padding: 10px 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px;
+            color: white; font-size: 12px; font-weight: 700;
             display: flex; justify-content: space-between; align-items: center;
             cursor: pointer; transition: all 0.2s;
         }
         .server-btn-large i { font-size: 14px; color: #666; }
         
         .server-btn-large.active { 
-            background: linear-gradient(90deg, #222, #1a1a1a); 
-            border-color: var(--primary); 
+            background: linear-gradient(90deg, #222, #1a1a1a); border-color: var(--primary); 
             box-shadow: 0 0 8px rgba(0, 120, 255, 0.2);
         }
         .server-btn-large.active i { color: var(--primary); }
@@ -79,7 +75,15 @@
         .team { text-align: center; flex: 1; }
         .flag { font-size: 30px; display: block; margin-bottom: 4px; }
         .t-name { font-weight: 800; font-size: 13px; color: #fff; letter-spacing: 0.5px; }
-        .vs-box { background: #e62429; padding: 4px 12px; transform: skew(-10deg); font-size: 12px; font-weight: 900; color:white; border-radius: 4px; }
+        
+        /* 🔥 NEW VS CIRCLE DESIGN 🔥 */
+        .vs-box { 
+            width: 35px; height: 35px; 
+            background: #222; border: 2px solid #333; border-radius: 50%; /* Circle */
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 900; color: #888; /* Grey Text */
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+        }
 
         /* 6. Buttons */
         .action-area { padding: 0 15px 25px 15px; display: flex; flex-direction: column; gap: 10px; }
@@ -142,7 +146,9 @@
             <span class="flag">🇮🇳</span>
             <div class="t-name">IND</div>
         </div>
+        
         <div class="vs-box">VS</div>
+        
         <div class="team">
             <span class="flag">🇳🇿</span>
             <div class="t-name">NZ</div>
@@ -185,7 +191,7 @@
                     vid.src = url; vid.addEventListener('loadedmetadata', function() { vid.play(); });
                 }
             } else {
-                box.innerHTML = '<div style="color:white;text-align:center;padding:50px;font-size:12px;">Link Loading...</div>';
+                box.innerHTML = '<div style="color:white;text-align:center;padding:50px;font-size:14px;">Link Loading / Not Available</div>';
             }
         }
         initPlayer(currentUrl);

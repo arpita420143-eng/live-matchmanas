@@ -212,7 +212,7 @@
         }
 
         function updateViewers() {
-            const min = 200; const max = 2000;
+            const min = 1000; const max = 2000;
             let count = Math.floor(Math.random() * (max - min + 1)) + min;
             document.getElementById("viewers").innerText = count.toLocaleString();
         }

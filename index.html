@@ -30,10 +30,8 @@
 
         /* 2. Video Player */
         .video-wrapper { position: relative; width: 100%; background: #000; }
-        /* Aspect Ratio 16/9 maintain karne ke liye */
         .video-box { position: relative; width: 100%; padding-bottom: 56.25%; /* 16:9 Aspect Ratio */ height: 0; background: #000; overflow: hidden; }
         
-        /* Iframe ko fit karne ke liye CSS */
         .video-box iframe { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; 
         }
@@ -129,17 +127,17 @@
         <div class="server-label">Select Stream Server</div>
         
         <div class="server-btn-large active" onclick="changeServer(1, this)">
-            <div class="server-name"><div class="status-dot"></div> SERVER 1 (HD)</div>
+            <div class="server-name"><div class="status-dot"></div> SERVER 1 (Main)</div>
             <i class="fas fa-play-circle"></i>
         </div>
         
         <div class="server-btn-large" onclick="changeServer(2, this)">
-            <div class="server-name"><div class="status-dot"></div> SERVER 2 (FAST)</div>
+            <div class="server-name"><div class="status-dot"></div> SERVER 2 (Backup)</div>
             <i class="fas fa-bolt"></i>
         </div>
         
         <div class="server-btn-large" onclick="changeServer(3, this)">
-            <div class="server-name"><div class="status-dot"></div> SERVER 3 (BACKUP)</div>
+            <div class="server-name"><div class="status-dot"></div> SERVER 3 (Extra)</div>
             <i class="fas fa-shield-alt"></i>
         </div>
     </div>
@@ -169,38 +167,34 @@
     </div>
 
     <script>
-        // 🔥 UPDATE LINKS HERE 🔥
-        const server1 = "https://dlhd.link/stream/stream-589.php"; // New Iframe Link
-        const server2 = "Link_2_Here"; 
-        const server3 = "Link_3_Here";
+        // 🔥 LINKS UPDATED HERE 🔥
+        const server1 = "https://dlhd.link/stream/stream-589.php";
+        const server2 = "https://dlhd.link/stream/stream-370.php"; 
+        const server3 = "Link_3_Here"; // Jab aur koi link mile toh yaha daal dena
 
         let currentUrl = server1;
 
-        // Function to create Iframe
         function initPlayer(url) {
             const box = document.getElementById('playerContainer');
-            box.innerHTML = ''; // Clear previous player
+            box.innerHTML = ''; // Clear previous
 
-            if (url && url !== "Link_2_Here" && url !== "Link_3_Here") {
-                // Create Iframe Element
+            if (url && url !== "Link_3_Here") {
                 const iframe = document.createElement('iframe');
                 iframe.src = url;
                 iframe.setAttribute('allowfullscreen', 'true');
-                iframe.setAttribute('scrolling', 'no'); // Hides scrollbars inside iframe
+                iframe.setAttribute('scrolling', 'no');
                 iframe.style.border = "0";
-                
-                // Append to container
                 box.appendChild(iframe);
             } else {
                 box.innerHTML = '<div style="color:white;text-align:center;padding-top:20%;font-size:14px;">Link Loading / Not Available</div>';
             }
         }
         
-        // Start Player
+        // Load Server 1 by default
         initPlayer(currentUrl);
 
         function changeServer(num, btn) {
-            // Update UI
+            // UI Change
             document.querySelectorAll('.server-btn-large').forEach(b => {
                 b.classList.remove('active');
                 b.querySelector('.status-dot').style.background = '#444';
@@ -210,24 +204,21 @@
             btn.querySelector('.status-dot').style.background = '#0f0';
             btn.querySelector('i').style.color = '#0078FF';
 
-            // Change Link
+            // Server Logic
             if(num === 1) initPlayer(server1);
             if(num === 2) initPlayer(server2);
             if(num === 3) initPlayer(server3);
         }
 
-        // 🔥 REALISTIC VIEWERS LOGIC 🔥
+        // Fake Viewers Logic
         let currentViewers = 1245; 
         function updateViewers() {
             let isIncreasing = Math.random() > 0.5;
             let change = Math.floor(Math.random() * 15) + 5; 
-
             if (isIncreasing) currentViewers += change;
             else currentViewers -= change;
-
             if (currentViewers < 1000) currentViewers = 1000;
             if (currentViewers > 3000) currentViewers = 3000;
-
             document.getElementById("viewers").innerText = currentViewers.toLocaleString();
         }
         setInterval(updateViewers, 5000);

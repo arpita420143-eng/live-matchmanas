@@ -132,12 +132,12 @@
         </div>
         
         <div class="server-btn-large" onclick="changeServer(2, this)">
-            <div class="server-name"><div class="status-dot"></div> SERVER 2 (Backup)</div>
+            <div class="server-name"><div class="status-dot"></div> SERVER 2 (Backup 1)</div>
             <i class="fas fa-bolt"></i>
         </div>
         
         <div class="server-btn-large" onclick="changeServer(3, this)">
-            <div class="server-name"><div class="status-dot"></div> SERVER 3 (Extra)</div>
+            <div class="server-name"><div class="status-dot"></div> SERVER 3 (Backup 2)</div>
             <i class="fas fa-shield-alt"></i>
         </div>
     </div>
@@ -170,31 +170,27 @@
         // 🔥 LINKS UPDATED HERE 🔥
         const server1 = "https://dlhd.link/stream/stream-589.php";
         const server2 = "https://dlhd.link/stream/stream-370.php"; 
-        const server3 = "Link_3_Here"; // Jab aur koi link mile toh yaha daal dena
+        const server3 = "https://dlhd.link/stream/stream-34.php"; 
 
         let currentUrl = server1;
 
         function initPlayer(url) {
             const box = document.getElementById('playerContainer');
-            box.innerHTML = ''; // Clear previous
+            box.innerHTML = ''; 
 
-            if (url && url !== "Link_3_Here") {
+            if (url) {
                 const iframe = document.createElement('iframe');
                 iframe.src = url;
                 iframe.setAttribute('allowfullscreen', 'true');
                 iframe.setAttribute('scrolling', 'no');
                 iframe.style.border = "0";
                 box.appendChild(iframe);
-            } else {
-                box.innerHTML = '<div style="color:white;text-align:center;padding-top:20%;font-size:14px;">Link Loading / Not Available</div>';
             }
         }
         
-        // Load Server 1 by default
         initPlayer(currentUrl);
 
         function changeServer(num, btn) {
-            // UI Change
             document.querySelectorAll('.server-btn-large').forEach(b => {
                 b.classList.remove('active');
                 b.querySelector('.status-dot').style.background = '#444';
@@ -204,13 +200,11 @@
             btn.querySelector('.status-dot').style.background = '#0f0';
             btn.querySelector('i').style.color = '#0078FF';
 
-            // Server Logic
             if(num === 1) initPlayer(server1);
             if(num === 2) initPlayer(server2);
             if(num === 3) initPlayer(server3);
         }
 
-        // Fake Viewers Logic
         let currentViewers = 1245; 
         function updateViewers() {
             let isIncreasing = Math.random() > 0.5;

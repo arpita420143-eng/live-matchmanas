@@ -7,7 +7,6 @@
     <title>MKS Sports Live - IND vs NZ</title>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     
     <style>
         :root { --bg: #050505; --surface: #121212; --primary: #0078FF; --telegram: #0088cc; --whatsapp: #25D366; --text: #fff; --warning: #ffcc00; }
@@ -29,13 +28,12 @@
         .logo span { color: var(--primary); }
         .live-tag { background: #e62429; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; }
 
-        /* 2. Video Player Area */
+        /* 2. Video Player */
         .video-wrapper { position: relative; width: 100%; background: #000; }
-        .video-box { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background: #000; overflow: hidden; }
+        .video-box { position: relative; width: 100%; padding-bottom: 56.25%; /* 16:9 Aspect Ratio */ height: 0; background: #000; overflow: hidden; }
         
-        /* Player Div (Clappr & Iframe both use this) */
-        #playerContainer > div, #playerContainer iframe { 
-            position: absolute; top: 0; left: 0; width: 100% !important; height: 100% !important; border: none; 
+        .video-box iframe { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; 
         }
         
         .video-overlay-views { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 5px; pointer-events: none; z-index: 10; }
@@ -55,6 +53,7 @@
             transition: 0.2s;
         }
         .btn-refresh:active { background: #333; transform: scale(0.98); }
+        .btn-refresh i { font-size: 14px; }
 
         /* 4. SERVER LIST */
         .server-section {
@@ -80,7 +79,7 @@
         .status-dot { width: 6px; height: 6px; background: #444; border-radius: 50%; }
         .server-btn-large.active .status-dot { background: #0f0; box-shadow: 0 0 5px #0f0; }
 
-        /* 5. Scoreboard & Buttons */
+        /* 5. Scoreboard */
         .match-card {
             margin: 10px 15px; background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
             border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; align-items: center;
@@ -90,11 +89,14 @@
         .flag { font-size: 30px; display: block; margin-bottom: 4px; }
         .t-name { font-weight: 800; font-size: 13px; color: #fff; letter-spacing: 0.5px; }
         .vs-box { 
-            width: 35px; height: 35px; background: #222; border: 2px solid #333; border-radius: 50%; 
+            width: 35px; height: 35px; 
+            background: #222; border: 2px solid #333; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center;
             font-size: 10px; font-weight: 900; color: #888;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
         }
 
+        /* 6. Buttons */
         .action-area { padding: 0 15px 25px 15px; display: flex; flex-direction: column; gap: 10px; }
         .big-btn { 
             display: flex; align-items: center; justify-content: center; gap: 8px; 
@@ -105,6 +107,7 @@
         .btn-yt { background: #cc0000; border: 1px solid #ff3333; }
         .btn-tg { background: #0088cc; border: 1px solid #3399ff; }
         .btn-wa { background: #25D366; border: 1px solid #4cd980; }
+        .big-btn i { font-size: 16px; }
 
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
     </style>
@@ -127,13 +130,13 @@
 
     <div class="news-ticker">
         <div class="ticker-content">
-            📢 LIVE: INDIA VS NEW ZEALAND • AD-FREE HD STREAM • JOIN TELEGRAM FOR UPDATES • SERVER 1 IS FASTEST! 📢
+            📢 LIVE: INDIA VS NEW ZEALAND • WATCH HD STREAM FREE • JOIN TELEGRAM FOR UPDATES • SHARE WITH FRIENDS! 📢
         </div>
     </div>
 
     <div class="refresh-area">
         <div class="btn-refresh" onclick="refreshPlayer()">
-            <i class="fas fa-sync-alt"></i> Refresh / Reload
+            <i class="fas fa-sync-alt"></i> Refresh Stream / Fix Loading
         </div>
     </div>
 
@@ -141,117 +144,109 @@
         <div class="server-label">Select Stream Server</div>
         
         <div class="server-btn-large active" onclick="changeServer(1, this)">
-            <div class="server-name"><div class="status-dot"></div> SERVER 1 (NO ADS - FAST)</div>
+            <div class="server-name"><div class="status-dot"></div> SERVER 1 (Main)</div>
             <i class="fas fa-play-circle"></i>
         </div>
         
         <div class="server-btn-large" onclick="changeServer(2, this)">
-            <div class="server-name"><div class="status-dot"></div> SERVER 2 (BACKUP)</div>
+            <div class="server-name"><div class="status-dot"></div> SERVER 2 (Backup 1)</div>
             <i class="fas fa-bolt"></i>
         </div>
         
         <div class="server-btn-large" onclick="changeServer(3, this)">
-            <div class="server-name"><div class="status-dot"></div> SERVER 3 (BACKUP 2)</div>
+            <div class="server-name"><div class="status-dot"></div> SERVER 3 (Backup 2)</div>
             <i class="fas fa-shield-alt"></i>
         </div>
     </div>
 
     <div class="match-card">
-        <div class="team"><span class="flag">🇮🇳</span><div class="t-name">IND</div></div>
+        <div class="team">
+            <span class="flag">🇮🇳</span>
+            <div class="t-name">IND</div>
+        </div>
         <div class="vs-box">VS</div>
-        <div class="team"><span class="flag">🇳🇿</span><div class="t-name">NZ</div></div>
+        <div class="team">
+            <span class="flag">🇳🇿</span>
+            <div class="t-name">NZ</div>
+        </div>
     </div>
 
     <div class="action-area">
-        <a href="https://youtube.com/@mkssports3" target="_blank" class="big-btn btn-yt"><i class="fab fa-youtube"></i> Subscribe YouTube</a>
-        <a href="https://t.me/MKSSports_3" target="_blank" class="big-btn btn-tg"><i class="fab fa-telegram"></i> Join Telegram</a>
-        <a href="whatsapp://send?text=Watch Live Match HD! Link: https://matchmanas.pages.dev" class="big-btn btn-wa"><i class="fab fa-whatsapp"></i> Share with Friends</a>
+        <a href="https://youtube.com/@mkssports3" target="_blank" class="big-btn btn-yt">
+            <i class="fab fa-youtube"></i> Subscribe YouTube
+        </a>
+        <a href="https://t.me/MKSSports_3" target="_blank" class="big-btn btn-tg">
+            <i class="fab fa-telegram"></i> Join Telegram
+        </a>
+        <a href="whatsapp://send?text=Watch IND vs NZ Live Match HD Free! 👇 Click Here: https://matchmanas.pages.dev" class="big-btn btn-wa">
+            <i class="fab fa-whatsapp"></i> Share with Friends
+        </a>
     </div>
 
     <script>
-        // 🔥 SERVER LINKS 🔥
-        
-        // SERVER 1: TUMHARA M3U8 LINK (Direct & No Ads)
-        const server1 = "https://jan.player0003.com/hls/star3in.m3u8?md6=D5huJgaF2lugK1MIdqZgaA&expires=1768734860&s=MmEwMDo3YzgwOjA6M2EzOjoxMw==";
-        
-        // Backup Servers (Embeds)
-        const server2 = "https://sportifylive-18-1.pages.dev/ch?id=ten-3"; 
-        const server3 = "https://daddylive.sx/embed/stream-34.php"; 
+        // 🔥 LINKS 🔥
+        const server1 = "https://dlhd.link/stream/stream-589.php";
+        const server2 = "https://dlhd.link/stream/stream-370.php"; 
+        const server3 = "https://dlhd.link/stream/stream-34.php"; 
 
         let currentUrl = server1;
-        let playerInstance = null;
 
         function initPlayer(url) {
             const box = document.getElementById('playerContainer');
-            
-            // Purana player destroy karo
-            if(playerInstance) {
-                playerInstance.destroy();
-                playerInstance = null;
-            }
+            // Clear only if needed, but here we rebuild to force refresh
             box.innerHTML = ''; 
 
-            // Logic: Agar Link .m3u8 hai toh Clappr chalao (Best Quality), nahi toh Iframe
-            if (url.includes('.m3u8')) {
-                playerInstance = new Clappr.Player({
-                    source: url,
-                    parentId: "#playerContainer",
-                    width: '100%',
-                    height: '100%',
-                    autoPlay: true,
-                    playback: { playInline: true }, // Mobile support
-                    events: {
-                        onError: function(e) {
-                            console.log("Error loading stream", e);
-                            // Agar error aaye toh backup par bhej do
-                        }
-                    }
-                });
-            } else {
-                // Iframe Logic for Backups
+            if (url) {
                 const iframe = document.createElement('iframe');
                 iframe.src = url;
                 iframe.setAttribute('allowfullscreen', 'true');
                 iframe.setAttribute('scrolling', 'no');
-                iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin allow-presentation'); // Block Redirects
                 iframe.style.border = "0";
-                iframe.style.width = "100%";
-                iframe.style.height = "100%";
                 box.appendChild(iframe);
             }
         }
         
-        // Start with Server 1
+        // Load default
         initPlayer(currentUrl);
 
+        // 🔥 REFRESH FUNCTION 🔥
         function refreshPlayer() {
             const box = document.getElementById('playerContainer');
-            if(playerInstance) { playerInstance.destroy(); playerInstance = null; }
-            box.innerHTML = '<div style="color:var(--primary);display:flex;justify-content:center;align-items:center;height:100%;font-size:14px;font-weight:bold;">Reloading...</div>';
-            setTimeout(() => { initPlayer(currentUrl); }, 500);
+            box.innerHTML = '<div style="color:white;display:flex;justify-content:center;align-items:center;height:100%;font-size:12px;">Refreshing...</div>';
+            
+            // Thoda delay taaki user ko lage refresh hua
+            setTimeout(() => {
+                initPlayer(currentUrl);
+            }, 500);
         }
 
         function changeServer(num, btn) {
             document.querySelectorAll('.server-btn-large').forEach(b => {
                 b.classList.remove('active');
                 b.querySelector('.status-dot').style.background = '#444';
+                b.querySelector('i').style.color = '#666';
             });
             btn.classList.add('active');
             btn.querySelector('.status-dot').style.background = '#0f0';
+            btn.querySelector('i').style.color = '#0078FF';
 
-            if(num === 1) { currentUrl = server1; }
-            if(num === 2) { currentUrl = server2; }
-            if(num === 3) { currentUrl = server3; }
-            initPlayer(currentUrl);
+            if(num === 1) { currentUrl = server1; initPlayer(server1); }
+            if(num === 2) { currentUrl = server2; initPlayer(server2); }
+            if(num === 3) { currentUrl = server3; initPlayer(server3); }
         }
 
-        // Viewers Logic
         let currentViewers = 1245; 
-        setInterval(() => {
-            currentViewers += Math.floor(Math.random() * 20) - 5;
-            if(currentViewers < 800) currentViewers = 800;
+        function updateViewers() {
+            let isIncreasing = Math.random() > 0.5;
+            let change = Math.floor(Math.random() * 15) + 5; 
+            if (isIncreasing) currentViewers += change;
+            else currentViewers -= change;
+            if (currentViewers < 10000) currentViewers = 10000;
+            if (currentViewers > 30000) currentViewers = 30000;
             document.getElementById("viewers").innerText = currentViewers.toLocaleString();
-        }, 4000);
+        }
+        setInterval(updateViewers, 5000);
+        updateViewers();
     </script>
 </body>
 </html>

@@ -6,7 +6,6 @@
     <meta name="referrer" content="no-referrer">
     <title>MKS Sports Live - IND vs NZ</title>
     
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
@@ -31,10 +30,15 @@
 
         /* 2. Video Player */
         .video-wrapper { position: relative; width: 100%; background: #000; }
-        .video-box { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; }
-        iframe, video { width: 100%; height: 100%; border: none; }
+        /* Aspect Ratio 16/9 maintain karne ke liye */
+        .video-box { position: relative; width: 100%; padding-bottom: 56.25%; /* 16:9 Aspect Ratio */ height: 0; background: #000; overflow: hidden; }
         
-        .video-overlay-views { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 5px; pointer-events: none; }
+        /* Iframe ko fit karne ke liye CSS */
+        .video-box iframe { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; 
+        }
+        
+        .video-overlay-views { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 5px; pointer-events: none; z-index: 10; }
         .view-count { font-size: 11px; font-weight: 800; color: #fff; }
         .live-dot { width: 6px; height: 6px; background: red; border-radius: 50%; box-shadow: 0 0 5px red; }
 
@@ -42,7 +46,7 @@
         .news-ticker { background: var(--primary); color: white; font-size: 11px; font-weight: 700; padding: 6px 0; white-space: nowrap; overflow: hidden; border-bottom: 1px solid #333; }
         .ticker-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
 
-        /* 4. SERVER LIST (Compact & Vertical) */
+        /* 4. SERVER LIST */
         .server-section {
             padding: 10px 15px; display: flex; flex-direction: column; gap: 8px;
             background: #0a0a0a; border-bottom: 1px solid #222;
@@ -75,8 +79,6 @@
         .team { text-align: center; flex: 1; }
         .flag { font-size: 30px; display: block; margin-bottom: 4px; }
         .t-name { font-weight: 800; font-size: 13px; color: #fff; letter-spacing: 0.5px; }
-        
-        /* Premium Circle VS Box */
         .vs-box { 
             width: 35px; height: 35px; 
             background: #222; border: 2px solid #333; border-radius: 50%; 
@@ -109,7 +111,8 @@
     </div>
 
     <div class="video-wrapper">
-        <div class="video-box" id="playerContainer"></div>
+        <div class="video-box" id="playerContainer">
+            </div>
         <div class="video-overlay-views">
             <div class="live-dot"></div>
             <span class="view-count" id="viewers">1,245</span>
@@ -166,35 +169,38 @@
     </div>
 
     <script>
-        // 🔥 LINKS UPDATE KAREIN 🔥
-        const server1 = "https://apn11.playlist.live-video.net/v1/playlist/Cp4Fs7B7voMH61n8z0Ttk3vYjgdhyZHaLMakwtyLpBrAOBdEKbckp1Tp5QQsSFq258kmB2qNpHM3ZBDXos4iBEMlXkjwXo6KuX5LcG0OeDS9Nwtbe7mwA6kci7JBHi5L2IKRa-aSMqg3W1TOu3FRqQXoiAuo2p8tiEM4s2UebdokUbG7U2gBVwTCdpM2DvrSvUAvLGTG_ljvIMZZ_NaaRnHDiAfhD8lzN1ZYK15rR99Rj4tRn0wlWxrNgl5uZyMDs_B-EU4cfurZ-yuwhPDHWk4kYNkJp7KAuuUQUDRrClCegT9AWz8j0GIdw7P0CcBl_prFLZ4zqFQFz4_uEctvwxKNGq6avpDN01YXIRDaUU3rLINK7PSo2UfrByWdD8OYPybONUi5kZtiZcgZo6OTybNQXTcIKpyMpfSQdA95fwxkIEXi7SeLRd9noA1558mrxvNpi7JHwQZXsmEqJH0V19blrO4Baf9jdnk8FxLSTWNAAx6YaiMpe1IOIFsIh2ldfa4rtts_IbWbzjRt0TeGJQZ_iQuEnlPDX4-Ky_nzpyQy7oZAm5nIwS0tEZWKQBuZ_t464LxR9SRZ0OioCEF7lIycWz1BM4E59-EGmqwnykndtM8HOKxNwap2qLDjx7KMQYT9cCNFABZDs7sdZV7-OIyRDUn70-HwvNYoGDPzKMZCi7bJ48P5CK6Qe4Z76ysoAEKHtjktHlvxQrCDaWH_iF_CRMUrHq9L_4zEpAcJCfWRqCl-zH6nX-ccXBxf2qNsykTSQzDtOdlWu9PanehjjjE82lkuXWCCBQR91XpcsPPRwu_cU0Ymdf-ArdSaykLclxcn-AH0yvE83NuMVdxjri8xuYjC9CAS-z2z6vvgMb9u_GBrqe9WzJqhhoUNkA601hoMxFTZpostrxqkywbaIAEqCXVzLXdlc3QtMjCbDg.m3u8";
-        const server2 = "https://jan.player0003.com/hls/star3in.m3u8?md6=PiUjN3HHi1Cq5ZIgU5AwHg&expires=1768726424&s=MjEyLjEwMi41MS4yNDM="; 
-        const server3 = "https://jan.player0003.com/hls/star3in.m3u8?md6=sX0cPrJJx2LFYKhKvWa2uQ&expires=1768727864&s=MmEwMjo2ZWEwOmQzM2I6MjIyMjo6MTI=";
+        // 🔥 UPDATE LINKS HERE 🔥
+        const server1 = "https://dlhd.link/stream/stream-589.php"; // New Iframe Link
+        const server2 = "Link_2_Here"; 
+        const server3 = "Link_3_Here";
 
         let currentUrl = server1;
 
+        // Function to create Iframe
         function initPlayer(url) {
             const box = document.getElementById('playerContainer');
-            box.innerHTML = ''; 
-            if (url.includes('.m3u8') && url !== "Link_2" && url !== "Link_3") {
-                const vid = document.createElement('video');
-                vid.controls = true; vid.autoplay = true; vid.playsInline = true;
-                vid.style.width="100%"; vid.style.height="100%";
-                box.appendChild(vid);
-                if (Hls.isSupported()) { 
-                    const hls = new Hls(); hls.loadSource(url); hls.attachMedia(vid);
-                    hls.on(Hls.Events.MANIFEST_PARSED, function() { vid.play().catch(e => console.log(e)); });
-                }
-                else if (vid.canPlayType('application/vnd.apple.mpegurl')) { 
-                    vid.src = url; vid.addEventListener('loadedmetadata', function() { vid.play(); });
-                }
+            box.innerHTML = ''; // Clear previous player
+
+            if (url && url !== "Link_2_Here" && url !== "Link_3_Here") {
+                // Create Iframe Element
+                const iframe = document.createElement('iframe');
+                iframe.src = url;
+                iframe.setAttribute('allowfullscreen', 'true');
+                iframe.setAttribute('scrolling', 'no'); // Hides scrollbars inside iframe
+                iframe.style.border = "0";
+                
+                // Append to container
+                box.appendChild(iframe);
             } else {
-                box.innerHTML = '<div style="color:white;text-align:center;padding:50px;font-size:14px;">Link Loading / Not Available</div>';
+                box.innerHTML = '<div style="color:white;text-align:center;padding-top:20%;font-size:14px;">Link Loading / Not Available</div>';
             }
         }
+        
+        // Start Player
         initPlayer(currentUrl);
 
         function changeServer(num, btn) {
+            // Update UI
             document.querySelectorAll('.server-btn-large').forEach(b => {
                 b.classList.remove('active');
                 b.querySelector('.status-dot').style.background = '#444';
@@ -204,40 +210,27 @@
             btn.querySelector('.status-dot').style.background = '#0f0';
             btn.querySelector('i').style.color = '#0078FF';
 
+            // Change Link
             if(num === 1) initPlayer(server1);
             if(num === 2) initPlayer(server2);
             if(num === 3) initPlayer(server3);
         }
 
-        // 🔥 REALISTIC ORGANIC VIEWERS LOGIC 🔥
-        // Start with a realistic number between 1000 and 2000
+        // 🔥 REALISTIC VIEWERS LOGIC 🔥
         let currentViewers = 1245; 
-
         function updateViewers() {
-            // Decide whether to add or subtract viewers (Randomly)
-            // 50-50 chance to go up or down
             let isIncreasing = Math.random() > 0.5;
-            
-            // Change amount: Random number between 5 and 20
             let change = Math.floor(Math.random() * 15) + 5; 
 
-            if (isIncreasing) {
-                currentViewers += change;
-            } else {
-                currentViewers -= change;
-            }
+            if (isIncreasing) currentViewers += change;
+            else currentViewers -= change;
 
-            // Safety Check: Keep between 1000 and 2000
-            if (currentViewers < 1000) currentViewers = 1000 + Math.floor(Math.random() * 50);
-            if (currentViewers > 2000) currentViewers = 2000 - Math.floor(Math.random() * 50);
+            if (currentViewers < 1000) currentViewers = 1000;
+            if (currentViewers > 3000) currentViewers = 3000;
 
             document.getElementById("viewers").innerText = currentViewers.toLocaleString();
         }
-
-        // Update every 5 seconds
         setInterval(updateViewers, 5000);
-        
-        // Initial call
         updateViewers();
     </script>
 </body>

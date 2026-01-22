@@ -22,7 +22,7 @@
             font-family: 'Segoe UI', sans-serif; text-align: center;
         }
 
-        /* Professional Header */
+        /* Header Style from your screenshot */
         .header {
             background: linear-gradient(180deg, #1a237e 0%, #0f1016 100%);
             padding: 25px 15px; border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -48,7 +48,7 @@
         }
         video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        /* Professional Buttons */
+        /* Buttons from screenshot */
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
         .btn {
             text-decoration: none; padding: 14px; border-radius: 50px;
@@ -74,7 +74,7 @@
         <div class="player-box">
             <div class="live-info">
                 <div class="badge">● LIVE</div>
-                <div style="font-size:12px; color:#aaa;">👁 <span id="viewers">138.4K</span> Watching</div>
+                <div style="font-size:12px; color:#aaa;">👁 <span id="viewers">138.4K</span></div>
             </div>
             <div class="video-wrapper">
                 <video id="video" controls autoplay playsinline></video>
@@ -89,10 +89,10 @@
     </div>
 
     <script>
-        // Aapka provide kiya hua link
+        // Willow TV Link
         const rawUrl = "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8";
         
-        // Mobile browser block fix karne ke liye Proxy
+        // Fix for mobile block
         const finalUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(rawUrl);
 
         function startStream() {
@@ -109,7 +109,7 @@
 
         window.onload = startStream;
 
-        // Realistic Viewers Count
+        // Viewers count effect
         setInterval(() => {
             let v = 138000 + Math.floor(Math.random() * 500);
             document.getElementById('viewers').innerText = (v/1000).toFixed(1) + "K";

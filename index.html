@@ -3,59 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKS Sports Live - Secure Player</title>
+    <title>MKS Sports - Live Streaming</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        :root { --main: #0b0c10; --accent: #66fcf1; }
-        body { margin: 0; background: var(--main); color: white; font-family: sans-serif; text-align: center; }
+        body { margin: 0; background: #0b0c10; color: white; font-family: sans-serif; text-align: center; }
         .container { max-width: 800px; margin: auto; padding: 15px; }
-        .player-box { background: #1f2833; padding: 10px; border-radius: 12px; }
+        .player-box { background: #1f2833; padding: 10px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 8px; overflow: hidden; }
         video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .status { font-size: 12px; color: var(--accent); margin-bottom: 8px; }
+        .status { font-size: 13px; color: #66fcf1; margin-bottom: 10px; font-weight: bold; }
+        .btn-refresh { margin-top: 15px; background: #66fcf1; color: #000; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1 style="color: var(--accent);">MKS SPORTS LIVE</h1>
+        <h1 style="color: #66fcf1; letter-spacing: 2px;">MKS SPORTS</h1>
         <div class="player-box">
-            <div id="status" class="status">Connecting to Secure Server...</div>
+            <div id="status" class="status">Securing Stream Connection...</div>
             <div class="video-wrapper">
                 <video id="video" controls autoplay playsinline></video>
             </div>
+            <button class="btn-refresh" onclick="location.reload()">🔄 Refresh Stream</button>
         </div>
-        <p style="font-size:12px; color:#555; margin-top:10px;">HTTP links are automatically converted to HTTPS Proxy</p>
+        <p style="font-size: 11px; color: #555; margin-top: 15px;">Powered by MKS Sports Proxy System</p>
     </div>
 
     <script>
-        // Yahan apna http wala link dalein
-        const myHttpLink = "http://example.com/live.m3u8"; 
+        // Aapka provide kiya hua link
+        const rawLink = "http://103.167.255.18:8085/play/a0kl/index.m3u8";
+        
+        // HTTP ko HTTPS mein convert karne ke liye Proxy
+        const secureLink = "https://api.allorigins.win/raw?url=" + encodeURIComponent(rawLink);
 
-        function startSecureStream(url) {
+        function startStream() {
             const video = document.getElementById('video');
             const status = document.getElementById('status');
-            
-            // Logic: Agar link http hai, toh proxy add karo, warna direct chalao
-            let finalUrl = url;
-            if (url.startsWith("http://")) {
-                status.innerText = "Security: Converting HTTP to HTTPS Proxy...";
-                finalUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
-            } else {
-                status.innerText = "Security: HTTPS Direct Connection Stable.";
-            }
 
             if (Hls.isSupported()) {
                 const hls = new Hls();
-                hls.loadSource(finalUrl);
+                hls.loadSource(secureLink);
                 hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = finalUrl;
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    status.innerText = "● LIVE - Stream Connected (Secure)";
+                    video.play();
+                });
+                
+                hls.on(Hls.Events.ERROR, function (event, data) {
+                    if (data.fatal) {
+                        status.innerText = "Stream Down or Link Expired. Try Refresh.";
+                    }
+                });
+            } 
+            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = secureLink;
+                status.innerText = "● LIVE (iOS/Safari)";
             }
         }
 
-        window.onload = () => startSecureStream(myHttpLink);
+        window.onload = startStream;
     </script>
 </body>
 </html>

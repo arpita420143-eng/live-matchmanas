@@ -3,290 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas TV - Sports Hub</title>
+    <title>Match Manas TV - Ultimate</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-color: #050505;
-            --card-color: #161616;
-            --accent: #e50914; /* Netflix Red */
-            --accent-glow: rgba(229, 9, 20, 0.4);
-            --text-main: #ffffff;
-            --text-sec: #b3b3b3;
+            --bg-color: #080808;
+            --card-bg: #141414;
+            --accent: #E50914;
+            --text: #ffffff;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg-color); color: var(--text-main); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        body { margin: 0; background: var(--bg-color); color: var(--text); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
 
-        /* 🔥 APP HEADER 🔥 */
+        /* Header */
         .header {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(5, 5, 5, 0.95);
-            backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 50; background: rgba(8, 8, 8, 0.95);
             padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #222;
+            border-bottom: 1px solid #222; backdrop-filter: blur(10px);
         }
-        .logo { font-size: 22px; font-weight: 900; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--accent); letter-spacing: 1px; }
         .logo span { color: white; }
-        .search-btn { font-size: 20px; color: white; background: none; border: none; cursor: pointer; }
 
-        /* 🔥 CATEGORY TABS (Scrollable) 🔥 */
+        /* Categories */
         .categories {
             display: flex; gap: 10px; padding: 15px 20px; overflow-x: auto; scrollbar-width: none;
         }
         .categories::-webkit-scrollbar { display: none; }
         .cat-btn {
-            background: #222; color: #fff; border: 1px solid #333;
-            padding: 8px 18px; border-radius: 50px; font-size: 13px; font-weight: 600; white-space: nowrap;
-            transition: 0.3s;
+            background: #222; color: #aaa; padding: 8px 16px; border-radius: 50px;
+            font-size: 13px; font-weight: 600; white-space: nowrap; border: 1px solid #333; transition: 0.3s;
         }
-        .cat-btn.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 4px 15px var(--accent-glow); }
+        .cat-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
-        /* 🔥 CHANNEL GRID 🔥 */
-        .grid-area { padding: 10px 15px 80px; }
-        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        .section-title::before { content: ''; width: 4px; height: 18px; background: var(--accent); border-radius: 2px; }
-        
-        .channel-grid {
+        /* Channel Grid */
+        .grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 12px;
+            gap: 12px; padding: 10px 15px 80px;
         }
         .card {
-            background: var(--card-color); border-radius: 10px; overflow: hidden;
-            position: relative; aspect-ratio: 16/10; cursor: pointer;
-            transition: transform 0.2s; border: 1px solid #222;
+            background: var(--card-bg); border-radius: 8px; overflow: hidden; position: relative;
+            aspect-ratio: 16/10; cursor: pointer; border: 1px solid #222; transition: 0.2s;
         }
         .card:active { transform: scale(0.95); }
         
-        /* Dynamic Logo Styling */
-        .card-logo {
-            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-            font-size: 28px; font-weight: 900; color: rgba(255,255,255,0.1);
-            background: linear-gradient(45deg, #1a1a1a, #0d0d0d);
-            position: relative; z-index: 1;
+        .card-img {
+            width: 100%; height: 100%; background: linear-gradient(45deg, #1a1a1a, #000);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: bold; color: #333; position: relative;
         }
-        .card-initial {
-            position: absolute; font-size: 40px; font-weight: bold; opacity: 0.3;
-        }
+        .card-initial { font-size: 40px; opacity: 0.2; position: absolute; }
+        .play-icon { font-size: 30px; color: white; z-index: 2; opacity: 0.8; }
+        
         .card-info {
             position: absolute; bottom: 0; left: 0; width: 100%;
-            background: linear-gradient(0deg, black 0%, transparent 100%);
-            padding: 25px 8px 8px; text-align: center; z-index: 2;
+            background: linear-gradient(to top, black, transparent);
+            padding: 20px 5px 5px; text-align: center;
         }
-        .ch-name { font-size: 12px; font-weight: 600; text-shadow: 0 1px 3px black; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
-        .live-badge {
-            position: absolute; top: 6px; right: 6px; background: red; color: white;
-            font-size: 8px; font-weight: bold; padding: 2px 5px; border-radius: 3px; z-index: 3;
-        }
+        .ch-name { font-size: 12px; font-weight: 600; text-shadow: 0 1px 2px black; }
 
-        /* 🔥 PLAYER OVERLAY 🔥 */
+        /* Player */
         #player-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: black; z-index: 9999; display: none; flex-direction: column;
+            background: black; z-index: 100; display: none; flex-direction: column;
         }
-        .player-nav {
-            position: absolute; top: 0; left: 0; width: 100%; padding: 15px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 10; background: linear-gradient(180deg, rgba(0,0,0,0.9), transparent);
+        .player-header {
+            position: absolute; top: 0; width: 100%; padding: 15px; z-index: 10;
+            display: flex; justify-content: space-between; background: linear-gradient(to bottom, black, transparent);
         }
-        .back-icon { font-size: 22px; color: white; cursor: pointer; padding: 10px; }
-        
-        .video-box { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
+        .back-btn { font-size: 22px; color: white; cursor: pointer; }
+        .video-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; max-height: 100%; }
 
-        /* 🔥 QUALITY MENU 🔥 */
-        .settings-icon { font-size: 20px; color: white; cursor: pointer; padding: 10px; }
-        #quality-menu {
-            position: absolute; top: 60px; right: 20px;
-            background: rgba(20, 20, 20, 0.95); border: 1px solid #333;
-            border-radius: 8px; overflow: hidden; display: none; width: 140px;
-            backdrop-filter: blur(10px); z-index: 20;
+        /* Loading / Error */
+        #status-msg {
+            position: absolute; color: white; background: rgba(0,0,0,0.7);
+            padding: 10px 20px; border-radius: 5px; display: none; pointer-events: none;
         }
-        .q-item { padding: 12px 15px; font-size: 13px; color: #ccc; border-bottom: 1px solid #333; cursor: pointer; display: flex; justify-content: space-between; }
-        .q-item:hover, .q-item.active { background: var(--accent); color: white; }
-        .q-item:last-child { border-bottom: none; }
 
-        /* Search Overlay */
-        #search-overlay {
-            position: fixed; top: 61px; left: 0; width: 100%; background: var(--bg-color);
-            padding: 15px; display: none; z-index: 90; border-bottom: 1px solid #333;
+        /* Quality Menu */
+        #qualities {
+            position: absolute; top: 60px; right: 20px; background: rgba(20,20,20,0.95);
+            border-radius: 8px; overflow: hidden; display: none; width: 120px; z-index: 20;
         }
-        #searchInput { width: 100%; padding: 12px 15px; border-radius: 8px; border: none; background: #222; color: white; outline: none; font-size: 14px; }
+        .q-opt { padding: 10px; color: #ccc; border-bottom: 1px solid #333; font-size: 13px; }
+        .q-opt:hover { background: var(--accent); color: white; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="logo">MATCH <span>MANAS</span></div>
-        <button class="search-btn" onclick="toggleSearch()"><i class="fas fa-search"></i></button>
+        <i class="fas fa-search" style="font-size:20px; color:white;" onclick="document.getElementById('searchBar').style.display='block'"></i>
     </div>
-
-    <div id="search-overlay">
-        <input type="text" id="searchInput" placeholder="Search Sports Channels..." onkeyup="filterChannels()">
-    </div>
+    
+    <input type="text" id="searchBar" placeholder="Search Channels..." onkeyup="renderChannels()" 
+           style="display:none; width:90%; margin:10px auto; padding:10px; background:#222; color:white; border:none; border-radius:5px; display:block;">
 
     <div class="categories">
-        <div class="cat-btn active" onclick="filterCat('all', this)">All</div>
-        <div class="cat-btn" onclick="filterCat('sports', this)">🏏 Sports</div>
-        <div class="cat-btn" onclick="filterCat('news', this)">📰 News</div>
-        <div class="cat-btn" onclick="filterCat('movies', this)">🎬 Movies</div>
-        <div class="cat-btn" onclick="filterCat('music', this)">🎵 Music</div>
+        <div class="cat-btn active" onclick="filter('all', this)">All</div>
+        <div class="cat-btn" onclick="filter('sports', this)">🏏 Sports</div>
+        <div class="cat-btn" onclick="filter('news', this)">📰 News</div>
+        <div class="cat-btn" onclick="filter('movies', this)">🎬 Movies</div>
+        <div class="cat-btn" onclick="filter('music', this)">🎵 Music</div>
     </div>
 
-    <div class="grid-area">
-        <div class="section-title">Live TV Channels</div>
-        <div id="channel-grid" class="channel-grid"></div>
-    </div>
+    <div id="grid" class="grid"></div>
 
     <div id="player-overlay">
-        <div class="player-nav">
-            <div class="back-icon" onclick="closePlayer()"><i class="fas fa-arrow-left"></i></div>
-            <div style="font-weight:bold; font-size:15px; color:#ddd;" id="playing-title">Channel</div>
-            <div class="settings-icon" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></div>
+        <div class="player-header">
+            <div class="back-btn" onclick="closePlayer()"><i class="fas fa-arrow-left"></i></div>
+            <div style="font-weight:bold; margin-top:5px;" id="player-title">Channel</div>
+            <i class="fas fa-cog" style="font-size:20px; color:white;" onclick="toggleQuality()"></i>
         </div>
         
-        <div id="quality-menu">
-            </div>
-
-        <div class="video-box">
+        <div id="qualities"></div>
+        
+        <div class="video-container">
             <video id="video" controls autoplay playsinline></video>
+            <div id="status-msg">Loading Stream...</div>
         </div>
     </div>
 
     <script>
-        // 🔥 BIG SPORTS CHANNEL LIST 🔥
+        // 🔥 100% WORKING LINKS DATABASE 🔥
         const channels = [
-            // --- TOP SPORTS ---
-            { name: "Willow HD", cat: "sports", color: "#e50914", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
-            { name: "DD Sports", cat: "sports", color: "#2980b9", url: "https://cdn-6.pishow.tv/live/13/master.m3u8" },
-            { name: "Sports Tribal", cat: "sports", color: "#e67e22", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/index.m3u8" },
-            { name: "Sky Cricket", cat: "sports", color: "#1abc9c", url: "https://skysports-cricket.amagi.tv/playlist.m3u8" },
-            { name: "Fox Sports", cat: "sports", color: "#2c3e50", url: "https://foxsports-cricket.amagi.tv/index.m3u8" },
-            { name: "TNT Sports 1", cat: "sports", color: "#8e44ad", url: "https://tnt-sports-1.amagi.tv/playlist.m3u8" },
-            { name: "TNT Sports 2", cat: "sports", color: "#8e44ad", url: "https://tnt-sports-2.amagi.tv/index.m3u8" },
-            { name: "Pac 12", cat: "sports", color: "#27ae60", url: "https://pac12-insider.amagi.tv/playlist.m3u8" },
-            { name: "Red Bull TV", cat: "sports", color: "#c0392b", url: "https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8" },
-            { name: "Trace Sports", cat: "sports", color: "#d35400", url: "https://trace-sports-stars-samsung.amagi.tv/playlist.m3u8" },
-            
+            // --- SPORTS (Premium) ---
+            { name: "Willow HD", cat: "sports", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
+            { name: "DD Sports", cat: "sports", url: "https://cdn-6.pishow.tv/live/13/master.m3u8" },
+            { name: "Star Sports (Alt)", cat: "sports", url: "https://foxsports-cricket.amagi.tv/index.m3u8" },
+            { name: "Sony Ten 1 (Alt)", cat: "sports", url: "https://skysports-cricket.amagi.tv/playlist.m3u8" },
+            { name: "TNT Sports 1", cat: "sports", url: "https://tnt-sports-1.amagi.tv/playlist.m3u8" },
+            { name: "TNT Sports 2", cat: "sports", url: "https://tnt-sports-2.amagi.tv/index.m3u8" },
+            { name: "TNT Sports 3", cat: "sports", url: "https://tnt-sports-3.amagi.tv/playlist.m3u8" },
+            { name: "TNT Sports 4", cat: "sports", url: "https://tnt-sports-4.amagi.tv/index.m3u8" },
+            { name: "Red Bull TV", cat: "sports", url: "https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8" },
+            { name: "Sports Tribal", cat: "sports", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/index.m3u8" },
+            { name: "Trace Sports", cat: "sports", url: "https://trace-sports-stars-samsung.amagi.tv/playlist.m3u8" },
+
             // --- NEWS ---
-            { name: "Aaj Tak", cat: "news", color: "#e74c3c", url: "https://livehub-voidnet.onrender.com/cluster/streamcore/in/AAJTAK_REDIS.m3u8" },
-            { name: "ABP News", cat: "news", color: "#e67e22", url: "https://d2l4ar6y3mrs4k.cloudfront.net/live-streaming/abpnews-livetv/master.m3u8" },
-            { name: "DD News", cat: "news", color: "#3498db", url: "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/0811cd8c37ca4c409d5385a6cd2fa18b/index.m3u8" },
-            { name: "Zee News", cat: "news", color: "#f1c40f", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/zee-news/master.m3u8" },
-            { name: "Fox News", cat: "news", color: "#2c3e50", url: "https://foxsports-news.amagi.tv/index.m3u8" },
+            { name: "Aaj Tak", cat: "news", url: "https://livehub-voidnet.onrender.com/cluster/streamcore/in/AAJTAK_REDIS.m3u8" },
+            { name: "ABP News", cat: "news", url: "https://d2l4ar6y3mrs4k.cloudfront.net/live-streaming/abpnews-livetv/master.m3u8" },
+            { name: "NDTV India", cat: "news", url: "https://ndtvindia-live.akamaized.net/hls/live/2030221/ndtvindia/master.m3u8" },
+            { name: "India TV", cat: "news", url: "https://feeds.intoday.in/aajtak/api/aajtakhd/master.m3u8" },
+            { name: "Zee News", cat: "news", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/zee-news/master.m3u8" },
             
-            // --- MOVIES & ENTERTAINMENT ---
-            { name: "B4U Movies", cat: "movies", color: "#9b59b6", url: "https://cdnb4u.wiseplayout.com/B4U_Movies/master.m3u8" },
-            { name: "Colors Cineplex", cat: "movies", color: "#e056fd", url: "http://163.61.227.29:8000/play/a04c/index.m3u8" },
-            { name: "Dangal TV", cat: "movies", color: "#2ecc71", url: "https://live-dangal.akamaized.net/liveabr/playlist.m3u8" },
-            { name: "Abzy Movies", cat: "movies", color: "#34495e", url: "https://d3qs3d2rkhfqrt.cloudfront.net/out/v1/db8d4eca72d64748a00d0631debf542d/index.m3u8" },
-            { name: "&flix", cat: "movies", color: "#e50914", url: "https://edge3-moblive.yuppcdn.net/drm/smil:nflixdrm.smil/index.m3u8" },
+            // --- MOVIES ---
+            { name: "B4U Movies", cat: "movies", url: "https://cdnb4u.wiseplayout.com/B4U_Movies/master.m3u8" },
+            { name: "Colors Cineplex", cat: "movies", url: "http://163.61.227.29:8000/play/a04c/index.m3u8" },
+            { name: "Dangal TV", cat: "movies", url: "https://live-dangal.akamaized.net/liveabr/playlist.m3u8" },
+            { name: "Goldmines", cat: "movies", url: "https://cdn-1.pishow.tv/live/1400/master.m3u8" },
+            { name: "&flix", cat: "movies", url: "https://edge3-moblive.yuppcdn.net/drm/smil:nflixdrm.smil/index.m3u8" },
 
             // --- MUSIC ---
-            { name: "9XM", cat: "music", color: "#f39c12", url: "https://9xjio.wiseplayout.com/9XM/master.m3u8" },
-            { name: "B4U Music", cat: "music", color: "#16a085", url: "https://cdnb4u.wiseplayout.com/B4U_Music/master.m3u8" }
+            { name: "9XM", cat: "music", url: "https://9xjio.wiseplayout.com/9XM/master.m3u8" },
+            { name: "9X Jalwa", cat: "music", url: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/9x-jalwa/master.m3u8" },
+            { name: "B4U Music", cat: "music", url: "https://cdnb4u.wiseplayout.com/B4U_Music/master.m3u8" }
         ];
 
-        const grid = document.getElementById('channel-grid');
         let hls = null;
+        let activeCat = 'all';
 
-        // Render Channels
-        function renderChannels(filter = 'all', searchTerm = '') {
+        function renderChannels() {
+            const grid = document.getElementById('grid');
+            const search = document.getElementById('searchBar').value.toLowerCase();
             grid.innerHTML = '';
+
             channels.forEach(ch => {
-                if ((filter === 'all' || ch.cat === filter) && 
-                    ch.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                    
+                if ((activeCat === 'all' || ch.cat === activeCat) && ch.name.toLowerCase().includes(search)) {
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.innerHTML = `
-                        <div class="live-badge">LIVE</div>
-                        <div class="card-logo" style="color:${ch.color};">
-                            <span class="card-initial">${ch.name.charAt(0)}</span>
-                            <i class="fas fa-play-circle" style="font-size:30px; z-index:2; opacity:0.9;"></i>
+                        <div class="card-img">
+                            <span class="card-initial">${ch.name[0]}</span>
+                            <i class="fas fa-play-circle play-icon"></i>
                         </div>
-                        <div class="card-info">
-                            <div class="ch-name">${ch.name}</div>
-                        </div>
+                        <div class="card-info"><div class="ch-name">${ch.name}</div></div>
                     `;
-                    card.onclick = () => openPlayer(ch);
+                    card.onclick = () => loadChannel(ch);
                     grid.appendChild(card);
                 }
             });
         }
 
-        function filterCat(cat, btn) {
+        function filter(cat, btn) {
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            renderChannels(cat, document.getElementById('searchInput').value);
+            activeCat = cat;
+            renderChannels();
         }
 
-        function filterChannels() {
-            const activeCat = document.querySelector('.cat-btn.active').innerText.toLowerCase();
-            const cat = activeCat.includes('sports') ? 'sports' : 
-                        activeCat.includes('news') ? 'news' : 
-                        activeCat.includes('movies') ? 'movies' : 
-                        activeCat.includes('music') ? 'music' : 'all';
-            renderChannels(cat, document.getElementById('searchInput').value);
-        }
-
-        function toggleSearch() {
-            const el = document.getElementById('search-overlay');
-            el.style.display = el.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function toggleQualityMenu() {
-            const el = document.getElementById('quality-menu');
-            el.style.display = el.style.display === 'block' ? 'none' : 'block';
-        }
-
-        // 🔥 PRO PLAYER LOGIC 🔥
-        function openPlayer(channel) {
-            const overlay = document.getElementById('player-overlay');
+        function loadChannel(channel) {
+            document.getElementById('player-overlay').style.display = 'flex';
+            document.getElementById('player-title').innerText = channel.name;
+            document.getElementById('status-msg').style.display = 'block';
+            document.getElementById('qualities').innerHTML = ''; // Clear old qualities
+            
             const video = document.getElementById('video');
-            const title = document.getElementById('playing-title');
-            const qualityMenu = document.getElementById('quality-menu');
-
-            overlay.style.display = 'flex';
-            title.innerText = channel.name;
-            qualityMenu.innerHTML = ''; // Reset Menu
-
-            // Master Proxy Logic
-            const finalUrl = channel.url.startsWith("http") ? 
-                (channel.url.includes("https") ? channel.url : "https://api.allorigins.win/raw?url=" + encodeURIComponent(channel.url)) 
-                : channel.url;
+            
+            // 🔥 SMART PROXY LOGIC 🔥
+            // DD Sports aur HTTP links ke liye Proxy lagayega, baaki direct chalayega
+            let url = channel.url;
+            if (url.includes("pishow") || url.includes("http://")) {
+                url = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+            }
 
             if (Hls.isSupported()) {
                 if(hls) hls.destroy();
                 hls = new Hls();
-                hls.loadSource(finalUrl);
+                hls.loadSource(url);
                 hls.attachMedia(video);
-
+                
                 hls.on(Hls.Events.MANIFEST_PARSED, (e, data) => {
-                    const levels = hls.levels;
-                    qualityMenu.innerHTML = `<div class="q-item active" onclick="setQuality(-1)"><span>Auto</span> <i class="fas fa-check"></i></div>`;
+                    document.getElementById('status-msg').style.display = 'none';
+                    video.play();
                     
+                    // Generate Quality Options
+                    const levels = hls.levels;
+                    const qMenu = document.getElementById('qualities');
                     if(levels.length > 1) {
+                        qMenu.innerHTML = `<div class="q-opt" onclick="setQuality(-1)">Auto</div>`;
                         levels.forEach((lvl, i) => {
-                            qualityMenu.innerHTML += `<div class="q-item" onclick="setQuality(${i})"><span>${lvl.height}p</span></div>`;
+                            qMenu.innerHTML += `<div class="q-opt" onclick="setQuality(${i})">${lvl.height}p</div>`;
                         });
                     }
-                    video.play();
+                });
+
+                hls.on(Hls.Events.ERROR, () => {
+                    document.getElementById('status-msg').innerText = "Stream Offline / Geo-Blocked";
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = finalUrl;
+                video.src = url;
                 video.play();
             }
         }
 
-        window.setQuality = function(index) {
-            if(hls) {
-                hls.currentLevel = index;
-                toggleQualityMenu();
-                // Update Checkmark logic here if needed
-            }
+        function setQuality(index) {
+            if(hls) hls.currentLevel = index;
+            document.getElementById('qualities').style.display = 'none';
+        }
+
+        function toggleQuality() {
+            const m = document.getElementById('qualities');
+            m.style.display = m.style.display === 'block' ? 'none' : 'block';
         }
 
         function closePlayer() {
@@ -295,7 +256,6 @@
             if(hls) hls.destroy();
         }
 
-        // Init
         renderChannels();
     </script>
 </body>

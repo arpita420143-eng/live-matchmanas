@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas - SPORTS ONLY</title>
+    <title>Match Manas - SPORTS</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -11,14 +11,13 @@
         :root { --bg: #0a0a0a; --card: #161616; --accent: #ff0000; --text: #fff; }
         body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
 
-        /* 🔥 SPORTS HEADER 🔥 */
+        /* Header */
         .header {
             position: sticky; top: 0; z-index: 50; background: rgba(10,10,10,0.95);
             padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
             border-bottom: 2px solid var(--accent); backdrop-filter: blur(10px);
-            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.2);
         }
-        .logo { font-size: 24px; font-weight: 900; color: white; font-style: italic; }
+        .logo { font-size: 22px; font-weight: 900; color: white; font-style: italic; }
         .logo span { color: var(--accent); }
 
         /* Search */
@@ -30,13 +29,12 @@
         }
         #searchBar:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(255,0,0,0.3); }
 
-        /* Channel Grid */
+        /* Grid */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; padding: 20px 15px 100px; }
         .card { 
             background: var(--card); border-radius: 12px; overflow: hidden; position: relative; 
             aspect-ratio: 1/1; cursor: pointer; border: 1px solid #222; transition: 0.2s;
         }
-        .card:active { transform: scale(0.95); }
         
         .card-img { 
             width: 100%; height: 100%; display: flex; flex-direction: column; 
@@ -44,40 +42,24 @@
             background: linear-gradient(135deg, #1f1f1f 0%, #000 100%); 
         }
         .logo-text { font-size: 40px; opacity: 0.2; font-weight: 900; font-style: italic; }
-        .play-btn { font-size: 35px; color: var(--accent); z-index: 2; filter: drop-shadow(0 0 10px rgba(255,0,0,0.6)); }
-        
-        .live-badge { 
-            position: absolute; top: 8px; right: 8px; background: red; color: white; 
-            font-size: 9px; padding: 3px 6px; border-radius: 4px; font-weight: 800; 
-            box-shadow: 0 0 10px red;
-        }
-        
-        .ch-name { 
-            position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, black, transparent); 
-            font-size: 11px; padding: 10px; text-align: center; white-space: nowrap; 
-            overflow: hidden; text-overflow: ellipsis; font-weight: 700; color: #ddd;
-        }
+        .play-btn { font-size: 35px; color: var(--accent); z-index: 2; filter: drop-shadow(0 0 5px red); }
+        .live-badge { position: absolute; top: 8px; right: 8px; background: red; color: white; font-size: 9px; padding: 3px 6px; border-radius: 4px; font-weight: 800; }
+        .ch-name { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); font-size: 11px; padding: 10px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; color: #ddd; }
 
-        /* Player Overlay */
+        /* Player */
         #player-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 100; display: none; flex-direction: column; }
-        .player-header { 
-            position: absolute; top: 0; width: 100%; padding: 15px 20px; z-index: 20; 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
-        }
+        .player-header { position: absolute; top: 0; width: 100%; padding: 15px 20px; z-index: 20; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); }
         
         #qualities { position: absolute; top: 60px; right: 15px; background: rgba(20,20,20,0.95); border-radius: 8px; display: none; min-width: 120px; z-index: 30; border: 1px solid #333; }
         .q-opt { padding: 12px; color: #ccc; border-bottom: 1px solid #333; font-size: 13px; cursor: pointer; text-align: left;}
-        .q-opt:hover, .q-opt.active { background: var(--accent); color: white; }
 
         .video-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; max-height: 100%; }
 
-        /* Server Controls */
+        /* Controls */
         #server-controls { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 20; }
         .srv-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px 20px; border-radius: 30px; font-size: 13px; cursor: pointer; backdrop-filter: blur(5px); font-weight: 600; }
-        .srv-btn.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px rgba(255,0,0,0.4); }
-        
+        .srv-btn.active { background: var(--accent); border-color: var(--accent); }
         #error-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(20, 0, 0, 0.9); padding: 25px; border-radius: 12px; text-align: center; display: none; border: 1px solid red; z-index: 25; }
     </style>
 </head>
@@ -97,7 +79,7 @@
     <div id="player-overlay">
         <div class="player-header">
             <i class="fas fa-arrow-left" style="color:white; font-size:24px; cursor:pointer;" onclick="closePlayer()"></i>
-            <span id="player-title" style="font-weight:bold; font-size:16px; text-shadow:0 2px 4px black;">Channel</span>
+            <span id="player-title" style="font-weight:bold; font-size:16px;">Channel</span>
             <i class="fas fa-cog" style="color:white; font-size:24px; cursor:pointer;" onclick="toggleQ()"></i>
         </div>
         
@@ -117,11 +99,10 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // 🔥 UPDATED SPORTS DATABASE (FOX ADDED + TNT FIX) 🔥
+        <script>
+        // 🔥 UPDATED SPORTS DATABASE (FOX + TNT FIX) 🔥
         const channels = [
-            // --- CRICKET SPECIAL ---
+            // --- TOP CRICKET ---
             { 
                 name: "Fox Cricket", 
                 srv1: "https://foxsports-cricket.amagi.tv/index.m3u8",
@@ -139,31 +120,15 @@
             },
             { 
                 name: "Star Sports", 
-                srv1: "https://foxsports-cricket.amagi.tv/index.m3u8", // Backup link
+                srv1: "https://foxsports-cricket.amagi.tv/index.m3u8", 
                 srv2: "https://corsproxy.io/?https://foxsports-cricket.amagi.tv/index.m3u8"
             },
 
             // --- TNT SPORTS (Fixed) ---
-            { 
-                name: "TNT Sports 1", 
-                srv1: "https://tnt-sports-1.amagi.tv/playlist.m3u8",
-                srv2: "https://corsproxy.io/?https://tnt-sports-1.amagi.tv/playlist.m3u8"
-            },
-            { 
-                name: "TNT Sports 2", 
-                srv1: "https://tnt-sports-2.amagi.tv/index.m3u8",
-                srv2: "https://corsproxy.io/?https://tnt-sports-2.amagi.tv/index.m3u8"
-            },
-            { 
-                name: "TNT Sports 3", 
-                srv1: "https://tnt-sports-3.amagi.tv/playlist.m3u8",
-                srv2: "https://corsproxy.io/?https://tnt-sports-3.amagi.tv/playlist.m3u8"
-            },
-            { 
-                name: "TNT Sports 4", 
-                srv1: "https://tnt-sports-4.amagi.tv/index.m3u8",
-                srv2: "https://corsproxy.io/?https://tnt-sports-4.amagi.tv/index.m3u8"
-            },
+            { name: "TNT Sports 1", srv1: "https://tnt-sports-1.amagi.tv/playlist.m3u8", srv2: "https://corsproxy.io/?https://tnt-sports-1.amagi.tv/playlist.m3u8" },
+            { name: "TNT Sports 2", srv1: "https://tnt-sports-2.amagi.tv/index.m3u8", srv2: "https://corsproxy.io/?https://tnt-sports-2.amagi.tv/index.m3u8" },
+            { name: "TNT Sports 3", srv1: "https://tnt-sports-3.amagi.tv/playlist.m3u8", srv2: "https://corsproxy.io/?https://tnt-sports-3.amagi.tv/playlist.m3u8" },
+            { name: "TNT Sports 4", srv1: "https://tnt-sports-4.amagi.tv/index.m3u8", srv2: "https://corsproxy.io/?https://tnt-sports-4.amagi.tv/index.m3u8" },
 
             // --- OTHER SPORTS ---
             { name: "Sony Ten 1", srv1: "https://skysports-cricket.amagi.tv/playlist.m3u8" },
@@ -172,8 +137,14 @@
             { name: "Trace Sports", srv1: "https://trace-sports-stars-samsung.amagi.tv/playlist.m3u8" },
             { name: "Red Bull TV", srv1: "https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8" },
             { name: "Pac 12", srv1: "https://pac12-insider.amagi.tv/playlist.m3u8" },
+            { name: "Motorvision", srv1: "https://d2e1asnsl7br7b.cloudfront.net/77827782/playlist.m3u8" },
+            { name: "WPT Poker", srv1: "https://wpt-wpt-1-us.samsung.wurl.tv/playlist.m3u8" },
             { name: "US Golf", srv1: "https://d2e1asnsl7br7b.cloudfront.net/playlist.m3u8" },
-            { name: "Motorvision", srv1: "https://d2e1asnsl7br7b.cloudfront.net/77827782/playlist.m3u8" }
+            { name: "Edge Sport", srv1: "https://edgesport-samsunguk.amagi.tv/playlist.m3u8" },
+            { name: "Unbeaten Sports", srv1: "https://unbeaten-samsunguk.amagi.tv/playlist.m3u8" },
+            { name: "World Billiards", srv1: "https://kojo-billiardtv-1-us.samsung.wurl.tv/playlist.m3u8" },
+            { name: "Fuel TV", srv1: "https://fueltv-samsunguk.amagi.tv/playlist.m3u8" },
+            { name: "Origin Sports", srv1: "https://d10r26ahw275o7.cloudfront.net/index_1080.m3u8" }
         ];
 
         let hls = null;
@@ -208,9 +179,9 @@
             document.getElementById('error-msg').style.display = 'none';
             document.getElementById('qualities').innerHTML = '<div class="q-opt">Auto (Default)</div>';
             
-            // TNT Sports ke liye Direct Server 2 (Fix) try karein
+            // TNT aur Fox ke liye direct Server 2 (Fix) use karo
             if(ch.name.includes("TNT") || ch.name.includes("Fox")) {
-                playCurrent(2); // Auto Proxy for blocked channels
+                playCurrent(2);
             } else {
                 playCurrent(1);
             }
@@ -220,104 +191,10 @@
             const video = document.getElementById('video');
             let url = activeCh.srv1;
             
-            // Agar Server 2 (Fix) dabaya, toh Proxy lagao
+            // Server 2 Logic (Proxy)
             if (serverNum === 2 || activeCh.srv2) {
-                // Agar channel ke paas specific srv2 hai toh wo use karo, warna proxy lagao
                 url = (serverNum === 2 && activeCh.srv2) ? activeCh.srv2 : "https://corsproxy.io/?" + encodeURIComponent(activeCh.srv1);
             }
-
-            // Button Highlight Logic
-            document.querySelectorAll('.srv-btn').forEach((b, i) => b.classList.toggle('active', i === serverNum - 1));
-            document.getElementById('error-msg').style.display = 'none';
-
-            if (Hls.isSupported()) {
-                if(hls) hls.destroy();
-                hls = new Hls();
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play();
-                    generateQualities();
-                });
-                hls.on(Hls.Events.ERROR, (e, data) => {
-                    if (data.fatal) {
-                        if(serverNum === 1) {
-                            // Agar Server 1 fail ho, toh Server 2 button dikhao
-                            document.getElementById('error-msg').style.display = 'block';
-                        }
-                    }
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = url;
-                video.play();
-            }
-        }
-
-        function switchServer() { playCurrent(2); }
-
-        function generateQualities() {
-            const levels = hls.levels;
-            const qMenu = document.getElementById('qualities');
-            if(levels.length > 1) {
-                qMenu.innerHTML = `<div class="q-opt" onclick="setQ(-1)">Auto</div>`;
-                levels.forEach((l, i) => {
-                    qMenu.innerHTML += `<div class="q-opt" onclick="setQ(${i})">${l.height}p</div>`;
-                });
-            }
-        }
-
-        function setQ(idx) { if(hls) hls.currentLevel = idx; toggleQ(); }
-        function toggleQ() { 
-            const q = document.getElementById('qualities');
-            q.style.display = q.style.display === 'block' ? 'none' : 'block'; 
-        }
-        function closePlayer() {
-            document.getElementById('player-overlay').style.display = 'none';
-            document.getElementById('video').pause();
-            if(hls) hls.destroy();
-        }
-
-        renderChannels();
-    </script>
-
-        let hls = null;
-        let activeCh = null;
-
-        function renderChannels() {
-            const grid = document.getElementById('grid');
-            const search = document.getElementById('searchBar').value.toLowerCase();
-            grid.innerHTML = '';
-            channels.forEach(ch => {
-                if (ch.name.toLowerCase().includes(search)) {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <div class="card-img">
-                            <span class="logo-text">${ch.name[0]}</span>
-                            <i class="fas fa-play-circle play-btn"></i>
-                            <div class="live-badge">LIVE</div>
-                        </div>
-                        <div class="ch-name">${ch.name}</div>
-                    `;
-                    card.onclick = () => loadPlayer(ch);
-                    grid.appendChild(card);
-                }
-            });
-        }
-
-        function loadPlayer(ch) {
-            activeCh = ch;
-            document.getElementById('player-overlay').style.display = 'flex';
-            document.getElementById('player-title').innerText = ch.name;
-            document.getElementById('error-msg').style.display = 'none';
-            document.getElementById('qualities').innerHTML = '<div class="q-opt">Auto (Default)</div>';
-            playCurrent(1);
-        }
-
-        function playCurrent(serverNum) {
-            const video = document.getElementById('video');
-            let url = activeCh.srv1;
-            if (serverNum === 2) url = "https://corsproxy.io/?" + encodeURIComponent(activeCh.srv1);
 
             document.querySelectorAll('.srv-btn').forEach((b, i) => b.classList.toggle('active', i === serverNum - 1));
             document.getElementById('error-msg').style.display = 'none';

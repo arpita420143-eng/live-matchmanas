@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas - Direct Play</title>
+    <title>Match Manas - Live Sports</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -73,37 +73,46 @@
     </div>
 
     <script>
-        // 🔥 DIRECT M3U8 LINKS (No Proxy) 🔥
+        // 🔥 SHAREABLE ID SYSTEM 🔥
+        // 'id' field dekho, yahi aapka unique number/naam hai
         const channels = [
             { 
+                id: "willow", 
                 name: "Willow HD", 
                 url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8"
             },
             { 
+                id: "sky", 
                 name: "Sky Cricket", 
                 url: "https://skysports-cricket.amagi.tv/playlist.m3u8"
             },
             { 
+                id: "dds", 
                 name: "DD Sports", 
                 url: "https://cdn-6.pishow.tv/live/13/master.m3u8"
             },
             { 
+                id: "tnt1", 
                 name: "TNT Sports 1", 
                 url: "https://tnt-sports-1.amagi.tv/playlist.m3u8"
             },
             { 
+                id: "tnt2", 
                 name: "TNT Sports 2", 
                 url: "https://tnt-sports-2.amagi.tv/index.m3u8"
             },
             { 
+                id: "tnt3", 
                 name: "TNT Sports 3", 
                 url: "https://tnt-sports-3.amagi.tv/playlist.m3u8"
             },
             { 
+                id: "tnt4", 
                 name: "TNT Sports 4", 
                 url: "https://tnt-sports-4.amagi.tv/index.m3u8"
             },
             { 
+                id: "sony", 
                 name: "Sony Ten 1", 
                 url: "https://skysports-cricket.amagi.tv/playlist.m3u8"
             }
@@ -125,6 +134,7 @@
                     </div>
                     <div class="ch-name">${ch.name}</div>
                 `;
+                // Click par URL update nahi karenge, bas player kholenge
                 card.onclick = () => loadPlayer(ch);
                 grid.appendChild(card);
             });
@@ -135,7 +145,10 @@
             document.getElementById('player-title').innerText = ch.name;
             const video = document.getElementById('video');
             
-            // Direct Play Logic (Simple)
+            // URL update taaki share kiya ja sake (Optional UX enhancement)
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + ch.id;
+            window.history.pushState({path:newUrl}, '', newUrl);
+
             if (Hls.isSupported()) {
                 if(hls) hls.destroy();
                 hls = new Hls();
@@ -172,9 +185,26 @@
             document.getElementById('player-overlay').style.display = 'none';
             document.getElementById('video').pause();
             if(hls) hls.destroy();
+            // URL wapas normal karna
+            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.pushState({path:cleanUrl}, '', cleanUrl);
         }
 
-        renderChannels();
+        // 🔥 AUTOMATIC ID DETECTION 🔥
+        // Page load hone par check karega ki URL mein 'id' hai ya nahi
+        window.onload = function() {
+            renderChannels(); // Pehle grid banao
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const channelId = urlParams.get('id'); // e.g. ?id=willow
+
+            if (channelId) {
+                const channelToLoad = channels.find(c => c.id === channelId);
+                if (channelToLoad) {
+                    loadPlayer(channelToLoad);
+                }
+            }
+        }
     </script>
 </body>
 </html>

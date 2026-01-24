@@ -3,268 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas - Live Sports</title>
+    <title>Match Manas TV - Premium Live Sports</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
+        /* --- PREMIUM DARK THEME VARIABLES --- */
         :root {
-            --bg: #090b10;
-            --card-bg: #151922;
-            --accent: #e50914; /* Red Theme */
-            --accent-glow: rgba(229, 9, 20, 0.5);
-            --telegram: #0088cc;
-            --youtube: #ff0000;
-            --text: #ffffff;
+            --bg-primary: #0a0b0e; /* Deep Dark Background */
+            --bg-secondary: #14161c; /* Card/Header Background */
+            --accent-red: #e50914; /* YouTube/Live Red */
+            --accent-blue: #0088cc; /* Telegram Blue */
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --glow-red: 0 0 15px rgba(229, 9, 20, 0.6);
+            --glow-blue: 0 0 15px rgba(0, 136, 204, 0.6);
         }
 
-        body { 
-            margin: 0; background-color: var(--bg); color: var(--text); 
-            font-family: 'Segoe UI', sans-serif; overflow-x: hidden; 
-            background-image: radial-gradient(circle at top right, rgba(229,9,20,0.15), transparent 40%);
+        body {
+            margin: 0;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
         }
 
-        /* 🔥 HEADER 🔥 */
+        /* --- HEADER & LOGO --- */
         .header {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(9, 11, 16, 0.95); backdrop-filter: blur(12px);
-            padding: 12px 15px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(20, 22, 28, 0.95);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #222;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
-        .logo { font-size: 20px; font-weight: 900; letter-spacing: 0.5px; }
-        .logo span { color: var(--accent); }
 
-        .social-box { display: flex; gap: 8px; }
-        .social-btn {
-            padding: 6px 12px; border-radius: 50px; font-size: 11px; font-weight: 700;
-            text-decoration: none; color: white; display: flex; align-items: center; gap: 5px;
-            transition: 0.3s;
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, var(--text-primary), var(--accent-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(229, 9, 20, 0.3);
         }
-        .btn-tg { background: var(--telegram); }
-        .btn-yt { background: var(--youtube); }
-        .social-btn:active { transform: scale(0.95); }
 
-        /* 🔥 SEARCH 🔥 */
-        .search-area { padding: 15px; text-align: center; }
-        .search-input {
-            width: 100%; max-width: 500px; padding: 12px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
-            background: #1c212c; color: white; font-size: 14px; outline: none; transition: 0.3s;
+        /* --- HEADER SOCIAL BUTTONS --- */
+        .header-buttons {
+            display: flex;
+            gap: 10px;
         }
-        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
 
-        /* 🔥 GRID 🔥 */
-        .grid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); 
-            gap: 12px; padding: 0 15px 100px; 
+        .social-btn-header {
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .btn-tg-header { background: var(--accent-blue); box-shadow: var(--glow-blue); }
+        .btn-yt-header { background: var(--accent-red); box-shadow: var(--glow-red); }
+        .social-btn-header:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .social-btn-header:active { transform: scale(0.95); }
+
+
+        /* --- MAIN CONTAINER & PLAYER --- */
+        .main-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .video-section {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        #loading-spinner {
+            position: absolute;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 5px solid var(--accent-red);
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            display: none; /* Hidden by default */
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+
+        /* --- PLAYER CONTROLS & SOCIAL LINKS --- */
+        .player-controls-container {
+            padding: 20px;
+            background: linear-gradient(to top, var(--bg-secondary), rgba(20, 22, 28, 0.8));
+        }
+        
+        .channel-info {
+            margin-bottom: 20px;
+        }
+        .channel-title { font-size: 22px; font-weight: 800; margin-bottom: 5px; }
+        .live-indicator {
+            display: inline-block; padding: 4px 10px; background: var(--accent-red);
+            color: white; border-radius: 4px; font-size: 12px; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: var(--glow-red); animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
+
+        .control-buttons-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .srv-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            border: 2px solid #333;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .srv-btn:hover { background: rgba(255,255,255,0.1); color: white; border-color: #555; }
+        .srv-btn.active { background: var(--accent-red); color: white; border-color: var(--accent-red); box-shadow: var(--glow-red); }
+
+
+        /* --- PERMANENT LARGE SOCIAL BUTTONS --- */
+        .social-buttons-large {
+            display: flex;
+            gap: 15px;
+        }
+        .social-btn-large {
+            flex: 1;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 800;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        .btn-tg-large { background: var(--accent-blue); box-shadow: var(--glow-blue); }
+        .btn-yt-large { background: var(--accent-red); box-shadow: var(--glow-red); }
+        .social-btn-large:hover { transform: translateY(-3px); filter: contrast(1.2); }
+        .social-btn-large:active { transform: scale(0.97); }
+
+
+        /* --- CHANNEL GRID SECTION --- */
+        .section-title { font-size: 20px; font-weight: 700; margin: 30px 0 15px; padding-left: 10px; border-left: 4px solid var(--accent-red); }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 15px;
+            padding-bottom: 50px;
         }
         .card {
-            background: linear-gradient(145deg, #1c212c, #151922);
-            border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1/1; cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.2s;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16/9;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-        .card:active { transform: scale(0.95); }
+        .card:hover { border-color: var(--accent-red); transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
         
-        .card-icon {
-            width: 100%; height: 100%; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; position: relative;
+        .card-img-container {
+            width: 100%; height: 100%; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #222 0%, #111 100%);
         }
-        .ch-initial { font-size: 40px; font-weight: 900; opacity: 0.1; position: absolute; }
-        .play-icon { font-size: 35px; color: var(--accent); z-index: 2; filter: drop-shadow(0 0 10px red); }
+        .channel-logo-text { font-size: 24px; font-weight: 900; color: #555; }
+        .play-icon-overlay { position: absolute; font-size: 40px; color: var(--accent-red); opacity: 0; transition: 0.3s; }
+        .card:hover .play-icon-overlay { opacity: 1; transform: scale(1.1); }
 
-        .ch-name {
-            position: absolute; bottom: 0; width: 100%; padding: 8px; text-align: center;
-            font-size: 10px; font-weight: 700; background: rgba(0,0,0,0.8); color: #e0e0e0;
-        }
-        .live-badge {
-            position: absolute; top: 8px; right: 8px; background: #e50914; color: white;
-            font-size: 8px; padding: 2px 6px; border-radius: 4px; font-weight: bold; animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.5;} 100% {opacity: 1;} }
-
-        /* 🔥 PLAYER OVERLAY 🔥 */
-        #player-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000;
-            z-index: 200; display: none; flex-direction: column;
-        }
-        .player-nav {
-            position: absolute; top: 0; width: 100%; padding: 15px; z-index: 10;
-            display: flex; justify-content: space-between; align-items: center;
-            background: linear-gradient(to bottom, black, transparent);
+        .card-name-overlay {
+            position: absolute; bottom: 0; width: 100%; padding: 10px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            font-size: 14px; font-weight: 700; text-align: center;
         }
         
-        .video-box { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-        video { width: 100%; max-height: 100%; }
-
-        /* Controls */
-        .controls-area {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            display: flex; flex-direction: column; gap: 10px; z-index: 20; width: 90%; align-items: center;
+        @media (max-width: 600px) {
+            .header-buttons .social-btn-header span { display: none; } /* Hide text on small screens */
+            .social-btn-header { padding: 8px; }
+            .social-buttons-large { flex-direction: column; }
+            .grid { grid-template-columns: repeat(2, 1fr); }
         }
-        .server-row { display: flex; gap: 10px; width: 100%; justify-content: center; }
-        .social-row { display: flex; gap: 10px; width: 100%; justify-content: center; margin-top: 5px; }
-
-        .srv-btn, .soc-btn-player {
-            flex: 1; padding: 10px; border-radius: 8px; border: none;
-            color: white; font-weight: 600; cursor: pointer; font-size: 12px; text-align: center; text-decoration: none;
-        }
-        .srv-btn { background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); }
-        .srv-btn.active { background: var(--accent); }
-        
-        .tg-player { background: var(--telegram); }
-        .yt-player { background: var(--youtube); }
-
-        #error-msg {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(20, 20, 20, 0.95); padding: 20px; border-radius: 12px; border: 1px solid red;
-            text-align: center; display: none; z-index: 25;
-        }
-        
-        /* Quality Menu */
-        #qualities { 
-            position: absolute; top: 60px; right: 15px; background: rgba(20,20,20,0.95); 
-            border-radius: 8px; display: none; min-width: 120px; z-index: 30; border: 1px solid #333; 
-        }
-        .q-opt { padding: 12px; color: #ccc; border-bottom: 1px solid #333; font-size: 13px; cursor: pointer; text-align: left;}
-        .q-opt:hover { background: var(--accent); color: white; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="logo">MATCH <span>MANAS</span></div>
-        <div class="social-box">
-            <a href="https://t.me/MKSSports_3" class="social-btn btn-tg" target="_blank">
-                <i class="fab fa-telegram"></i> Join
+        <div class="logo">MATCH MANAS</div>
+        <div class="header-buttons">
+            <a href="https://t.me/MKSSports_3" class="social-btn-header btn-tg-header" target="_blank">
+                <i class="fab fa-telegram-plane"></i> <span>Telegram</span>
             </a>
-            <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="social-btn btn-yt" target="_blank">
-                <i class="fab fa-youtube"></i> Sub
+            <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="social-btn-header btn-yt-header" target="_blank">
+                <i class="fab fa-youtube"></i> <span>Subscribe</span>
             </a>
         </div>
     </div>
 
-    <div class="search-area">
-        <input type="text" id="searchBar" class="search-input" placeholder="Search Sports Channels..." onkeyup="renderChannels()">
-    </div>
-
-    <div id="grid" class="grid"></div>
-
-    <div id="player-overlay">
-        <div class="player-nav">
-            <i class="fas fa-arrow-left" style="font-size:24px; cursor:pointer; color:white;" onclick="closePlayer()"></i>
-            <span id="player-title" style="font-weight:bold; font-size:16px;">LIVE TV</span>
-            <i class="fas fa-cog" style="font-size:24px; color:white; opacity:0.9;" onclick="toggleQ()"></i>
-        </div>
+    <div class="main-container">
         
-        <div id="qualities"><div class="q-opt">Auto</div></div>
-
-        <div class="video-box">
-            <video id="video" controls autoplay playsinline></video>
+        <div class="video-section">
+            <div class="video-container">
+                <div id="loading-spinner"></div>
+                <video id="video" controls autoplay playsinline poster="https://i.imgur.com/3Q3Q3Q3.jpg"></video> </div>
             
-            <div id="error-msg">
-                <p style="margin:0 0 10px 0;">Stream Offline?</p>
-                <button class="srv-btn" style="background:red; width:100%;" onclick="playCurrent(2)">Tap to Fix (Server 2)</button>
-            </div>
-
-            <div class="controls-area">
-                <div class="server-row">
-                    <button class="srv-btn active" onclick="playCurrent(1)">Server 1</button>
-                    <button class="srv-btn" onclick="playCurrent(2)">Server 2 (Fix)</button>
+            <div class="player-controls-container">
+                <div class="channel-info">
+                    <div class="channel-title" id="current-channel-name">Select a Channel</div>
+                    <span class="live-indicator">● Live Stream</span>
                 </div>
-                
-                <div class="social-row">
-                    <a href="https://t.me/MKSSports_3" class="soc-btn-player tg-player" target="_blank">
-                        <i class="fab fa-telegram"></i> Telegram
+
+                <div class="control-buttons-row">
+                    <button class="srv-btn active" onclick="playCurrent(1)"><i class="fas fa-server"></i> Server 1</button>
+                    <button class="srv-btn" onclick="playCurrent(2)"><i class="fas fa-tools"></i> Server 2 (Fix)</button>
+                </div>
+
+                <div class="social-buttons-large">
+                    <a href="https://t.me/MKSSports_3" class="social-btn-large btn-tg-large" target="_blank">
+                        <i class="fab fa-telegram-plane"></i> Join Telegram Channel
                     </a>
-                    <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="soc-btn-player yt-player" target="_blank">
-                        <i class="fab fa-youtube"></i> Subscribe
+                    <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="social-btn-large btn-yt-large" target="_blank">
+                        <i class="fab fa-youtube"></i> Subscribe on YouTube
                     </a>
                 </div>
             </div>
         </div>
+
+        <div class="section-title">Live Sports Channels</div>
+        <div id="grid" class="grid"></div>
     </div>
+
 
     <script>
-        // 🔥 YOUR SPORTS DATABASE 🔥
+        // CHANNEL DATABASE
         const channels = [
-            { 
-                id: "willow", 
-                name: "Willow HD", 
-                url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8"
-            },
-            { 
-                id: "sky", 
-                name: "Sky Cricket", 
-                url: "https://skysports-cricket.amagi.tv/playlist.m3u8"
-            },
-            { 
-                id: "dds", 
-                name: "DD Sports", 
-                url: "https://cdn-6.pishow.tv/live/13/master.m3u8"
-            },
-            { 
-                id: "tnt1", 
-                name: "TNT Sports 1", 
-                url: "https://tnt-sports-1.amagi.tv/playlist.m3u8"
-            },
-            { 
-                id: "tnt2", 
-                name: "TNT Sports 2", 
-                url: "https://tnt-sports-2.amagi.tv/index.m3u8"
-            },
-            { 
-                id: "tnt3", 
-                name: "TNT Sports 3", 
-                url: "https://tnt-sports-3.amagi.tv/playlist.m3u8"
-            },
-            { 
-                id: "tnt4", 
-                name: "TNT Sports 4", 
-                url: "https://tnt-sports-4.amagi.tv/index.m3u8"
-            },
-            { 
-                id: "sony", 
-                name: "Sony Ten 1", 
-                url: "https://skysports-cricket.amagi.tv/playlist.m3u8"
-            }
+            { name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
+            { name: "Sky Cricket", url: "https://skysports-cricket.amagi.tv/playlist.m3u8" },
+            { name: "DD Sports", url: "https://cdn-6.pishow.tv/live/13/master.m3u8" },
+            { name: "TNT Sports 1", url: "https://tnt-sports-1.amagi.tv/playlist.m3u8" },
+            { name: "TNT Sports 2", url: "https://tnt-sports-2.amagi.tv/index.m3u8" },
+            { name: "TNT Sports 3", url: "https://tnt-sports-3.amagi.tv/playlist.m3u8" },
+            { name: "TNT Sports 4", url: "https://tnt-sports-4.amagi.tv/index.m3u8" },
+            { name: "Sony Ten 1", url: "https://skysports-cricket.amagi.tv/playlist.m3u8" }
         ];
 
         let hls = null;
-        let activeCh = null;
+        let activeCh = channels[0]; // Default to first channel
+
+        // Initialize App
+        function init() {
+            renderChannels();
+            loadPlayer(activeCh); // Auto-load first channel
+        }
 
         function renderChannels() {
             const grid = document.getElementById('grid');
-            const search = document.getElementById('searchBar').value.toLowerCase();
             grid.innerHTML = '';
             channels.forEach(ch => {
-                if (ch.name.toLowerCase().includes(search)) {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <div class="card-icon">
-                            <span class="ch-initial">${ch.name[0]}</span>
-                            <i class="fas fa-play-circle play-icon"></i>
-                            <div class="live-badge">LIVE</div>
-                        </div>
-                        <div class="ch-name">${ch.name}</div>
-                    `;
-                    card.onclick = () => loadPlayer(ch);
-                    grid.appendChild(card);
-                }
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-img-container">
+                        <span class="channel-logo-text">${ch.name.split(' ')[0]}</span>
+                        <i class="fas fa-play-circle play-icon-overlay"></i>
+                    </div>
+                    <div class="card-name-overlay">${ch.name}</div>
+                `;
+                card.onclick = () => loadPlayer(ch);
+                grid.appendChild(card);
             });
         }
 
         function loadPlayer(ch) {
             activeCh = ch;
-            document.getElementById('player-overlay').style.display = 'flex';
-            document.getElementById('player-title').innerText = ch.name;
-            document.getElementById('error-msg').style.display = 'none';
-            document.getElementById('qualities').innerHTML = '<div class="q-opt">Auto</div>';
-
-            // URL Update
-            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + ch.id;
-            window.history.pushState({path:newUrl}, '', newUrl);
+            document.getElementById('current-channel-name').innerText = ch.name;
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to player
             
-            // Auto-Fix Logic for TNT/DD
+            // Auto-select best server based on channel name
             if (ch.name.includes("TNT") || ch.name.includes("DD")) {
                 playCurrent(2);
             } else {
@@ -274,15 +340,19 @@
 
         function playCurrent(serverNum) {
             const video = document.getElementById('video');
+            const spinner = document.getElementById('loading-spinner');
             let url = activeCh.url;
+
+            // Update active button state
+            document.querySelectorAll('.srv-btn').forEach((b, i) => b.classList.toggle('active', i === serverNum - 1));
             
-            // Server 2 = Proxy Fix
+            // Show spinner & reset video
+            spinner.style.display = 'block';
+            video.pause();
+
             if (serverNum === 2) {
                 url = "https://corsproxy.io/?" + encodeURIComponent(activeCh.url);
             }
-
-            document.querySelectorAll('.srv-btn').forEach((b, i) => b.classList.toggle('active', i === serverNum - 1));
-            document.getElementById('error-msg').style.display = 'none';
 
             if (Hls.isSupported()) {
                 if(hls) hls.destroy();
@@ -290,53 +360,27 @@
                 hls.loadSource(url);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    spinner.style.display = 'none'; // Hide spinner on success
                     video.play();
-                    generateQualities();
                 });
                 hls.on(Hls.Events.ERROR, (e, data) => {
-                    if (data.fatal && serverNum === 1) document.getElementById('error-msg').style.display = 'block';
+                    if (data.fatal) {
+                        spinner.style.display = 'none';
+                        // Optional: Show error message or auto-switch server
+                        if (serverNum === 1) playCurrent(2); // Auto-try server 2 on failure
+                    }
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = url;
-                video.play();
-            }
-        }
-
-        function generateQualities() {
-            const levels = hls.levels;
-            const qMenu = document.getElementById('qualities');
-            if(levels.length > 1) {
-                qMenu.innerHTML = `<div class="q-opt" onclick="setQ(-1)">Auto</div>`;
-                levels.forEach((l, i) => {
-                    qMenu.innerHTML += `<div class="q-opt" onclick="setQ(${i})">${l.height}p</div>`;
+                video.addEventListener('loadedmetadata', () => {
+                    spinner.style.display = 'none';
+                    video.play();
                 });
             }
         }
 
-        function setQ(idx) { if(hls) hls.currentLevel = idx; toggleQ(); }
-        function toggleQ() { 
-            const q = document.getElementById('qualities');
-            q.style.display = q.style.display === 'block' ? 'none' : 'block'; 
-        }
-
-        function closePlayer() {
-            document.getElementById('player-overlay').style.display = 'none';
-            document.getElementById('video').pause();
-            if(hls) hls.destroy();
-            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            window.history.pushState({path:cleanUrl}, '', cleanUrl);
-        }
-
-        // Auto-Load from URL
-        window.onload = function() {
-            renderChannels();
-            const urlParams = new URLSearchParams(window.location.search);
-            const channelId = urlParams.get('id');
-            if (channelId) {
-                const found = channels.find(c => c.id === channelId);
-                if (found) loadPlayer(found);
-            }
-        }
+        // Start the application
+        init();
     </script>
 </body>
 </html>

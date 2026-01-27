@@ -58,7 +58,14 @@
             position: relative; width: 100%; aspect-ratio: 16/9; background: black;
             display: flex; align-items: center; justify-content: center;
         }
-        video { width: 100%; height: 100%; }
+        video { width: 100%; height: 100%; display: block; }
+        
+        /* 🔥 IFRAME STYLE 🔥 */
+        #iframe-box {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10; display: none; background: #000;
+        }
+        #iframe-box iframe { width: 100%; height: 100%; border: none; }
 
         /* Quality Settings */
         .settings-btn {
@@ -100,7 +107,7 @@
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3);
             border-top: 4px solid var(--accent-red); border-radius: 50%;
-            animation: spin 1s linear infinite; display: none;
+            animation: spin 1s linear infinite; display: none; z-index: 5;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
@@ -132,9 +139,13 @@
         
         <div class="player-box">
             <div class="video-wrapper">
-                <button class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
+                <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
                 <div id="quality-menu"><div id="quality-list"></div></div>
+                
                 <video id="video" controls autoplay playsinline></video>
+                
+                <div id="iframe-box"></div>
+
                 <div id="loader"></div>
             </div>
             <div class="controls-box">
@@ -159,17 +170,14 @@
     </div>
 
     <script>
-        // YOUR CHANNELS (DIRECT LINKS ONLY)
+        // YOUR CHANNELS LIST
+        // Note: I added a test iframe link at the end to show it works
         const channels = [
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
             { id: "sky", name: "Sky Cricket", url: "https://d3.merichunidya.com:1686/hls/skyscric.m3u8?md5=kHbfVfVtKKqVWMPwLY8DBg&expires=1769241381" },
-            { id: "dds", name: "DD Sports", url: "https://cdn-6.pishow.tv/live/13/master.m3u8" },
             { id: "tnt1", name: "TNT Sports 1", url: "https://tnt-sports-1.amagi.tv/playlist.m3u8" },
             { id: "tnt2", name: "TNT Sports 2", url: "https://tnt-sports-2.amagi.tv/index.m3u8" },
-            { id: "tnt3", name: "TNT Sports 3", url: "https://tnt-sports-3.amagi.tv/playlist.m3u8" },
-            { id: "tnt4", name: "TNT Sports 4", url: "https://tnt-sports-4.amagi.tv/index.m3u8" },
-            { id: "haterskigandmaro", name: "star sports hindi", url: "https://corsproxy.io/?http://aps31.playlist.live-video.net/v1/playlist/CuAFtELx_49lAMCd73YtkZFQSR3HWecB3EXwgpfI5PQjHy7nUeJPBh6UdwT7bs9eKKofC_Eb-jhDIcTI3lqrjC-8MeL8kie5cxx8BVH5Ip3Y47xUkrvPc_XXfX516fC-ScMVeeBLRTEhNvvL6uVy3vPoHDKs72eWjiZddCBx738pchtlIL6AsqWTi3zY-2IL-uQWi7XVEIyNOvXJ9HeIItuQf2jUISoL00adnU84gbbc2D4Hxqsnhndq45MWXOQK4B0Z8tQGUmZhdzuAB2NAMrbErqAFCigC-BnC9W3xgN9dBe892i1ceNezLJETgoF0PfzU4G2AxN2Uud50mKTNrazqAVBA9EDKOL2PrppqekNy62t1i_mD1sZC6K6GBtghhOaJabbzYdMIh0qUYvcyC-aYuEodyl0ipnkQYqSwdg8HwyFpqPVmegcGSIIyCwNDRwhlLmGoC0yTWoCCaJPduqPL6j15bUW41W7pMX2WcwsndzMYZENRIsZjgm41sf-5zTO_a_wAiDMYikwQUzT1ycRLevrpt_q0fOPwbw5_Um5VuexCm6V7rG6GP44UcHQcmH_aAzsY6maEoIRkqHpRQ78i6nnn9hj1kCJ2nKDRgJWLU5HbUbC0olCRIHaU7c2X6fQbRRdRaoYdQRhRVhGLGa6NhHkPteoCfMX39JMw9YlACOLx56ZvV3JXl6pJkqsLD7ZdY-Xf1oDjddhbL3lGnrzgqe7zFFWd8pcZ_rq3sDWZ6TL6h0160C-lWgeWC_vfHZhZ0xgFvqC_Rfv6Erp4ZBdMh6XJPAam-UuYKUk6kckXkDD9o-qiEZTG0XV13Kz5-PEKjchRxXmogwj55klKJ8lNymfAN17WWeQMjJrYTNnVu-1Earp_oa_TkS3Bc9k6NsNixmBVs0A584F4YhdB9BNZSfHu2jA1E9gUvMd-Ik2yadF6Rn5mEk9JPfHeP8QAr9Q1dF-tXpChLvj0HGjuYFtm0hoMW3W-pcv0cmi44pnRIAEqCXVzLXdlc3QtMjCiDg.m3u8 https://share.google/vFCRJiSGrjRGntWyG" },
-            { id: "sony", name: "Sony Ten 1", url: "https://skysports-cricket.amagi.tv/playlist.m3u8" }
+            { id: "iframe_test", name: "Iframe Test", url: "https://mks-live.pages.dev/mkstar?channel_id=1956" }
         ];
 
         let hls = null;
@@ -227,26 +235,48 @@
 
         function playStream() {
             const video = document.getElementById('video');
+            const iframeBox = document.getElementById('iframe-box');
             const loader = document.getElementById('loader');
+            const settingsBtn = document.getElementById('settings-btn');
+            const qualityMenu = document.getElementById('quality-menu');
             
-            // 🔥 DIRECT URL ONLY (NO PROXY) 🔥
             let url = activeCh.url; 
-
             loader.style.display = 'block';
-            
-            if (Hls.isSupported()) {
-                if(hls) hls.destroy();
-                hls = new Hls();
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    loader.style.display = 'none';
+
+            // Clean up previous states
+            if(hls) { hls.destroy(); hls = null; }
+            qualityMenu.style.display = 'none'; // Hide menu if open
+
+            // 🔥 LOGIC: Check if it is M3U8/HLS or Iframe 🔥
+            if (url.includes('.m3u8')) {
+                // --- HLS MODE ---
+                iframeBox.style.display = 'none';
+                iframeBox.innerHTML = ""; // Clear iframe
+                video.style.display = 'block';
+                settingsBtn.style.display = 'block'; // Show Quality Button
+
+                if (Hls.isSupported()) {
+                    hls = new Hls();
+                    hls.loadSource(url);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        loader.style.display = 'none';
+                        video.play();
+                        generateQualityOptions();
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = url;
                     video.play();
-                    generateQualityOptions();
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = url;
-                video.play();
+                    loader.style.display = 'none';
+                }
+            } else {
+                // --- IFRAME MODE ---
+                video.style.display = 'none';
+                video.pause();
+                settingsBtn.style.display = 'none'; // Hide Quality Button for Iframe
+                
+                iframeBox.style.display = 'block';
+                iframeBox.innerHTML = `<iframe src="${url}" allowfullscreen scrolling="no" allow="autoplay; encrypted-media"></iframe>`;
                 loader.style.display = 'none';
             }
         }

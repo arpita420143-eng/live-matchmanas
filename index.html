@@ -168,11 +168,23 @@
     </div>
 
     <script>
-        // CHANNELS LIST
+        // 🔥🔥 CHANNELS LIST (Added 2 New Links) 🔥🔥
         const channels = [
+            // 1. Existing HLS
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
+            
+            // 2. Existing Sky
             { id: "sky", name: "Sky Cricket", url: "https://451nj1za7g9v2kexgxatdrh.linux-developers.top/cpannel/logs/C/p2/WWE_Royal_Rumble_2026_SDv2/logs.m3u8?md5=tIEDNzdz-rK1SacsfH9uPg&expires=1769968741" },
-            { id: "haterskigandmaro", name: "Tera Baap Hu", url:"https://mksplay.pages.dev/mkid?id=t20wc" }
+            
+            // 3. Existing Iframe
+            { id: "haterskigandmaro", name: "Tera Baap Hu", url: "https://mksplay.pages.dev/mkid?id=t20wc" },
+
+            // 4. NEW: YOUTUBE EMBED (Yahan apni ID dalo)
+            // Note: Use 'embed' not 'watch'
+            { id: "ytlive", name: "YouTube Live", url: "https://www.youtube.com/embed/VIDEO_ID_HERE" },
+
+            // 5. NEW: SERVER 4 (IFRAME) (Yahan apna Iframe link dalo)
+            { id: "server4", name: "Server 4 (VIP)", url: "https://example.com/your-iframe-link" }
         ];
 
         let hls = null;
@@ -234,6 +246,7 @@
             if(hls) { hls.destroy(); hls = null; }
             document.getElementById('quality-menu').style.display = 'none';
 
+            // Check if URL is .m3u8 (HLS Video)
             if (url.includes('.m3u8')) {
                 // Video Mode
                 wrapper.style.aspectRatio = "16/9";
@@ -259,7 +272,7 @@
                     loader.style.display = 'none';
                 }
             } else {
-                // Iframe Mode
+                // Iframe Mode (For YouTube & other embeds)
                 wrapper.style.aspectRatio = "auto";
                 wrapper.style.height = "550px";
                 

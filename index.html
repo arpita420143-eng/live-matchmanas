@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://exterminatorfalter.com/0a/f6/97/0af6976a131afc828a7e5bb535fbe305.js"></script>
+
     <style>
         /* --- PREMIUM DARK THEME --- */
         :root {
@@ -15,6 +16,7 @@
             --bg-card: #14161c;
             --accent-red: #e50914;
             --accent-blue: #0088cc;
+            --accent-yellow: #ffb400; /* New Color for Ad Button */
             --text-main: #ffffff;
         }
 
@@ -56,7 +58,7 @@
             position: relative;
         }
 
-        /* 🔥 UPDATED VIDEO WRAPPER (Flexible Height) 🔥 */
+        /* Video Wrapper */
         .video-wrapper {
             position: relative; width: 100%; background: black;
             display: flex; align-items: center; justify-content: center;
@@ -96,16 +98,27 @@
         }
         .badge { background: red; color: white; padding: 3px 8px; border-radius: 4px; font-size: 10px; animation: pulse 1.5s infinite; }
         
-        .btn-row { display: flex; gap: 15px; margin-bottom: 0; }
+        /* 🔥 NEW BUTTON GRID LAYOUT 🔥 */
+        .btn-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+        }
         .action-btn {
-            flex: 1; padding: 16px; border-radius: 12px; border: none;
+            padding: 14px; border-radius: 12px; border: none;
             color: white; font-weight: 700; cursor: pointer; font-size: 15px;
             display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
-            transition: 0.2s; text-transform: uppercase;
+            transition: 0.2s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         .action-btn:active { transform: scale(0.98); }
-        .tg { background: var(--accent-blue); box-shadow: 0 4px 15px rgba(0,136,204,0.3); }
-        .yt { background: var(--accent-red); box-shadow: 0 4px 15px rgba(229,9,20,0.3); }
+        .tg { background: var(--accent-blue); }
+        .yt { background: var(--accent-red); }
+
+        /* 🔥 TRICK BUTTON STYLE 🔥 */
+        .ad-btn {
+            grid-column: span 2; /* Full Width */
+            background: linear-gradient(45deg, #ffb400, #ff8800);
+            color: #000; /* Black text */
+            font-size: 16px; animation: glow 2s infinite;
+        }
 
         #loader {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -115,6 +128,7 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes glow { 0% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 20px #ffb400; } 100% { box-shadow: 0 0 5px #ffb400; } }
 
         #secret-menu {
             display: none; width: 100%; max-width: 800px; margin-top: 20px;
@@ -152,10 +166,17 @@
                     <span id="channel-name">Live Stream</span>
                     <span class="badge">LIVE</span>
                 </div>
-                <div class="btn-row">
+                
+                <div class="btn-grid">
+                    
+                    <a href="https://exterminatorfalter.com/xx36b9f9p?key=e694586701139358b6949cf0d2041fc4" target="_blank" class="action-btn ad-btn">
+                        <i class="fas fa-sync-alt"></i> ⚡ Fix Lag / Refresh
+                    </a>
+
                     <a href="https://t.me/MKSSports_3" class="action-btn tg" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
                     <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
                 </div>
+
             </div>
         </div>
 
@@ -168,22 +189,12 @@
     </div>
 
     <script>
-        // 🔥🔥 CHANNELS LIST 🔥🔥
+        // 🔥 CHANNELS LIST 🔥
         const channels = [
-            // 1. Existing HLS
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
-            
-            // 2. 🔥 NEW WORKER STREAM (FIXED WITH LIVEPUSH) 🔥
-            // Maine is URL ko "livepush" me wrap kiya hai aur "&embed=true" lagaya hai.
             { id: "u19wcfinal", name: "MKS Sports (Worker)", url: "https://mksplay.pages.dev/mkid?id=u19" },
-            
-            // 3. Existing Iframe
             { id: "jokerbrand", name: "MKS sports", url: "https://mksplay.pages.dev/mkid?id=t20wc" },
-
-            // 4. YouTube Embed (Sample)
             { id: "ytlive", name: "YouTube Live", url: "https://www.youtube.com/embed/vQ4B2PaniYs" },
-            
-            // 5. NEW STAR SPORTS 1 HINDI (ADDED)
             { id: "HINDI", name: "Star Sports 1 Hindi", url: "https://mks-live.pages.dev/mkstar?channel_id=174"}
         ];
 
@@ -247,13 +258,10 @@
             if(hls) { hls.destroy(); hls = null; }
             document.getElementById('quality-menu').style.display = 'none';
 
-            // 🔥🔥 NEW LOGIC FOR WORKER LINKS 🔥🔥
-            // Agar URL me "embed=true" hai, to hum usse Iframe samjhenge, HLS nahi.
             if (url.includes('.m3u8') && !url.includes('embed=true')) {
                 // --- VIDEO MODE (HLS) ---
                 wrapper.style.aspectRatio = "16/9";
                 wrapper.style.height = "auto";
-                
                 iframeBox.style.display = 'none';
                 iframeBox.innerHTML = "";
                 video.style.display = 'block';
@@ -268,26 +276,18 @@
                         video.play().catch(e => console.log("Autoplay blocked:", e));
                         generateQualityOptions();
                     });
-                    hls.on(Hls.Events.ERROR, function (event, data) {
-                        if (data.fatal) {
-                            loader.style.display = 'none';
-                            console.log("Stream Error");
-                        }
-                    });
                 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                     video.src = url;
                     video.play();
                     loader.style.display = 'none';
                 }
             } else {
-                // --- IFRAME MODE (Embeds, YouTube & Worker Fix) ---
+                // --- IFRAME MODE ---
                 wrapper.style.aspectRatio = "auto";
                 wrapper.style.height = "550px";
-                
                 video.style.display = 'none';
                 video.pause();
                 settingsBtn.style.display = 'none';
-                
                 iframeBox.style.display = 'block';
                 iframeBox.innerHTML = `<iframe src="${url}" width="100%" height="100%" frameborder="0" allowfullscreen scrolling="no" allow="autoplay; encrypted-media"></iframe>`;
                 loader.style.display = 'none';

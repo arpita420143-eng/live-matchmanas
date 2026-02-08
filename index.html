@@ -124,7 +124,7 @@
                     <span class="live-dot"></span> LIVE
                     <span class="live-sep"></span>
                     <span class="view-count-box">
-                        <i class="fas fa-eye"></i> <span id="fake-viewers">452</span>
+                        <i class="fas fa-eye"></i> <span id="fake-viewers">312</span>
                     </span>
                 </div>
 
@@ -270,18 +270,25 @@
         function setQuality(index) { if(hls) { hls.currentLevel = index; document.getElementById('quality-menu').style.display = 'none'; } }
         function toggleQualityMenu() { const menu = document.getElementById('quality-menu'); menu.style.display = (menu.style.display === 'block') ? 'none' : 'block'; }
 
-        // 🔥 FAKE VIEWER LOGIC 🔥
-        let viewerCount = 100; 
+        // 🔥 FAKE VIEWER LOGIC (300 Avg) 🔥
+        let viewerCount = 312; 
         const viewerDisplay = document.getElementById('fake-viewers');
         function updateViewers() {
-            let direction = Math.random() < 0.5 ? -1 : 2; 
-            let amount = Math.floor(Math.random() * 4) + 2; 
+            // Random Direction (+ or -)
+            let direction = Math.random() < 0.5 ? -1 : 1; 
+            // Change by 2 or 3
+            let amount = Math.floor(Math.random() * 2) + 2; 
+
             viewerCount += direction * amount;
-            if (viewerCount < 60) viewerCount += 15;
-            if (viewerCount > 1000) viewerCount -= 15;
+
+            // Boundaries (50 to 800)
+            if (viewerCount < 50) viewerCount += 10;
+            if (viewerCount > 800) viewerCount -= 10;
+
             viewerDisplay.innerText = viewerCount.toLocaleString();
         }
-        setInterval(updateViewers, 3000);
+        // Update every 5 seconds
+        setInterval(updateViewers, 5000);
 
         // 🔥 FAKE SOCIAL NOTIFICATIONS 🔥
         function showToast(msg, icon) {
@@ -308,7 +315,7 @@
             
             showToast(`${randomName} ${randomAction.msg}`, randomAction.icon);
             
-            // 🔥 RANDOM INTERVAL (25s - 50s) 🔥
+            // Random Interval (25s - 50s)
             setTimeout(triggerFakeSocial, Math.random() * 25000 + 25000);
         }
         

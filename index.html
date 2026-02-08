@@ -274,10 +274,10 @@
         let viewerCount = 100; 
         const viewerDisplay = document.getElementById('fake-viewers');
         function updateViewers() {
-            let direction = Math.random() < 0.5 ? -1 : 7; 
+            let direction = Math.random() < 0.5 ? -1 : 2; 
             let amount = Math.floor(Math.random() * 4) + 2; 
             viewerCount += direction * amount;
-            if (viewerCount < 50) viewerCount += 15;
+            if (viewerCount < 60) viewerCount += 15;
             if (viewerCount > 1000) viewerCount -= 15;
             viewerDisplay.innerText = viewerCount.toLocaleString();
         }

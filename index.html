@@ -7,6 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script src="https://exterminatorfalter.com/0a/f6/97/0af6976a131afc828a7e5bb535fbe305.js"></script>
+
     <style>
         /* --- PREMIUM DARK THEME --- */
         :root {
@@ -27,16 +29,16 @@
         /* --- HEADER --- */
         .header {
             position: sticky; top: 0; z-index: 100;
-            background: rgba(20, 22, 28, 0.95); padding: 12px 15px;
+            background: rgba(20, 22, 28, 0.95); padding: 10px 15px; /* Padding thodi kam ki */
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 2px solid #222; backdrop-filter: blur(10px);
         }
-        .logo { font-size: 20px; font-weight: 900; letter-spacing: 1px; color: white; cursor: pointer; user-select: none; }
+        .logo { font-size: 18px; font-weight: 900; letter-spacing: 1px; color: white; cursor: pointer; user-select: none; }
         .logo span { color: var(--accent-red); text-shadow: 0 0 10px var(--accent-red); }
 
         .head-btns { display: flex; gap: 8px; }
         .h-btn {
-            padding: 8px 12px; border-radius: 50px; font-size: 11px; font-weight: 700;
+            padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700;
             text-decoration: none; color: white; display: flex; align-items: center; gap: 5px;
             transition: 0.3s;
         }
@@ -45,22 +47,25 @@
 
         /* --- PLAYER CONTAINER --- */
         .main-container { 
-            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            padding: 20px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box;
+            flex: 1; display: flex; flex-direction: column; align-items: center; 
+            justify-content: flex-start; /* Upar chipkega */
+            padding: 5px; /* Padding aur kam kar di taaki button upar aaye */
+            width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box;
         }
 
         .player-box {
             width: 100%; max-width: 800px;
-            background: var(--bg-card); border-radius: 16px; overflow: hidden;
+            background: var(--bg-card); border-radius: 12px; overflow: hidden;
             box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: 1px solid #333;
             position: relative;
+            margin-top: 5px;
         }
 
         /* Video Wrapper */
         .video-wrapper {
             position: relative; width: 100%; background: black;
             display: flex; align-items: center; justify-content: center;
-            min-height: 250px; 
+            min-height: 230px; /* Thoda sa height adjust kiya */
             transition: height 0.3s ease;
         }
         video { width: 100%; height: 100%; display: block; }
@@ -73,43 +78,48 @@
 
         /* Quality Settings */
         .settings-btn {
-            position: absolute; top: 15px; right: 15px; z-index: 20;
+            position: absolute; top: 10px; right: 10px; z-index: 20;
             background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 12px; border-radius: 8px; cursor: pointer; backdrop-filter: blur(5px);
-            font-size: 18px; transition: 0.3s;
+            padding: 5px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(5px);
+            font-size: 16px; transition: 0.3s;
         }
         #quality-menu {
-            position: absolute; top: 60px; right: 15px; z-index: 30;
+            position: absolute; top: 45px; right: 10px; z-index: 30;
             background: rgba(15, 15, 15, 0.95); border: 1px solid #444;
-            border-radius: 8px; width: 160px; display: none; overflow: hidden;
+            border-radius: 8px; width: 140px; display: none; overflow: hidden;
         }
-        .q-item { padding: 12px 15px; font-size: 14px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .q-item { padding: 10px 12px; font-size: 13px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .q-item:hover { background: #333; }
         .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
 
-        /* Controls */
-        .controls-box { padding: 25px; }
+        /* 🔥 COMPACT CONTROLS (Yahan jagah bachayi hai) 🔥 */
+        .controls-box { padding: 10px; } /* Padding 25px se 10px kar di */
+        
         .live-title { 
-            font-size: 22px; font-weight: 700; margin-bottom: 20px; 
-            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            font-size: 15px; /* Size chhota kiya */
+            font-weight: 700; 
+            margin-bottom: 5px; /* Gap kam kar diya */
+            margin-top: 5px;
+            display: flex; align-items: center; justify-content: center; gap: 8px; 
             text-align: center;
         }
-        .badge { background: red; color: white; padding: 3px 8px; border-radius: 4px; font-size: 10px; animation: pulse 1.5s infinite; }
+        .badge { background: red; color: white; padding: 2px 6px; border-radius: 3px; font-size: 9px; animation: pulse 1.5s infinite; }
         
-        /* 🔥 VIP AD SPOT STYLE 🔥 */
+        /* 🔥 VIP AD SPOT (Gap Reduced) 🔥 */
         .vip-ad-box {
-            display: flex; justify-content: center; margin-bottom: 10px; /* Reduced gap */
-            background: #000; padding: 10px; border-radius: 10px; border: 1px solid #333;
+            display: flex; justify-content: center; 
+            margin-bottom: 5px; /* Gap 20px se 5px kar diya */
+            background: #000; padding: 5px; border-radius: 8px; border: 1px solid #333;
         }
 
         /* Buttons Grid */
         .btn-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
         }
         .action-btn {
-            padding: 14px; border-radius: 12px; border: none;
-            color: white; font-weight: 700; cursor: pointer; font-size: 15px;
-            display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+            padding: 12px; border-radius: 8px; border: none;
+            color: white; font-weight: 700; cursor: pointer; font-size: 13px;
+            display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none;
             transition: 0.2s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         .action-btn:active { transform: scale(0.98); }
@@ -120,14 +130,13 @@
         .ad-btn {
             grid-column: span 2; /* Full Width */
             background: linear-gradient(45deg, #ffb400, #ff8800);
-            color: #000; /* Black text */
-            font-size: 16px; animation: glow 2s infinite;
+            color: #000; font-size: 14px; animation: glow 2s infinite;
         }
 
-        /* 🔥 BOTTOM AD WALL STYLE 🔥 */
+        /* Bottom Ad Wall */
         .ad-wall {
             display: grid; grid-template-columns: 1fr; 
-            gap: 15px; margin-top: 20px; padding: 10px;
+            gap: 10px; margin-top: 15px; padding: 10px;
             background: #0a0b0e; border-radius: 10px; border: 1px solid #333;
         }
         .ad-slot { background: #111; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; min-height: 260px; border: 1px dashed #444; }
@@ -180,7 +189,6 @@
                     <span class="badge">LIVE</span>
                 </div>
                 
-                <div style="text-align: center; color: #555; font-size: 10px; margin-bottom: 5px;">SPONSORED</div>
                 <div class="vip-ad-box">
                     <script type="text/javascript">
                         atOptions = {
@@ -216,7 +224,7 @@
                     <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
                 </div>
 
-                <div style="text-align: center; color: #555; font-size: 11px; margin-top: 10px;">PARTNER OFFERS</div>
+                <div style="text-align: center; color: #555; font-size: 10px; margin-top: 15px;">PARTNER OFFERS</div>
                 <div class="ad-wall">
                     <div class="ad-slot">
                         <script type="text/javascript">
@@ -337,9 +345,9 @@
                     loader.style.display = 'none';
                 }
             } else {
-                // --- IFRAME MODE ---
+                // --- IFRAME MODE (Height Fixed here) ---
                 wrapper.style.aspectRatio = "auto";
-                wrapper.style.height = "550px";
+                wrapper.style.height = "400px"; 
                 video.style.display = 'none';
                 video.pause();
                 settingsBtn.style.display = 'none';
@@ -374,5 +382,6 @@
         init();
     </script>
     
+    <script src="https://exterminatorfalter.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js"></script>
     </body>
 </html>

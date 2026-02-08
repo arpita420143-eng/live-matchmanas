@@ -271,10 +271,10 @@
         function toggleQualityMenu() { const menu = document.getElementById('quality-menu'); menu.style.display = (menu.style.display === 'block') ? 'none' : 'block'; }
 
         // 🔥 FAKE VIEWER LOGIC 🔥
-        let viewerCount = 302; 
+        let viewerCount = 100; 
         const viewerDisplay = document.getElementById('fake-viewers');
         function updateViewers() {
-            let direction = Math.random() < 0.5 ? -1 : 1; 
+            let direction = Math.random() < 0.5 ? -1 : 7; 
             let amount = Math.floor(Math.random() * 4) + 2; 
             viewerCount += direction * amount;
             if (viewerCount < 50) viewerCount += 15;

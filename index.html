@@ -10,156 +10,70 @@
     <script src="https://exterminatorfalter.com/0a/f6/97/0af6976a131afc828a7e5bb535fbe305.js"></script>
 
     <style>
-        /* --- PREMIUM DARK THEME --- */
-        :root {
-            --bg-main: #0a0b0e;
-            --bg-card: #14161c;
-            --accent-red: #e50914;
-            --accent-blue: #0088cc;
-            --accent-yellow: #ffb400;
-            --text-main: #ffffff;
-        }
+        /* --- THEME --- */
+        :root { --bg-main: #0a0b0e; --bg-card: #14161c; --accent-red: #e50914; --accent-blue: #0088cc; --text-main: #ffffff; }
+        body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; }
 
-        body {
-            margin: 0; background: var(--bg-main); color: var(--text-main);
-            font-family: 'Segoe UI', sans-serif; overflow-x: hidden;
-            display: flex; flex-direction: column; min-height: 100vh;
-        }
-
-        /* --- HEADER --- */
-        .header {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(20, 22, 28, 0.95); padding: 12px 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid #222; backdrop-filter: blur(10px);
-        }
-        .logo { font-size: 20px; font-weight: 900; letter-spacing: 1px; color: white; cursor: pointer; user-select: none; }
+        /* HEADER */
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(20, 22, 28, 0.95); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; backdrop-filter: blur(10px); }
+        .logo { font-size: 20px; font-weight: 900; letter-spacing: 1px; color: white; }
         .logo span { color: var(--accent-red); text-shadow: 0 0 10px var(--accent-red); }
-
         .head-btns { display: flex; gap: 8px; }
-        .h-btn {
-            padding: 8px 12px; border-radius: 50px; font-size: 11px; font-weight: 700;
-            text-decoration: none; color: white; display: flex; align-items: center; gap: 5px;
-            transition: 0.3s;
-        }
-        .hb-tg { background: var(--accent-blue); }
-        .hb-yt { background: var(--accent-red); }
+        .h-btn { padding: 8px 12px; border-radius: 50px; font-size: 11px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; background: var(--accent-blue); }
 
-        /* --- PLAYER CONTAINER --- */
-        .main-container { 
-            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            padding: 20px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box;
-        }
+        /* CONTAINER */
+        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
+        .player-box { width: 100%; max-width: 800px; background: var(--bg-card); border-radius: 16px; overflow: hidden; border: 1px solid #333; }
 
-        .player-box {
-            width: 100%; max-width: 800px;
-            background: var(--bg-card); border-radius: 16px; overflow: hidden;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.7); border: 1px solid #333;
-            position: relative;
-        }
-
-        /* Video Wrapper */
-        .video-wrapper {
-            position: relative; width: 100%; background: black;
-            display: flex; align-items: center; justify-content: center;
-            min-height: 250px; 
-            transition: height 0.3s ease;
-        }
+        /* VIDEO */
+        .video-wrapper { position: relative; width: 100%; background: black; display: flex; align-items: center; justify-content: center; min-height: 250px; }
         video { width: 100%; height: 100%; display: block; }
-        
-        #iframe-box {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10; display: none; background: #000;
-        }
+        #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; background: #000; }
         #iframe-box iframe { width: 100%; height: 100%; border: none; }
 
-        /* Quality Settings */
-        .settings-btn {
-            position: absolute; top: 15px; right: 15px; z-index: 20;
-            background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 12px; border-radius: 8px; cursor: pointer; backdrop-filter: blur(5px);
-            font-size: 18px; transition: 0.3s;
-        }
-        #quality-menu {
-            position: absolute; top: 60px; right: 15px; z-index: 30;
-            background: rgba(15, 15, 15, 0.95); border: 1px solid #444;
-            border-radius: 8px; width: 160px; display: none; overflow: hidden;
-        }
-        .q-item { padding: 12px 15px; font-size: 14px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .q-item:hover { background: #333; }
-        .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
-
-        /* Controls */
-        .controls-box { padding: 25px; }
-        .live-title { 
-            font-size: 22px; font-weight: 700; margin-bottom: 20px; 
-            display: flex; align-items: center; justify-content: center; gap: 10px; 
-            text-align: center;
-        }
+        /* CONTROLS */
+        .controls-box { padding: 15px; }
+        .live-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; text-align: center; display: flex; justify-content: center; gap: 10px; }
         .badge { background: red; color: white; padding: 3px 8px; border-radius: 4px; font-size: 10px; animation: pulse 1.5s infinite; }
-        
-        /* Buttons Grid */
-        .btn-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-        }
-        .action-btn {
-            padding: 14px; border-radius: 12px; border: none;
-            color: white; font-weight: 700; cursor: pointer; font-size: 15px;
-            display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
-            transition: 0.2s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        .action-btn:active { transform: scale(0.98); }
-        .tg { background: var(--accent-blue); }
-        .yt { background: var(--accent-red); }
 
-        /* Trick Button Style */
-        .ad-btn {
-            grid-column: span 2; /* Full Width */
-            background: linear-gradient(45deg, #ffb400, #ff8800);
-            color: #000; /* Black text */
-            font-size: 16px; animation: glow 2s infinite;
+        /* 🔥 VIP AD SPOT (Top Wala) 🔥 */
+        .vip-ad-box {
+            display: flex; justify-content: center; margin-bottom: 20px;
+            background: #000; padding: 10px; border-radius: 10px; border: 1px solid #333;
         }
 
-        #loader {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3);
-            border-top: 4px solid var(--accent-red); border-radius: 50%;
-            animation: spin 1s linear infinite; display: none; z-index: 5;
+        /* 🔥 BUTTONS 🔥 */
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .action-btn { padding: 14px; border-radius: 10px; border: none; color: white; font-weight: 700; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .tg { background: var(--accent-blue); } .yt { background: var(--accent-red); }
+        .ad-btn { grid-column: span 2; background: linear-gradient(45deg, #ffb400, #ff8800); color: black; animation: glow 2s infinite; font-size: 16px; }
+
+        /* 🔥 BONUS AD WALL (Niche Wala) 🔥 */
+        .ad-wall {
+            display: grid; grid-template-columns: 1fr; /* Mobile pe 1 column looks better for bottom */
+            gap: 15px; margin-top: 10px; padding: 10px;
+            background: #0a0b0e; border-radius: 10px; border: 1px solid #333;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .ad-slot { background: #111; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; min-height: 260px; border: 1px dashed #444; }
+
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
         @keyframes glow { 0% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 20px #ffb400; } 100% { box-shadow: 0 0 5px #ffb400; } }
-
-        #secret-menu {
-            display: none; width: 100%; max-width: 800px; margin-top: 20px;
-            background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333;
-        }
-        .secret-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
-        .secret-card {
-            background: #222; padding: 10px; text-align: center; border-radius: 8px;
-            font-size: 12px; font-weight: bold; cursor: pointer; border: 1px solid #333;
-        }
-        .secret-card:hover { background: var(--accent-red); border-color: var(--accent-red); }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="logo" onclick="unlockSecret()">MATCH <span>MANAS</span></div>
+        <div class="logo">MATCH <span>MANAS</span></div>
         <div class="head-btns">
-            <a href="https://t.me/MKSSports_3" class="h-btn hb-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Join</a>
-            <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="h-btn hb-yt" target="_blank"><i class="fab fa-youtube"></i> Sub</a>
+            <a href="https://t.me/MKSSports_3" class="h-btn" target="_blank">Join Telegram</a>
         </div>
     </div>
 
     <div class="main-container">
         <div class="player-box">
             <div class="video-wrapper" id="videoWrapper">
-                <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
-                <div id="quality-menu"><div id="quality-list"></div></div>
                 <video id="video" controls autoplay playsinline></video>
                 <div id="iframe-box"></div>
-                <div id="loader"></div>
             </div>
             
             <div class="controls-box">
@@ -167,42 +81,43 @@
                     <span id="channel-name">Live Stream</span>
                     <span class="badge">LIVE</span>
                 </div>
-                
-                <div style="width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; background: #1a1a1a; padding: 10px; border-radius: 12px; border: 1px solid #333; min-height: 260px;">
+
+                <div class="vip-ad-box">
                     <script type="text/javascript">
-                        atOptions = {
-                            'key' : 'c54c7d6bd836d9fe66d2c49614f17d00',
-                            'format' : 'iframe',
-                            'height' : 250,
-                            'width' : 300,
-                            'params' : {}
-                        };
+                        atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
                     </script>
                     <script type="text/javascript" src="https://exterminatorfalter.com/c54c7d6bd836d9fe66d2c49614f17d00/invoke.js"></script>
                 </div>
+
                 <div class="btn-grid">
-                    
                     <a href="https://exterminatorfalter.com/xx36b9f9p?key=e694586701139358b6949cf0d2041fc4" target="_blank" class="action-btn ad-btn">
                         <i class="fas fa-sync-alt"></i> ⚡ Fix Lag / Refresh
                     </a>
-
                     <a href="https://t.me/MKSSports_3" class="action-btn tg" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
-                    <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
+                    <a href="https://youtube.com/@mkssports3" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
+                </div>
+
+                <div style="text-align: center; color: #555; font-size: 11px; margin-top: 10px;">PARTNER OFFERS</div>
+                <div class="ad-wall">
+                    <div class="ad-slot">
+                        <script type="text/javascript">
+                            atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
+                        </script>
+                        <script type="text/javascript" src="https://exterminatorfalter.com/c54c7d6bd836d9fe66d2c49614f17d00/invoke.js"></script>
+                    </div>
+                    <div class="ad-slot">
+                        <script type="text/javascript">
+                            atOptions = { 'key' : 'c54c7d6bd836d9fe66d2c49614f17d00', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
+                        </script>
+                        <script type="text/javascript" src="https://exterminatorfalter.com/c54c7d6bd836d9fe66d2c49614f17d00/invoke.js"></script>
+                    </div>
                 </div>
 
             </div>
-        </div>
-
-        <div id="secret-menu">
-            <div style="margin-bottom:10px; color:#aaa; font-size:12px; border-bottom:1px solid #333; padding-bottom:5px;">
-                ADMIN PANEL - CHANGE CHANNEL
-            </div>
-            <div id="secret-grid" class="secret-grid"></div>
         </div>
     </div>
 
     <script>
-        // 🔥 CHANNELS LIST 🔥
         const channels = [
             { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
             { id: "u19wcfinal", name: "MKS Sports (Worker)", url: "https://mksplay.pages.dev/mkid?id=u19" },
@@ -211,127 +126,37 @@
             { id: "HINDI", name: "Star Sports 1 Hindi", url: "https://mks-live.pages.dev/mkstar?channel_id=174"}
         ];
 
-        let hls = null;
-        let activeCh = null;
-        let clickCount = 0;
-
         function init() {
             const urlParams = new URLSearchParams(window.location.search);
             const channelId = urlParams.get('id');
-            const found = channels.find(c => c.id === channelId);
-            activeCh = found ? found : channels[0];
-            loadPlayer(activeCh);
-            renderSecretMenu();
-        }
-
-        function unlockSecret() {
-            clickCount++;
-            if (clickCount === 5) {
-                clickCount = 0;
-                let password = prompt("Enter Admin Password:");
-                if (password === "manas") { 
-                    document.getElementById('secret-menu').style.display = 'block';
-                }
-            }
-        }
-
-        function renderSecretMenu() {
-            const grid = document.getElementById('secret-grid');
-            grid.innerHTML = "";
-            channels.forEach(ch => {
-                const btn = document.createElement('div');
-                btn.className = 'secret-card';
-                btn.innerText = ch.name;
-                btn.onclick = () => {
-                    loadPlayer(ch);
-                    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + ch.id;
-                    window.history.pushState({path:newUrl}, '', newUrl);
-                    document.getElementById('secret-menu').style.display = 'none';
-                };
-                grid.appendChild(btn);
-            });
+            const found = channels.find(c => c.id === channelId) || channels[0];
+            loadPlayer(found);
         }
 
         function loadPlayer(ch) {
-            activeCh = ch;
             document.getElementById('channel-name').innerText = ch.name;
-            playStream();
-        }
-
-        function playStream() {
-            const wrapper = document.getElementById('videoWrapper');
             const video = document.getElementById('video');
             const iframeBox = document.getElementById('iframe-box');
-            const loader = document.getElementById('loader');
-            const settingsBtn = document.getElementById('settings-btn');
             
-            let url = activeCh.url; 
-            loader.style.display = 'block';
-
-            if(hls) { hls.destroy(); hls = null; }
-            document.getElementById('quality-menu').style.display = 'none';
-
-            if (url.includes('.m3u8') && !url.includes('embed=true')) {
-                // --- VIDEO MODE (HLS) ---
-                wrapper.style.aspectRatio = "16/9";
-                wrapper.style.height = "auto";
+            if (ch.url.includes('.m3u8') && !ch.url.includes('embed=true')) {
                 iframeBox.style.display = 'none';
-                iframeBox.innerHTML = "";
                 video.style.display = 'block';
-                settingsBtn.style.display = 'block';
-
                 if (Hls.isSupported()) {
-                    hls = new Hls();
-                    hls.loadSource(url);
+                    const hls = new Hls();
+                    hls.loadSource(ch.url);
                     hls.attachMedia(video);
-                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                        loader.style.display = 'none';
-                        video.play().catch(e => console.log("Autoplay blocked:", e));
-                        generateQualityOptions();
-                    });
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
                 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                    video.src = url;
+                    video.src = ch.url;
                     video.play();
-                    loader.style.display = 'none';
                 }
             } else {
-                // --- IFRAME MODE ---
-                wrapper.style.aspectRatio = "auto";
-                wrapper.style.height = "550px";
                 video.style.display = 'none';
-                video.pause();
-                settingsBtn.style.display = 'none';
                 iframeBox.style.display = 'block';
-                iframeBox.innerHTML = `<iframe src="${url}" width="100%" height="100%" frameborder="0" allowfullscreen scrolling="no" allow="autoplay; encrypted-media"></iframe>`;
-                loader.style.display = 'none';
+                iframeBox.innerHTML = `<iframe src="${ch.url}" allowfullscreen allow="autoplay"></iframe>`;
             }
         }
-
-        function generateQualityOptions() {
-            const list = document.getElementById('quality-list');
-            list.innerHTML = '<div class="q-item active" onclick="setQuality(-1)">Auto</div>';
-            if(hls && hls.levels.length > 0) {
-                hls.levels.forEach((level, index) => {
-                    if (level.height) list.innerHTML += `<div class="q-item" onclick="setQuality(${index})">${level.height}p</div>`;
-                });
-            }
-        }
-
-        function setQuality(index) {
-            if(hls) {
-                hls.currentLevel = index;
-                document.getElementById('quality-menu').style.display = 'none';
-            }
-        }
-
-        function toggleQualityMenu() {
-            const menu = document.getElementById('quality-menu');
-            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-        }
-
         init();
     </script>
-    
-    <script src="https://exterminatorfalter.com/ff/e8/77/ffe877c5a9204d730c6d295f287d33e3.js"></script>
-    </body>
+</body>
 </html>

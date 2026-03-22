@@ -119,7 +119,7 @@
             </div>
             
             <div class="controls-box">
-                <a href="https://nickeldefiancepriest.com/uz5gxng1g?key=64a81be87aa8191cfc7d82578512a0c3" target="_blank" class="prominent-fix-btn">
+                <a href="javascript:location.reload();" class="prominent-fix-btn">
                     <i class="fas fa-sync-alt"></i> ⚡ Fix Lag / Refresh Stream
                 </a>
 
@@ -157,13 +157,6 @@
 
         function init() {
             if (!sessionStorage.getItem('tgModalShown')) { document.getElementById('tgModal').style.display = 'flex'; }
-
-            if (!sessionStorage.getItem('adShown')) {
-                let adScript = document.createElement('script');
-                adScript.src = "https://nickeldefiancepriest.com/e3/07/dc/e307dcd6c8c6b91d30a32cb2ac7540cb.js"; 
-                document.body.appendChild(adScript);
-                sessionStorage.setItem('adShown', 'true');
-            }
 
             const urlParams = new URLSearchParams(window.location.search);
             activeCh = channels.find(c => c.id === urlParams.get('id')) || channels[0];

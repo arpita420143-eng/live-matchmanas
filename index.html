@@ -6,7 +6,9 @@
     <title>MKS Study System - Live</title>
     
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.compiled.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -37,6 +39,7 @@
         .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; height: 320px; }
         @media(min-width: 600px) { .video-wrapper { height: 450px; aspect-ratio: 16/9; } }
         
+        #shaka-container { width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
         #iframe-box iframe { width: 100%; height: 100%; border: none; }
@@ -88,7 +91,10 @@
                 <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
                 <div id="quality-menu"><div id="quality-list"></div></div>
                 
-                <video id="video" controls autoplay playsinline></video>
+                <div id="shaka-container">
+                    <video id="video" autoplay playsinline></video>
+                </div>
+                
                 <div id="iframe-box"></div>
                 <div id="loader"></div>
             </div>
@@ -117,21 +123,21 @@
 
     <script>
         const channels = [
-            // 1. Willow HD (Set as Default again)
-            { 
-                id: "willow", 
-                name: "Willow HD", 
-                url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", 
-                type: "hls" 
-            },
-
-            // 2. Advanced DRM Code (Type: dash)
+            // 1. Advanced DRM Code (TEN CRICKET)
             { 
                 id: "ten", 
                 name: "TEN CRICKET", 
                 url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", 
                 type: "dash", 
                 keys: { "294b5761cefc22d0c6312939e13d8278": "52148f1042d238849f0a7813f1da8a7b" }
+            },
+
+            // 2. Willow HD
+            { 
+                id: "willow", 
+                name: "Willow HD", 
+                url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", 
+                type: "hls" 
             },
             
             // 3. WebCric iframe embed
@@ -145,6 +151,7 @@
 
         let hls = null;
         let shakaPlayerInstance = null;
+        let shakaUI = null;
         let activeCh = null;
         let clickCount = 0;
         let viewerCount = Math.floor(Math.random() * 30) + 40; 
@@ -173,6 +180,7 @@
         function loadPlayer(ch) {
             activeCh = ch;
             const video = document.getElementById('video');
+            const shakaContainer = document.getElementById('shaka-container');
             const iframeBox = document.getElementById('iframe-box');
             const loader = document.getElementById('loader');
             const wrapper = document.getElementById('videoWrapper');
@@ -185,26 +193,34 @@
             
             // Cleanup old players
             if(hls) { hls.destroy(); hls = null; }
+            if(shakaUI) { shakaUI.destroy(); shakaUI = null; }
             if(shakaPlayerInstance) { shakaPlayerInstance.destroy(); shakaPlayerInstance = null; }
 
             if (ch.isIframe) {
-                video.style.display = 'none';
+                shakaContainer.style.display = 'none';
                 settingsBtn.style.display = 'none';
                 iframeBox.style.display = 'block';
                 iframeBox.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" scrolling="no"></iframe>`;
                 setTimeout(() => { loader.style.display = 'none'; }, 2000);
             
             } else if (ch.type === "dash") {
-                // Advanced DRM Player Logic
-                video.style.display = 'block';
+                // Advanced DRM Player UI
+                shakaContainer.style.display = 'block';
                 settingsBtn.style.display = 'none'; 
                 iframeBox.style.display = 'none';
                 iframeBox.innerHTML = "";
+                video.controls = false; // Disable buggy native controls
 
                 shaka.polyfill.installAll();
                 if (shaka.Player.isBrowserSupported()) {
                     shakaPlayerInstance = new shaka.Player(video);
+                    shakaUI = new shaka.ui.Overlay(shakaPlayerInstance, shakaContainer, video);
                     
+                    // CLEAN UI: Added 'quality' back to the panel
+                    shakaUI.configure({
+                        'controlPanelElements': ['play_pause', 'spacer', 'mute', 'quality', 'fullscreen']
+                    });
+
                     if (ch.keys) {
                         shakaPlayerInstance.configure({
                             drm: { clearKeys: ch.keys }
@@ -224,7 +240,8 @@
                 // Normal HLS Logic
                 iframeBox.style.display = 'none';
                 iframeBox.innerHTML = "";
-                video.style.display = 'block';
+                shakaContainer.style.display = 'block';
+                video.controls = true; // Enable native controls for HLS
                 settingsBtn.style.display = 'block';
 
                 if (Hls.isSupported()) {
@@ -280,3 +297,4 @@
     </script>
 </body>
 </html>
+

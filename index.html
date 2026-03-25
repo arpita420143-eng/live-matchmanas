@@ -123,21 +123,21 @@
 
     <script>
         const channels = [
-            // 1. Advanced DRM Code (TEN CRICKET)
+            // 1. Willow HD (Default)
+            { 
+                id: "willow", 
+                name: "Willow HD", 
+                url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", 
+                type: "hls" 
+            },
+
+            // 2. Advanced DRM Code (TEN CRICKET)
             { 
                 id: "ten", 
                 name: "TEN CRICKET", 
                 url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", 
                 type: "dash", 
                 keys: { "294b5761cefc22d0c6312939e13d8278": "52148f1042d238849f0a7813f1da8a7b" }
-            },
-
-            // 2. Willow HD
-            { 
-                id: "willow", 
-                name: "Willow HD", 
-                url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", 
-                type: "hls" 
             },
             
             // 3. WebCric iframe embed
@@ -286,7 +286,7 @@
         }
 
         setInterval(() => {
-            let change = Math.floor(Math.random() * 6) - 2; 
+            let change = Math.floor(Math.random() * 5) - 2; 
             viewerCount += change;
             if (viewerCount > 99) viewerCount = 98;
             if (viewerCount < 15) viewerCount = 15;
@@ -297,4 +297,3 @@
     </script>
 </body>
 </html>
-

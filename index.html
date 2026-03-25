@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MKS Study System - Live</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.compiled.js"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -30,24 +33,9 @@
             .player-box { border-radius: 12px; border: 1px solid #333; margin-top: 5px; }
         }
         
-        /* --- VIDEO WRAPPER (FIXED HEIGHT 320PX) --- */
-        .video-wrapper { 
-            position: relative; 
-            width: 100%; 
-            background: #000; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden;
-            
-            /* MOBILE FIXED HEIGHT */
-            height: 320px;
-        }
-        
-        /* Desktop ke liye height badha denge */
-        @media(min-width: 600px) {
-            .video-wrapper { height: 450px; aspect-ratio: 16/9; }
-        }
+        /* --- VIDEO WRAPPER --- */
+        .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; height: 320px; }
+        @media(min-width: 600px) { .video-wrapper { height: 450px; aspect-ratio: 16/9; } }
         
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
@@ -72,10 +60,6 @@
         .action-btn { padding: 12px; border-radius: 8px; color: white; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .tg { background: var(--accent-blue); } .yt { background: var(--accent-red); }
         
-        /* MODAL */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 11, 14, 0.98); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .modal-box { background: #1a1c23; border-radius: 16px; padding: 25px 20px; width: 90%; max-width: 350px; text-align: center; border: 1px solid #333; }
-        
         /* FOOTER */
         .site-footer { text-align: center; padding: 20px 10px; border-top: 1px solid #222; color: #777; font-size: 11px; background: #0a0b0e; line-height: 1.6; }
         
@@ -84,15 +68,6 @@
     </style>
 </head>
 <body>
-
-    <div class="modal-overlay" id="tgModal">
-        <div class="modal-box">
-            <div style="font-size: 20px; font-weight: 800; color: white; margin-bottom: 10px;">Join Telegram! 📢</div>
-            <div style="font-size: 14px; color: #bbb; margin-bottom: 20px;">Get 100% Accurate Match Reports!</div>
-            <a href="https://t.me/MKSSports_3" target="_blank" style="background: #0088cc; display: block; padding: 12px; border-radius: 8px; color: white; text-decoration: none; font-weight: 700;" onclick="closeTelegramModal()">🚀 Join Now</a>
-            <div style="background: #2a2d3a; margin-top: 10px; padding: 12px; border-radius: 8px; color: #ddd; cursor: pointer;" onclick="closeTelegramModal()">Already Joined</div>
-        </div>
-    </div>
 
     <div class="header">
         <div class="logo" onclick="unlockSecret()">MKS <span>STUDY SYSTEM</span></div>
@@ -142,30 +117,45 @@
 
     <script>
         const channels = [
-            // 1. WILLOW HD
-            { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", isIframe: false },
-            // 2. WEB STREAM
-            { id: "mkslive", name: "Web Stream 1", url: "https://www.youtube.com/embed/TfHa5vXG8Ik", isIframe: true },
-            // 3. YOUTUBE
-            { id: "LSG", name: "YouTube Live", url: "https://www.youtube.com/embed/ml2jEHaE7gI", isIframe: true }
+            // 1. Willow HD (Set as Default again)
+            { 
+                id: "willow", 
+                name: "Willow HD", 
+                url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", 
+                type: "hls" 
+            },
+
+            // 2. Advanced DRM Code (Type: dash)
+            { 
+                id: "ten", 
+                name: "TEN CRICKET", 
+                url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", 
+                type: "dash", 
+                keys: { "294b5761cefc22d0c6312939e13d8278": "52148f1042d238849f0a7813f1da8a7b" }
+            },
+            
+            // 3. WebCric iframe embed
+            { 
+                id: "livematch", 
+                name: "WebCric Link", 
+                url: "https://go.webcric.com/frame5.htm", 
+                isIframe: true 
+            }
         ];
 
         let hls = null;
+        let shakaPlayerInstance = null;
         let activeCh = null;
         let clickCount = 0;
         let viewerCount = Math.floor(Math.random() * 30) + 40; 
 
         function init() {
-            if (!sessionStorage.getItem('tgModalShown')) { document.getElementById('tgModal').style.display = 'flex'; }
-
             const urlParams = new URLSearchParams(window.location.search);
             activeCh = channels.find(c => c.id === urlParams.get('id')) || channels[0];
-            
             loadPlayer(activeCh);
             renderSecretMenu();
         }
 
-        function closeTelegramModal() { document.getElementById('tgModal').style.display = 'none'; sessionStorage.setItem('tgModalShown', 'true'); }
         function unlockSecret() { clickCount++; if (clickCount === 5) { clickCount = 0; if (prompt("Password:") === "manas") document.getElementById('secret-menu').style.display = 'block'; } }
 
         function renderSecretMenu() {
@@ -193,15 +183,45 @@
             loader.style.display = 'block';
             qualityMenu.style.display = 'none';
             
+            // Cleanup old players
             if(hls) { hls.destroy(); hls = null; }
+            if(shakaPlayerInstance) { shakaPlayerInstance.destroy(); shakaPlayerInstance = null; }
 
-            if (ch.isIframe || ch.url.includes('embed') || ch.url.includes('pages.dev')) {
+            if (ch.isIframe) {
                 video.style.display = 'none';
                 settingsBtn.style.display = 'none';
                 iframeBox.style.display = 'block';
                 iframeBox.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" scrolling="no"></iframe>`;
                 setTimeout(() => { loader.style.display = 'none'; }, 2000);
+            
+            } else if (ch.type === "dash") {
+                // Advanced DRM Player Logic
+                video.style.display = 'block';
+                settingsBtn.style.display = 'none'; 
+                iframeBox.style.display = 'none';
+                iframeBox.innerHTML = "";
+
+                shaka.polyfill.installAll();
+                if (shaka.Player.isBrowserSupported()) {
+                    shakaPlayerInstance = new shaka.Player(video);
+                    
+                    if (ch.keys) {
+                        shakaPlayerInstance.configure({
+                            drm: { clearKeys: ch.keys }
+                        });
+                    }
+                    
+                    shakaPlayerInstance.load(ch.url).then(function() {
+                        loader.style.display = 'none';
+                        video.play().catch(() => { video.muted = true; video.play(); });
+                    }).catch(function(e) {
+                        console.error('Error loading DRM stream', e);
+                        loader.style.display = 'none';
+                    });
+                }
+            
             } else {
+                // Normal HLS Logic
                 iframeBox.style.display = 'none';
                 iframeBox.innerHTML = "";
                 video.style.display = 'block';

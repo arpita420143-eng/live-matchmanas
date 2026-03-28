@@ -6,14 +6,18 @@
     <title>MKS Study System - Live</title>
     
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* --- PREMIUM DARK THEME --- */
         :root { --bg-main: #0a0b0e; --bg-card: #14161c; --accent-red: #e50914; --accent-blue: #0088cc; --text-main: #ffffff; }
         body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
         
+        /* HEADER */
         .header { position: sticky; top: 0; z-index: 100; background: rgba(20, 22, 28, 0.95); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; backdrop-filter: blur(10px); }
         .logo { font-size: 18px; font-weight: 900; color: white; cursor: pointer; user-select: none; text-transform: uppercase; }
         .logo span { color: var(--accent-red); }
@@ -21,14 +25,17 @@
         .h-btn { padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; }
         .hb-tg { background: var(--accent-blue); } .hb-yt { background: var(--accent-red); }
 
+        /* MAIN CONTAINER */
         .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
         
+        /* PLAYER BOX */
         .player-box { width: 100%; max-width: 800px; background: var(--bg-card); overflow: hidden; border-bottom: 1px solid #333; margin-top: 0; }
         @media(min-width: 600px) {
             .main-container { padding: 10px; }
             .player-box { border-radius: 12px; border: 1px solid #333; margin-top: 5px; }
         }
         
+        /* --- VIDEO WRAPPER --- */
         .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; height: 320px; }
         @media(min-width: 600px) { .video-wrapper { height: 450px; aspect-ratio: 16/9; } }
         
@@ -37,15 +44,18 @@
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
         #iframe-box iframe { width: 100%; height: 100%; border: none; }
         
+        /* LIVE BADGE */
         .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(0, 0, 0, 0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 8px; pointer-events: none; }
         .live-dot { width: 8px; height: 8px; background: #e50914; border-radius: 50%; animation: blink 1.2s infinite ease-in-out; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
+        /* SETTINGS BTN */
         .settings-btn { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(5px); font-size: 16px; transition: 0.3s; display: none; }
         #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; overflow: hidden; }
         .q-item { padding: 10px 12px; font-size: 13px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .q-item:hover { background: #333; } .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
         
+        /* CONTROLS & BUTTONS */
         .controls-box { padding: 15px 10px; }
         .prominent-fix-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; margin-bottom: 15px; background: linear-gradient(45deg, #ffb400, #ff8800); color: #000; font-weight: 900; font-size: 16px; border-radius: 12px; text-decoration: none; text-transform: uppercase; animation: glow 2s infinite; text-align: center; }
         @keyframes glow { 0%, 100% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 20px #ffb400; } }
@@ -53,6 +63,7 @@
         .action-btn { padding: 12px; border-radius: 8px; color: white; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .tg { background: var(--accent-blue); } .yt { background: var(--accent-red); }
         
+        /* FOOTER */
         .site-footer { text-align: center; padding: 20px 10px; border-top: 1px solid #222; color: #777; font-size: 11px; background: #0a0b0e; line-height: 1.6; }
         
         #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 5; }
@@ -111,14 +122,79 @@
 
     <script>
         const channels = [
-            { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", type: "hls" },
-            { id: "ten", name: "TEN CRICKET", url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", type: "dash", keys: { "294b5761cefc22d0c6312939e13d8278": "52148f1042d238849f0a7813f1da8a7b" } },
-            { id: "CSK", name: "CSK PODCAST 1", url: "https://www.youtube.com/embed/JK7S1T-mS0E", isIframe: true },
-            { id: "RCBvsSRHhindi", name: "RCB VS SRH", url: "https://go.webcric.com/hindi.htm", isIframe: true },
-            { id: "livematch", name: "WebCric Link", url: "https://go.webcric.com/frame5.htm", isIframe: true },
-            { id: "starsp3_crichd", name: "Star Sports 3 Live", url: "https://playerado.top/embed2.php?id=starsp3&v=su", isIframe: true },
-            { id: "174", name: "Star Sports 1 Hindi HD", url: "https://jiotvpllive.cdn.jio.com/bpk-tv//Star_Sports_HD1_Hindi_BTS/output/index.mpd", type: "dash", keys: { "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4" } },
-            { id: "hotstar_live", name: "Hotstar Stream", url: "https://livetv.hotstar.com/mp1/gec-india-1540065788/fa6a4f0005ef4f90ab24484d165b0aaf/index.mpd?hdntl=exp=1774763750~acl=%2f*~id=d7828cfbfc2fe7f0bae649921447adbd~data=hdntl~hmac=5d4969603847e329355c7cdce346fb3c33f6a1333c0468c13f432ec9bcd380df", type: "dash", keys: { "81872faa1d6b45fa9045cdeb2e310000": "9b88168e61274587a471962c46b94675" }, customHeaders: { "User-Agent": "Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)" } }
+            // 1. Willow HD (Default)
+            { 
+                id: "willow", 
+                name: "Willow HD", 
+                url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", 
+                type: "hls" 
+            },
+
+            // 2. Advanced DRM Code (TEN CRICKET)
+            { 
+                id: "ten", 
+                name: "TEN CRICKET", 
+                url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", 
+                type: "dash", 
+                keys: { "294b5761cefc22d0c6312939e13d8278": "52148f1042d238849f0a7813f1da8a7b" }
+            },
+            
+            // 3. Youtube iframe embed
+            { 
+                id: "CSK", 
+                name: "CSK PODCAST 1", 
+                url: "https://www.youtube.com/embed/JK7S1T-mS0E", 
+                isIframe: true 
+            },
+            
+            // 4. Cricbuzz Hindi
+            { 
+                id: "RCBvsSRHhindi", 
+                name: "RCB VS SRH", 
+                url: "https://go.webcric.com/hindi.htm", 
+                isIframe: true 
+            },
+            
+            // 5. WebCric iframe embed
+            { 
+                id: "livematch", 
+                name: "WebCric Link", 
+                url: "https://go.webcric.com/frame5.htm", 
+                isIframe: true 
+            },
+            
+            // 6. Playerado / CricHD Stream
+            {
+                id: "starsp3_crichd",
+                name: "Star Sports 3 Live",
+                url: "https://playerado.top/embed2.php?id=starsp3&v=su",
+                isIframe: true
+            },
+            
+            // 7. JioTV Star Sports 1 Hindi HD (Auto Token + Fallbacks)
+            { 
+                id: "174", 
+                name: "Star Sports 1 Hindi HD", 
+                urls: [
+                    "https://jiotvpllive.cdn.jio.com/bpk-tv//Star_Sports_HD1_Hindi_BTS/output/index.mpd",
+                    "https://jiotvmblive.cdn.jio.com/bpk-tv//Star_Sports_HD1_Hindi_BTS/output/index.mpd",
+                    "https://jiotvbpkmob.cdn.jio.com/bpk-tv//Star_Sports_HD1_Hindi_BTS/output/index.mpd"
+                ],
+                type: "dash", 
+                keys: { "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4" }
+            },
+            
+            // 8. Hotstar Stream
+            {
+                id: "hotstar_live",
+                name: "Hotstar Stream",
+                url: "https://livetv.hotstar.com/mp1/gec-india-1540065788/fa6a4f0005ef4f90ab24484d165b0aaf/index.mpd?hdntl=exp=1774763750~acl=%2f*~id=d7828cfbfc2fe7f0bae649921447adbd~data=hdntl~hmac=5d4969603847e329355c7cdce346fb3c33f6a1333c0468c13f432ec9bcd380df",
+                type: "dash",
+                keys: { "81872faa1d6b45fa9045cdeb2e310000": "9b88168e61274587a471962c46b94675" },
+                customHeaders: {
+                    "User-Agent": "Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)"
+                }
+            }
         ];
 
         let hls = null;
@@ -127,7 +203,8 @@
         let activeCh = null;
         let clickCount = 0;
         let viewerCount = Math.floor(Math.random() * 30) + 40; 
-                async function fetchJioToken() {
+                // --- FETCH DYNAMIC JIO TOKEN ---
+        async function fetchJioToken() {
             try {
                 const listRes = await fetch("https://raw.githubusercontent.com/Shubhamkur/Tv/refs/heads/main/Cookies");
                 const urlArray = await listRes.json();
@@ -170,6 +247,7 @@
             });
         }
 
+        // --- ASYNC LOAD PLAYER FUNCTION ---
         async function loadPlayer(ch) {
             activeCh = ch;
             const video = document.getElementById('video');
@@ -184,6 +262,7 @@
             loader.style.display = 'block';
             qualityMenu.style.display = 'none';
             
+            // Cleanup old players
             if(hls) { hls.destroy(); hls = null; }
             if(shakaUI) { shakaUI.destroy(); shakaUI = null; }
             if(shakaPlayerInstance) { shakaPlayerInstance.destroy(); shakaPlayerInstance = null; }
@@ -196,6 +275,7 @@
                 setTimeout(() => { loader.style.display = 'none'; }, 2000);
             
             } else if (ch.type === "dash") {
+                // Advanced DRM Player UI
                 shakaContainer.style.display = 'block';
                 settingsBtn.style.display = 'none'; 
                 iframeBox.style.display = 'none';
@@ -209,23 +289,31 @@
                     
                     shakaUI.configure({ 'controlPanelElements': ['play_pause', 'spacer', 'mute', 'quality', 'fullscreen'] });
 
-                    if (ch.keys) {
-                        shakaPlayerInstance.configure({ drm: { clearKeys: ch.keys } });
-                    }
+                    // --- THE FIX: JIO SYNC SETTINGS ---
+                    shakaPlayerInstance.configure({
+                        drm: ch.keys ? { clearKeys: ch.keys } : {},
+                        manifest: { defaultPresentationDelay: 5 },
+                        streaming: { safeSeekOffset: 5, bufferingGoal: 10, rebufferingGoal: 2, lowLatencyMode: true }
+                    });
 
+                    // --- NEW: DYNAMIC TOKEN FETCH FOR JIO ---
                     let jioToken = "";
-                    if (ch.url.includes('jio.com')) {
+                    if ((ch.url && ch.url.includes('jio.com')) || (ch.urls && ch.urls[0].includes('jio.com'))) {
                         jioToken = await fetchJioToken(); 
                     }
 
+                    // --- CUSTOM HEADERS & NETWORK BYPASS ---
                     shakaPlayerInstance.getNetworkingEngine().registerRequestFilter((type, request) => {
+                        
+                        // Add custom headers if they exist
                         if (ch.customHeaders) {
                             for (let header in ch.customHeaders) {
                                 request.headers[header] = ch.customHeaders[header];
                             }
                         }
 
-                        if (ch.url.includes('jio.com')) {
+                        // Specific Jio Bypass Rules
+                        if (request.uris[0].includes('jio.com')) {
                             request.headers['Referer'] = 'https://www.jiotv.com/';
                             request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6';
                             
@@ -236,16 +324,30 @@
                         }
                     });
                     
-                    try {
-                        await shakaPlayerInstance.load(ch.url);
-                        loader.style.display = 'none';
-                        video.play().catch(() => { video.muted = true; video.play(); });
-                    } catch (e) {
-                        console.error('Error loading DRM stream', e);
+                    // --- THE FIX: MULTIPLE URL FALLBACK LOGIC ---
+                    let urlsToTry = ch.urls ? ch.urls : [ch.url];
+                    let streamLoaded = false;
+
+                    for (let i = 0; i < urlsToTry.length; i++) {
+                        try {
+                            await shakaPlayerInstance.load(urlsToTry[i]);
+                            loader.style.display = 'none';
+                            video.play().catch(() => { video.muted = true; video.play(); });
+                            streamLoaded = true;
+                            break; 
+                        } catch (e) {
+                            console.warn(`URL ${i+1} Failed, trying next...`, e);
+                        }
+                    }
+
+                    if (!streamLoaded) {
+                        console.error('All URLs blocked or down.');
                         loader.style.display = 'none';
                     }
                 }
+            
             } else {
+                // Normal HLS Logic
                 iframeBox.style.display = 'none';
                 iframeBox.innerHTML = "";
                 shakaContainer.style.display = 'block';
@@ -259,7 +361,8 @@
                         video.play().catch(() => { video.muted = true; video.play(); }); 
                         generateQualityOptions(); 
                     });
-                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                }
+                else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                     video.src = ch.url;
                     video.addEventListener('loadedmetadata', function() { loader.style.display = 'none'; video.play(); });
                     settingsBtn.style.display = 'none'; 

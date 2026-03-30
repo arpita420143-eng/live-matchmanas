@@ -7,8 +7,8 @@
     
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -71,6 +71,7 @@
     </style>
 </head>
 <body>
+
     <div class="header">
         <div class="logo" onclick="unlockSecret()">MKS <span>STUDY SYSTEM</span></div>
         <div class="head-btns">
@@ -119,8 +120,7 @@
         © MKS STUDY SYSTEM — Made with <span style="color: #e50914;">❤️</span>.<br>
         I am not the owner of any channels or content displayed. If you wish content removed, contact us and we will respond promptly.
     </div>
-
-    <script>
+        <script>
         const channels = [
             // 1. Willow HD (Default)
             { 
@@ -129,7 +129,6 @@
                 url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", 
                 type: "hls" 
             },
-
             // 2. Advanced DRM Code (TEN CRICKET)
             { 
                 id: "ten", 
@@ -138,15 +137,13 @@
                 type: "dash", 
                 keys: { "294b5761cefc22d0c6312939e13d8278": "52148f1042d238849f0a7813f1da8a7b" }
             },
-            
-            // 3. Youtube iframe embed
+            // 3. Youtube iframe embed or webcric embed
             { 
                 id: "CSK", 
                 name: "CSK PODCAST 1", 
                 url: "https://www.youtube.com/embed/JK7S1T-mS0E", 
                 isIframe: true 
             },
-            
             // 4. Cricbuzz Hindi
             { 
                 id: "RCBvsSRHhindi", 
@@ -154,24 +151,42 @@
                 url: "https://go.webcric.com/frame2.htm", 
                 isIframe: true 
             },
-            
-            // 5. WebCric iframe embed
+            // 5. CricHD / Playerado Stream
+            { 
+                id: "starhindi", 
+                name: "Star Sports hindi Live", 
+                url: "https://playerado.top/embed2.php?id=starsp3&v=su", 
+                isIframe: true 
+            },
+            // 6. CricHD / Playerado Stream
+            { 
+                id: "starenglish", 
+                name: "Star Sports English Live", 
+                url: "https://playerado.top/embed2.php?id=starsp1&v=su", 
+                isIframe: true 
+            },
+            // 7. Cricbuzz IPL
+            { 
+                id: "cricbuzz", 
+                name: "Cricbuzz IPL", 
+                url: "https://playerado.top/embed2.php?id=willowhd&v=su", 
+                isIframe: true 
+            },
+            // 8. WebCric iframe embed
             { 
                 id: "livematch", 
                 name: "WebCric Link", 
                 url: "https://go.webcric.com/frame1.htm", 
                 isIframe: true 
             },
-            
-            // 6. Playerado / CricHD Stream
+            // 9. Allrounder Star Sports Iframe
             {
-                id: "starenglish",
-                name: "Star Sports 3 Live",
-                url: "https://playerado.top/embed2.php?id=starsp3&v=su",
+                id: "star_allrounder",
+                name: "Star Sports 1 (Allrounder)",
+                url: "https://allrounder-live2.pages.dev/star/star-1-hindi",
                 isIframe: true
             },
-            
-            // 7. JioTV Star Sports 1 Hindi HD (Auto Token + Fallbacks)
+            // 10. JioTV Star Sports 1 Hindi HD
             { 
                 id: "mkssports1", 
                 name: "Star Sports 1 Hindi HD", 
@@ -183,7 +198,7 @@
                 type: "dash", 
                 keys: { "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4" }
             },
-            // 8. JioTV Star Sports 1 HD (Auto Token + Fallbacks)
+            // 11. JioTV Star Sports 1 HD
             { 
                 id: "mkssports2", 
                 name: "Star Sports 1 HD", 
@@ -195,7 +210,7 @@
                 type: "dash", 
                 keys: { "965dc2ddb1d85138ad787999a7f30ca5": "859695076e67fe961836b564db6d689c" }
             },
-            // 9. JioTV Star Sports 2 Tamil HD (Auto Token + Fallbacks)
+            // 12. JioTV Star Sports 2 Tamil HD
             { 
                 id: "mkssports3", 
                 name: "Star Sports 2 Tamil HD", 
@@ -206,27 +221,6 @@
                 ],
                 type: "dash", 
                 keys: { "dc44fe6251825774b90d58dcfa7d94e0": "63e3ae853f483a86752b5b9e6d61eb20" }
-            },
-            // 10. Hotstar 
-            { 
-                id: "hotstar", 
-                name: "hotstar hd", 
-                url: "https://aps33.playlist.live-video.net/v1/playlist/CuAH2nlgHJdCdwwNkQbGPey7TsJBR-AdVxaZgqkagN-UOmEJKUkLce3Y5l_4Qh61De11L7BP3lDY5TKQ7nman5Xn-7TkYB_LXH9IvI30L_Trkm2XgoQ5PYjrgMpQm8uOLMKh4v9v1L_8rPC4LFlrSghiDIW2DBPThVOIbNPO0f1yyc9FvUW_hDR_3T_aUI8qLHxjCPhCuC4aiWbOvjYL2KZD_5o9iB5yCgWBxS6mgFdr773TBOOifE12FTz0ccoMerbf5gJez-iyY1nPRQLSh7BX3icR7lfGDC2DFWHcaMH_-EE2Jhia6jFjaiEkCV1e7eFFrf__4BMt7SrD6v2yt7clUAgnY5lnz1UFKV9N7wRah3BOcvHchSNfGV9Ly9vuaUKRIZBjkHDUk5VhCRBYRA4HOdbvETpUlrGWEMyA9nL_ypXIp6eNjpqCTTDaM7NG1s_hXI_xpnTriAo5yOqaNTLg6-x9gkP1SjDOCcBv6u7LLpHtDSgBg0zgt2ZJVLceXZ6QTLtxmmlLXB2TEsRqheRvTFgHMMxYfBERs39oSOm8HaWzIjdP08XmRgYfiyjzpCBoGARoGyFufWrJ_-JPkHx3PuT-KlcE0LlGLszZJ6XetS6ep-JuOx9yScZRC_hXs7ZGqdNBbfp-aoiBRAnbcWs1kZUBYIgAkEPdlQrAxBx9H_F3ruDGf1_UytB8N6A8onIb9ppuaG39_R2-4J63XZJl9A5LWdXrZdJ3Mcwpzt76GL7ASzabIvWtIVy8m5-9sTvH9Swo6w1sVzvGR3j2zr-DPA45sl9igGVzpTecBd4PiXE_5F0SOpWjelIm9_k8GMtGjqXqYmimLMZKzzho5b-IamgzqhJfgP1PJMcKb4LcPWKxvhUsAm9xOPjG6fLdXmhovIViCvCIYG-mIQvlYFLEnIzNxk-3UCiWGkrS3kYGgqqQkIBjj6DkmJERaVq5r7CFNIREe9vxAhX80FldAEPbuJ9NLpYnSbGxwG905TBtpxDOYYqNxgwtQeur911nI1S_zPPI-2YaWGbfoa-neizuRJ3VqT-vk0t58DGtwwTqexWOr0gLZrDeexXBb_A4g028BWGQp0xpmbZDMOg3VKYpD6aCPwNPAamkoxPqpPdfZTYDLjE-AFA88VsFTs-jmpQrcwk7QeRH5S8Tmpss9Rn-7560m5Dfm6xj1V0sNP-G_s09mhOo3pWNYjxLJUKF0WgsBoTEBjuUiStcakMiyby9yxBAPUA3MwqRWj7Hm2zfmv8td5rE2-bRaQB-4ZF17xgaFl5juwxuuPr4i5fS1w1gpUlfcY-GZ-xrTpRePRc1QVYaDJGNTzi1mslsdm9VjSABKgl1cy13ZXN0LTIw4Q4.m3u8", 
-                type: "hls" 
-            },
-            // 11. Fox cricket 
-            { 
-                id: "fox", 
-                name: "fox cricket", 
-                url: "https://aps33.playlist.live-video.net/v1/playlist/Ct4HHxJSxcV8ANu5-W2nb8bkLgnxuphSGsiDSdTTG7UE3jWGdc3QQw2VomBPMWyEOw9W2isANX5CmuoL0mm6hWXanvR1NbFFGrs1nZv1BTkPbTgiJD__zg7jXdKYGey20Vsw8rvlZInY7c2BAu-SafKl8KAJEnLOi4qurbuZFlMWUbeyJfeOFGGo-C6YNk7_GCsPCPxn1QBGjzi_jTpxUFQbTN8oi6h5V6caQ1Lo0QlxHttpyeMWf4gG9mdd64W8Pgaqy14qzESLsY4Sqe2OX_pVi2woJdS2XhFIX9uJaa-CbbaHD7wzua_vGt-QFo9BsOaxY7tXGdBxwMB3RLIQwWYTlCDfEJSbAUk4F_u67BAg1EsEQFKWRW2fO24OlCKHzjqUm8cc9MQlaRbqqk576QHKJwDs5AtIHazLuYaJ68VO2RKRFVP9-U-04Syi8mpvuiaC82ftoBb5IS_M02mKeDXchsLL5HwrDotGhyqlzUrkiQVOzxklITEkwZX4T3TMtlQ89ND6u3u5Ph4GEPyOzfkitv_1BuSZZCuj0pA8VTyPiooUbUnemC8KL2qVz6ZZ3_brpFOYEKDWrTPn8wg7a9xzsl7JrTNfeb_Z_DYBjoIH77b6CN75rvRXj34l0X9pjIsY-MhTbgDTQOEk5bgCGMzTOn7PvizX-c7DUHleMue9Q_j1I-i26zH6ve62svYSyStBnYeSzGDcXyRPoCEz24kCK-bYAUOQItII194ICg5KyQvdVhgwthukTaFeF06LVI65xL9Z1_OOnEDKJbkHDZLOnV6fozplWTIAi131vvKM1EKdEt7ehu3zPVf-qrrw8jtoPBCnlNHFTLVufBw1932LRwjVmhpQc-ViUzdYl6RkfM0wPqccuLZoodAcJJHLoWez_dOv-BQ11tqNjTCXlJrHYu_m-xVvshzrH7V7gZ-5bqc_2weVRcud1O5j2QyUCujSfsWQfG0fUGdvmMBi4xsfeznweg6Us6jK84x1u45wq563MMZzJ6dHfwWWXoNha_KCautnHMG4cd16NFRe2oB2nUCTLwIn9176MnhSG2RDDzstCWOnReIpBjb5rtl5vc5GNaByiN6C7HrqOEUhlNvmdUGEL0yFj9mUV0pF1e4t4ApTG2AgsUJQK9P6sspIdobx_S9TPk5QWclcIhW0RcybVsIuWl-qficw9aTE-HR8uJ7Iiid00tF-B3AOhD4cG1os-iKhlHxqtAkq_nJn2Y3KBP5JhybMcUsq2ejn6-lPFQLazKOwc1AUYZMpVSTkbJnD62L-CSShRzMeUfY6BSiRxer0x-hIJvOmyYwr5T0iGgxkNGN2uzYiqSxBCKwgASoJdXMtd2VzdC0yMOEO.m3u8", 
-                type: "hls" 
-            },
-            // 12. Allrounder Star Sports Iframe
-            {
-                id: "star_allrounder",
-                name: "Star Sports 1 (Allrounder)",
-                url: "https://allrounder-live2.pages.dev/star/star-1-hindi",
-                isIframe: true
             }
         ];
 
@@ -236,7 +230,8 @@
         let activeCh = null;
         let clickCount = 0;
         let viewerCount = Math.floor(Math.random() * 30) + 40; 
-                // --- FETCH DYNAMIC JIO TOKEN ---
+
+        // --- FETCH DYNAMIC JIO TOKEN ---
         async function fetchJioToken() {
             try {
                 const listRes = await fetch("https://raw.githubusercontent.com/Shubhamkur/Tv/refs/heads/main/Cookies");
@@ -280,7 +275,6 @@
             });
         }
 
-        // --- ASYNC LOAD PLAYER FUNCTION ---
         async function loadPlayer(ch) {
             activeCh = ch;
             const video = document.getElementById('video');
@@ -322,30 +316,21 @@
                     
                     shakaUI.configure({ 'controlPanelElements': ['play_pause', 'spacer', 'mute', 'quality', 'fullscreen'] });
 
-                    // --- THE FIX: JIO SYNC SETTINGS ---
+                    // Handle DRM and Synchronization Settings
                     shakaPlayerInstance.configure({
                         drm: ch.keys ? { clearKeys: ch.keys } : {},
                         manifest: { defaultPresentationDelay: 5 },
                         streaming: { safeSeekOffset: 5, bufferingGoal: 10, rebufferingGoal: 2, lowLatencyMode: true }
                     });
 
-                    // --- NEW: DYNAMIC TOKEN FETCH FOR JIO ---
+                    // Fetch Jio Token if needed
                     let jioToken = "";
                     if ((ch.url && ch.url.includes('jio.com')) || (ch.urls && ch.urls[0].includes('jio.com'))) {
                         jioToken = await fetchJioToken(); 
                     }
 
-                    // --- CUSTOM HEADERS & NETWORK BYPASS ---
+                    // Network Filters
                     shakaPlayerInstance.getNetworkingEngine().registerRequestFilter((type, request) => {
-                        
-                        // Add custom headers if they exist
-                        if (ch.customHeaders) {
-                            for (let header in ch.customHeaders) {
-                                request.headers[header] = ch.customHeaders[header];
-                            }
-                        }
-
-                        // Specific Jio Bypass Rules
                         if (request.uris[0].includes('jio.com')) {
                             request.headers['Referer'] = 'https://www.jiotv.com/';
                             request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6';
@@ -356,8 +341,8 @@
                             }
                         }
                     });
-                    
-                    // --- THE FIX: MULTIPLE URL FALLBACK LOGIC ---
+
+                    // Load Logic (Handles ch.url or ch.urls array)
                     let urlsToTry = ch.urls ? ch.urls : [ch.url];
                     let streamLoaded = false;
 
@@ -437,6 +422,6 @@
         }, 4000);
 
         init();
-    </script>
-</body>
-</html>
+                    </script>
+                     </body>
+                      <html>

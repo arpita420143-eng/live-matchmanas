@@ -121,7 +121,7 @@
         I am not the owner of any channels or content displayed. If you wish content removed, contact us and we will respond promptly.
     </div>
         <script>
-        // 2. Extra Anti-Theft Protection: Keyboard & Right Click Blocker
+        // Extra Protection: Right click and Keyboard Shortcuts block
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
         document.onkeydown = function(e) {
             if (e.keyCode == 123 || 
@@ -131,18 +131,22 @@
             }
         };
 
-        // 3. Encrypted Data (Links are hidden in split Base64 strings to prevent easy search)
-        const part1 = "W3siaWQiOiJ3aWxsb3ciLCJuYW1lIjoiV2lsbG93IEhEIiwidXJsIjoiaHR0cHM6Ly9hbWcwMTI2OS1hbWcwMTI2OWMxLXNwb3J0c3RyaWJhbC1lbWVhLTUyMDQucGxheW91dHMubm93LmFtYWdpLnR2L3RzLWV1LXcxLW4yL3BsYXlsaXN0L2FtZzAxMjY5LXdpbGxvd3R2ZmFzdC13aWxsb3dwbHVzLXNwb3J0c3RyaWJhbGVtZWEvcGxheWxpc3QubTN1OCIsInR5cGUiOiJobHMifSx7ImlkIjoidGVuIiwibmFtZSI6IlRFTiBDUklDS0VUIiwidXJsIjoiaHR0cHM6Ly9vdHRlLmNhY2hlLmFpdi1jZG4ubmV0L2JvbS1uaXRyby9saXZlL2NsaWVudHMvZGFzaC9lbmMvY2xsZWtpZ3p6bi9vdXQvdjEv";
-        const part2 = "YmQzYjBjMzE0ZmZmNGJiMWFiNDY5MzM1OGYzY2QyZDMvY2VuYy5tcGQiLCJ0eXBlIjoiZGFzaCIsImtleXMiOnsiMjk0YjU3NjFjZWZjMjJkMGM2MzEyOTM5ZTEzZDgyNzgiOiI1MjE0OGYxMDQyZDIzODg0OWYwYTc4MTNmMWRhOGE3YiJ9fSx7ImlkIjoiQ1NLIiwibmFtZSI6IkNTSyBQT0RDQVNUIDEiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS9lbWJlZC9KSzdTMVQtbVMwRSIsImlzSWZyYW1lIjp0cnVlfSx7ImlkIjoiQ1NLdnNQQktTIiwibmFtZSI6IkNTSyB2cyBQQktTIiwidXJsIjoiaHR0cHM6Ly9nby53ZWJjcmljLmNvbS9mcmFtZTkuaHRtIiwiaXNJ";
-        const part3 = "ZnJhbWUiOnRydWV9LHsiaWQiOiJzdGFyaGluZGkiLCJuYW1lIjoiU3RhciBTcG9ydHMgaGluZGkgTGl2ZSIsInVybCI6Imh0dHBzOi8vcGxheWVyYWRvLnRvcC9lbWJlZDIucGhwP2lkPXN0YXJzcDMmdj1zdSIsImlzSWZyYW1lIjp0cnVlfSx7ImlkIjoic3RhcmVuZ2xpc2giLCJuYW1lIjoiU3RhciBTcG9ydHMgRW5nbGlzaCBMaXZlIiwidXJsIjoiaHR0cHM6Ly9hbGxyb3VuZGVyLWxpdmUucGFnZXMuZGV2L3N0YXIvc3Rhci0xIiwiaXNJZnJhbWUiOnRydWV9LHsiaWQiOiJ0YW1pbCIsIm5hbWUiOiJ0YW1pbCIsInVybCI6Imh0dHBzOi8vYWxscm91bmRlci1saXZl";
-        const part4 = "LnBhZ2VzLmRldi9zdGFyL3RhbWlsLTEiLCJpc0lmcmFtZSI6dHJ1ZX0seyJpZCI6ImxpdmVtYXRjaCIsIm5hbWUiOiJXZWJDcmljIExpbmsiLCJ1cmwiOiJodHRwczovL2dvLndlYmNyaWMuY29tL2ZyYW1lMS5odG0iLCJpc0lmcmFtZSI6dHJ1ZX0seyJpZCI6InN0YXJfYWxscm91bmRlciIsIm5hbWUiOiJTdGFyIFNwb3J0cyAxIChBbGxyb3VuZGVyKSIsInVybCI6Imh0dHBzOi8vYWxscm91bmRlci1saXZlMi5wYWdlcy5kZXYvc3Rhci9zdGFyLTEtaGluZGkiLCJpc0lmcmFtZSI6dHJ1ZX0seyJpZCI6Im1rc3Nwb3J0czEiLCJuYW1lIjoiU3RhciBTcG9ydHMgMSBIaW5k";
-        const part5 = "aSBIRCIsInVybHMiOlsiaHR0cHM6Ly9qaW90dnBsbGl2ZS5jZG4uamlvLmNvbS9icGstdHYvL1N0YXJfU3BvcnRzX0hEMV9IaW5kaV9CVFMvb3V0cHV0L2luZGV4Lm1wZCIsImh0dHBzOi8vamlvdHZtYmxpdmUuY29tLmppby5jb20vYnBrLXR2Ly9TdGFyX1Nwb3J0c19IRDVfSGluZGlfQlRTL291dHB1dC9pbmRleC5tcGQiLCJodHRwczovL2ppb3R2YnBrbW9iLmNkbi5qaW8uY29tL2Jway10di8vU3Rhci1TcG9ydHMtSEQxLUhpbmRpLUJUUy9vdXRwdXQvaW5kZXgubXBkIl0sInR5cGUiOiJkYXNoIiwia2V5cyI6eyI0MDAxMzE5OTRiNDQ1ZDhjODgxNzIwMjI0ODc2MGZk";
-        const part6 = "YSI6IjJkNTZjYjZmMDA3YTdiOWFmZjE2NWQ1MzRhZTJiZmM0In19LHsiaWQiOiJta3NzcG9ydHMyIiwibmFtZSI6IlN0YXIgU3BvcnRzIDEgSEQiLCJ1cmxzIjpbImh0dHBzOi8vamlvdHZwbGxpdmUuY29tLmppby5jb20vYnBrLXR2Ly9TdGFyX1Nwb3J0c19IRDVfQlRTL291dHB1dC9pbmRleC5tcGQiLCJodHRwczovL2ppb3R2bWJsaXZlLmNkbi5qaW8uY29tL2Jway10di8vU3Rhci1TcG9ydHMtSEQxLUJUUy9vdXRwdXQvaW5kZXgubXBkIiwiaHR0cHM6Ly9qaW90dmJwa21vYi5jZG4uamlvLmNvbS9icGstdHYvL1N0YXJfU3BvcnRzX0hEMV9CVFMvb3V0cHV0L2lu";
-        const part7 = "ZGV4Lm1wZCJdLCJ0eXBlIjoiZGFzaCIsImtleXMiOnsiOTY1ZGMyZGRiMWQ4NTEzOGFkNzg3OTk5YTdmMzBjYTUiOiI4NTk2OTUwNzZlNjdmZTk2MTgzNmI1NjRkYjZkNjg5YyJ9fSx7ImlkIjoibWtzc3BvcnRzMyIsIm5hbWUiOiJTdGFyIFNwb3J0cyAyIFRhbWlsIEhEIiwidXJscyI6WyJodHRwczovL2ppb3R2cGxsaXZlLmNkbi5qaW8uY29tL2Jway10di8vU3Rhci1TcG9ydHMyX1RhbWlsX0hEX0JUUy9vdXRwdXQvaW5kZXgubXBkIiwiaHR0cHM6Ly9qaW90dm1ibGl2ZS5jZG4uamlvLmNvbS9icGstdHYvL1N0YXJfU3BvcnRzMl9UYW1pbF9IRF9CVFMvb3V0cHV0L2luZGV4Lm1wZCJdLCJ0eXBlIjoiZGFzaCIsImtleXMiOnsiZGM0NGZlNjI1MTgyNTc3NGI5MGQ1OGRjZmE3ZDk0ZTAiOiI2M2UzYWU4NTNmNDgzYTg2NzUyYjViOWU2ZDYxZWIyMCJ9fV0=";
-        
-        // Auto-decode hidden channels list
-        const channels = JSON.parse(atob(part1 + part2 + part3 + part4 + part5 + part6 + part7));
-                    // 4. Core Player Setup
+        // YOUR LINKS ARE HERE - Easily editable on mobile
+        const channels = [
+            { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", type: "hls" },
+            { id: "ten", name: "TEN CRICKET", url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", type: "dash", keys: { "294b5761cefc22d0c6312939e13d8278": "52148f1042d238849f0a7813f1da8a7b" } },
+            { id: "CSK", name: "CSK PODCAST 1", url: "https://www.youtube.com/embed/JK7S1T-mS0E", isIframe: true },
+            { id: "CSKvsPBKS", name: "CSK vs PBKS", url: "https://go.webcric.com/frame9.htm", isIframe: true },
+            { id: "starhindi", name: "Star Sports hindi Live", url: "https://playerado.top/embed2.php?id=starsp3&v=su", isIframe: true },
+            { id: "starenglish", name: "Star Sports English Live", url: "https://allrounder-live.pages.dev/star/star-1", isIframe: true },
+            { id: "tamil", name: "tamil", url: "https://allrounder-live.pages.dev/star/tamil-1", isIframe: true },
+            { id: "livematch", name: "WebCric Link", url: "https://go.webcric.com/frame1.htm", isIframe: true },
+            { id: "star_allrounder", name: "Star Sports 1 (Allrounder)", url: "https://allrounder-live2.pages.dev/star/star-1-hindi", isIframe: true },
+            { id: "mkssports1", name: "Star Sports 1 Hindi HD", urls: ["https://jiotvpllive.cdn.jio.com/bpk-tv//Star_Sports_HD1_Hindi_BTS/output/index.mpd", "https://jiotvmblive.cdn.jio.com/bpk-tv//Star_Sports_HD1_Hindi_BTS/output/index.mpd", "https://jiotvbpkmob.cdn.jio.com/bpk-tv//Star_Sports_HD1_Hindi_BTS/output/index.mpd"], type: "dash", keys: { "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4" } },
+            { id: "mkssports2", name: "Star Sports 1 HD", urls: ["https://jiotvpllive.cdn.jio.com/bpk-tv//Star_Sports_HD1_BTS/output/index.mpd", "https://jiotvmblive.cdn.jio.com/bpk-tv//Star_Sports_HD1_BTS/output/index.mpd", "https://jiotvbpkmob.cdn.jio.com/bpk-tv//Star_Sports_HD1_BTS/output/index.mpd"], type: "dash", keys: { "965dc2ddb1d85138ad787999a7f30ca5": "859695076e67fe961836b564db6d689c" } },
+            { id: "mkssports3", name: "Star Sports 2 Tamil HD", urls: ["https://jiotvpllive.cdn.jio.com/bpk-tv//Star_Sports2_Tamil_HD_BTS/output/index.mpd", "https://jiotvmblive.cdn.jio.com/bpk-tv//Star_Sports2_Tamil_HD_BTS/output/index.mpd", "https://jiotvbpkmob.cdn.jio.com/bpk-tv//Star_Sports2_Tamil_HD_BTS/output/index.mpd"], type: "dash", keys: { "dc44fe6251825774b90d58dcfa7d94e0": "63e3ae853f483a86752b5b9e6d61eb20" } }
+        ];
+                    // Player Logic Starts Here
         let hls = null;
         let shakaPlayerInstance = null;
         let shakaUI = null;

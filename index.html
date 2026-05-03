@@ -13,51 +13,100 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* PREMIUM GLASSMORPHISM DARK THEME */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+        /* --- ULTIMATE GLOWING & ANIMATED THEME --- */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;900&display=swap');
         
-        :root { --bg-grad: linear-gradient(135deg, #0f111a, #1a1d29); --accent-red: #ff003c; --accent-blue: #0078ff; --glass-bg: rgba(255, 255, 255, 0.03); --glass-border: rgba(255, 255, 255, 0.08); }
-        body { margin: 0; background: var(--bg-grad); color: #fff; font-family: 'Poppins', sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; -webkit-user-select: none; }
+        :root { 
+            --accent-red: #ff1a40; 
+            --accent-glow: #ff0055;
+            --text-main: #ffffff;
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(20, 25, 40, 0.4);
+        }
         
-        .header { position: sticky; top: 0; z-index: 100; background: rgba(15, 17, 26, 0.85); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); backdrop-filter: blur(15px); }
-        .logo { font-size: 22px; font-weight: 800; color: white; cursor: pointer; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,0,60,0.3); transition: 0.2s; }
-        .logo:active { transform: scale(0.95); } .logo span { color: var(--accent-red); }
+        /* Moving Gradient Background */
+        body { 
+            margin: 0; 
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #240b36, #1a0000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text-main); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            display: flex; flex-direction: column; min-height: 100vh; 
+            user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; 
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         
-        .head-btns { display: flex; gap: 12px; }
-        .h-btn { padding: 8px 18px; border-radius: 50px; font-size: 13px; font-weight: 600; text-decoration: none; color: white; display: flex; align-items: center; gap: 6px; transition: 0.3s; border: 1px solid transparent; }
-        .hb-tg { background: rgba(0, 120, 255, 0.2); border-color: rgba(0, 120, 255, 0.5); color: #66b3ff; } 
-        .hb-yt { background: rgba(255, 0, 60, 0.2); border-color: rgba(255, 0, 60, 0.5); color: #ff6685; }
+        /* HEADER - GLASSY & GLOWING */
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(0, 0, 0, 0.3); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); backdrop-filter: blur(25px); box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
         
-        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 15px; width: 100%; max-width: 900px; margin: 0 auto; box-sizing: border-box; }
-        .player-box { width: 100%; background: var(--glass-bg); border-radius: 16px; border: 1px solid var(--glass-border); box-shadow: 0 15px 35px rgba(0,0,0,0.6); overflow: hidden; backdrop-filter: blur(10px); }
+        /* Glowing Logo */
+        .logo { font-size: 22px; font-weight: 900; color: white; cursor: pointer; letter-spacing: 0.5px; white-space: nowrap; display: flex; align-items: baseline; gap: 4px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+        .logo span { background: linear-gradient(90deg, #ff1a40, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(255, 26, 64, 0.8)); }
+        
+        .head-btns { display: flex; gap: 10px; }
+        .h-btn { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 6px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); }
+        .hb-tg { background: linear-gradient(45deg, rgba(0, 136, 204, 0.5), rgba(0, 85, 128, 0.5)); box-shadow: 0 0 10px rgba(0, 136, 204, 0.4); } 
+        .hb-yt { background: linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(153, 0, 0, 0.5)); box-shadow: 0 0 10px rgba(255, 0, 0, 0.4); }
+        .h-btn:active { transform: scale(0.9); }
+
+        /* MAIN CONTAINER */
+        .main-container { flex: 1; display: flex; flex-direction: column; padding: 15px; width: 100%; max-width: 800px; margin: 0 auto; box-sizing: border-box; }
+        
+        /* GLOWING PLAYER BOX */
+        .player-box { width: 100%; background: var(--glass-bg); border-radius: 18px; box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px rgba(255,26,64,0.2); overflow: hidden; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
         .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; aspect-ratio: 16/9; }
         
         #shaka-container { width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
         
-        .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(255, 0, 60, 0.15); border: 1px solid rgba(255, 0, 60, 0.4); color: white; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; pointer-events: none; backdrop-filter: blur(5px); }
-        .live-dot { width: 8px; height: 8px; background: #ff003c; border-radius: 50%; animation: blink 1s infinite alternate; box-shadow: 0 0 8px #ff003c; }
-        @keyframes blink { 0% { opacity: 1; } 100% { opacity: 0.3; } }
+        /* LIVE BADGE - NEON STYLE */
+        .live-overlay { position: absolute; top: 12px; left: 12px; z-index: 25; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255,26,64,0.5); color: white; padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 6px; pointer-events: none; backdrop-filter: blur(8px); box-shadow: 0 0 10px rgba(255,26,64,0.3); }
+        .live-dot { width: 8px; height: 8px; background: #fff; border-radius: 50%; animation: neonBlink 1s infinite; }
+        @keyframes neonBlink { 0%, 100% { background: #fff; box-shadow: 0 0 10px #fff, 0 0 20px var(--accent-red); } 50% { background: var(--accent-red); box-shadow: none; } }
         
-        .settings-btn { position: absolute; top: 15px; right: 15px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 12px; border-radius: 8px; cursor: pointer; backdrop-filter: blur(5px); font-size: 16px; display: none; }
-        #quality-menu { position: absolute; top: 55px; right: 15px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; overflow: hidden; }
-        .q-item { padding: 12px; font-size: 13px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .q-item:hover { background: #333; } .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
+        .settings-btn { position: absolute; top: 12px; right: 12px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.2); width: 34px; height: 34px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        #quality-menu { position: absolute; top: 55px; right: 12px; z-index: 30; background: rgba(10, 15, 25, 0.95); border-radius: 12px; width: 130px; display: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+        .q-item { padding: 12px 15px; font-size: 13px; font-weight: 600; color: #ccc; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
+        .q-item.active { background: linear-gradient(90deg, var(--accent-red), #cc0033); color: white; }
         
-        .controls-box { padding: 25px; }
+        /* CHAMAK WALE BUTTONS */
+        .controls-box { padding: 18px; }
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .action-btn { padding: 15px; border-radius: 10px; color: white; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; transition: 0.3s; background: var(--glass-bg); border: 1px solid var(--glass-border); }
+        .action-btn { position: relative; padding: 14px; border-radius: 12px; color: white; font-weight: 800; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; border: none; overflow: hidden; }
         
-        #admin-panel { display: none; width: 100%; margin-top: 25px; background: rgba(0,0,0,0.3); padding: 25px; border-radius: 16px; border: 1px solid rgba(255, 215, 0, 0.3); box-sizing: border-box; }
-        .secret-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #ffd700; display: flex; align-items: center; gap: 10px; }
-        #secret-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
-        .channel-btn { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.3s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .channel-btn.active { background: var(--accent-red); border-color: var(--accent-red); }
+        /* The Magic Shine Effect */
+        .action-btn::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-25deg); animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+
+        .btn-refresh { background: linear-gradient(135deg, #ff416c, #ff4b2b); box-shadow: 0 8px 20px rgba(255, 65, 108, 0.4); border: 1px solid rgba(255,255,255,0.2); }
+        .btn-tg { background: linear-gradient(135deg, #1cb5e0, #000046); box-shadow: 0 8px 20px rgba(28, 181, 224, 0.4); border: 1px solid rgba(255,255,255,0.2); }
+        .action-btn:active { transform: scale(0.95); box-shadow: none; }
         
-        .site-footer { text-align: center; padding: 25px 15px; border-top: 1px solid var(--glass-border); color: #777; font-size: 12px; margin-top: auto; }
-        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45px; height: 45px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--accent-red); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* PREMIUM ADMIN PANEL */
+        #admin-panel { display: none; width: 100%; margin-top: 25px; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 16px; border: 1px solid rgba(255, 215, 0, 0.3); box-shadow: 0 0 30px rgba(255,215,0,0.1); backdrop-filter: blur(15px); }
+        .secret-title { font-size: 15px; font-weight: 900; margin-bottom: 18px; color: #ffd700; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+        
+        #secret-grid { display: flex; flex-direction: column; gap: 12px; }
+        .channel-btn { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 15px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 15px; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+        .channel-btn i { font-size: 20px; color: #ccc; transition: 0.3s; }
+        .channel-btn.active { background: linear-gradient(90deg, rgba(255,26,64,0.4), transparent); border-color: var(--accent-red); box-shadow: 0 0 15px rgba(255,26,64,0.3), inset 0 0 20px rgba(255,26,64,0.2); }
+        .channel-btn.active i { color: var(--accent-red); text-shadow: 0 0 10px var(--accent-red); }
+        
+        .site-footer { text-align: center; padding: 25px; color: rgba(255,255,255,0.4); font-size: 12px; margin-top: auto; font-weight: 600; }
+        
+        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45px; height: 45px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; display: none; z-index: 30; box-shadow: 0 0 20px var(--accent-red); }
+        @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -89,14 +138,14 @@
             
             <div class="controls-box">
                 <div class="btn-grid">
-                    <a href="javascript:location.reload();" class="action-btn" style="color: #ffd700; border-color: rgba(255,215,0,0.3);"><i class="fas fa-sync-alt"></i> Refresh</a>
-                    <a href="https://t.me/MKSSports_3" class="action-btn" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
+                    <a href="javascript:location.reload();" class="action-btn btn-refresh"><i class="fas fa-sync-alt"></i> Fix Lag / Refresh</a>
+                    <a href="https://t.me/MKSSports_3" class="action-btn btn-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram</a>
                 </div>
             </div>
         </div>
         
         <div id="admin-panel">
-            <div class="secret-title"><i class="fas fa-user-shield"></i> Admin Panel - Select Channel</div>
+            <div class="secret-title"><i class="fas fa-shield-alt"></i> System Admin Panel</div>
             <div id="secret-grid"></div>
         </div>
     </div>

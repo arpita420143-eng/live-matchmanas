@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MKS Study System - Live</title>
+    <title>MKS Study System - Premium Live</title>
     
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
     
@@ -12,53 +12,76 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root { --bg-main: #0a0b0e; --bg-card: #14161c; --accent-red: #e50914; --accent-blue: #0088cc; --text-main: #ffffff; }
-        body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; -webkit-user-select: none; }
+        /* PREMIUM GLASSMORPHISM DARK THEME */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
         
-        .header { position: sticky; top: 0; z-index: 100; background: rgba(20, 22, 28, 0.95); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; backdrop-filter: blur(10px); }
-        .logo { font-size: 20px; font-weight: 900; color: white; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        :root { 
+            --bg-grad: linear-gradient(135deg, #0f111a, #1a1d29);
+            --accent-red: #ff003c; 
+            --accent-blue: #0078ff; 
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+        
+        body { margin: 0; background: var(--bg-grad); color: #fff; font-family: 'Poppins', sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; -webkit-user-select: none; }
+        
+        /* HEADER */
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(15, 17, 26, 0.85); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); backdrop-filter: blur(15px); }
+        .logo { font-size: 22px; font-weight: 800; color: white; cursor: pointer; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,0,60,0.3); transition: 0.2s; }
+        .logo:active { transform: scale(0.95); }
         .logo span { color: var(--accent-red); }
-        .head-btns { display: flex; gap: 10px; }
-        .h-btn { padding: 8px 15px; border-radius: 50px; font-size: 12px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 6px; transition: 0.3s; }
-        .hb-tg { background: var(--accent-blue); } .hb-yt { background: var(--accent-red); }
-        .h-btn:hover { transform: scale(1.05); }
-
-        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px; width: 100%; max-width: 1000px; margin: 0 auto; box-sizing: border-box; }
-        .player-box { width: 100%; background: var(--bg-card); overflow: hidden; border-radius: 12px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 10px; }
         
+        .head-btns { display: flex; gap: 12px; }
+        .h-btn { padding: 8px 18px; border-radius: 50px; font-size: 13px; font-weight: 600; text-decoration: none; color: white; display: flex; align-items: center; gap: 6px; transition: 0.3s; border: 1px solid transparent; }
+        .hb-tg { background: rgba(0, 120, 255, 0.2); border-color: rgba(0, 120, 255, 0.5); color: #66b3ff; } 
+        .hb-yt { background: rgba(255, 0, 60, 0.2); border-color: rgba(255, 0, 60, 0.5); color: #ff6685; }
+        .h-btn:hover { transform: translateY(-2px); filter: brightness(1.3); }
+
+        /* MAIN CONTAINER */
+        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 15px; width: 100%; max-width: 900px; margin: 0 auto; box-sizing: border-box; }
+        
+        /* PLAYER BOX */
+        .player-box { width: 100%; background: var(--glass-bg); border-radius: 16px; border: 1px solid var(--glass-border); box-shadow: 0 15px 35px rgba(0,0,0,0.6); overflow: hidden; backdrop-filter: blur(10px); }
         .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; aspect-ratio: 16/9; }
         #shaka-container { width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
         #iframe-box iframe { width: 100%; height: 100%; border: none; }
         
-        .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(0, 0, 0, 0.7); color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 8px; pointer-events: none; border: 1px solid rgba(255,255,255,0.1); }
-        .live-dot { width: 8px; height: 8px; background: #e50914; border-radius: 50%; animation: blink 1.2s infinite ease-in-out; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        /* OVERLAYS */
+        .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(255, 0, 60, 0.15); border: 1px solid rgba(255, 0, 60, 0.4); color: white; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; pointer-events: none; backdrop-filter: blur(5px); }
+        .live-dot { width: 8px; height: 8px; background: #ff003c; border-radius: 50%; animation: blink 1s infinite alternate; box-shadow: 0 0 8px #ff003c; }
+        @keyframes blink { 0% { opacity: 1; } 100% { opacity: 0.3; } }
         
-        .controls-box { padding: 20px; }
-        .prominent-fix-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; margin-bottom: 20px; background: linear-gradient(45deg, #ffb400, #ff8800); color: #000; font-weight: 900; font-size: 16px; border-radius: 12px; text-decoration: none; text-transform: uppercase; animation: glow 2s infinite; text-align: center; box-sizing: border-box; }
-        @keyframes glow { 0%, 100% { box-shadow: 0 0 5px rgba(255,180,0,0.5); } 50% { box-shadow: 0 0 20px rgba(255,180,0,0.8); } }
-        
+        /* CONTROLS BELOW PLAYER */
+        .controls-box { padding: 25px; }
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .action-btn { padding: 14px; border-radius: 8px; color: white; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; transition: 0.3s; }
-        .action-btn:hover { filter: brightness(1.2); }
-        .tg { background: var(--accent-blue); } .yt { background: var(--accent-red); }
+        .action-btn { padding: 15px; border-radius: 10px; color: white; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; transition: 0.3s; background: var(--glass-bg); border: 1px solid var(--glass-border); }
+        .action-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); }
         
-        #secret-menu { display: none; width: 100%; margin-top: 20px; background: #1a1c23; padding: 20px; border-radius: 12px; border: 1px solid #333; box-sizing: border-box; }
-        .secret-title { font-size: 16px; font-weight: bold; margin-bottom: 15px; color: #ffb400; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        #secret-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-        .channel-btn { background: #2a2d38; color: white; border: 1px solid #444; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.3s; text-align: center; }
-        .channel-btn:hover, .channel-btn.active { background: var(--accent-red); border-color: var(--accent-red); transform: translateY(-2px); }
+        /* ADMIN SECRET MENU */
+        #admin-panel { display: none; width: 100%; margin-top: 25px; background: rgba(0,0,0,0.3); padding: 25px; border-radius: 16px; border: 1px solid rgba(255, 215, 0, 0.3); box-sizing: border-box; box-shadow: 0 0 20px rgba(255, 215, 0, 0.05); }
+        .secret-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #ffd700; display: flex; align-items: center; gap: 10px; }
+        .secret-title::after { content: ''; flex: 1; height: 1px; background: rgba(255, 215, 0, 0.2); }
+        
+        #secret-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+        .channel-btn { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.3s; text-align: center; font-family: 'Poppins', sans-serif; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .channel-btn i { font-size: 20px; color: #aaa; transition: 0.3s; }
+        .channel-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); }
+        .channel-btn.active { background: var(--accent-red); border-color: var(--accent-red); box-shadow: 0 8px 20px rgba(255,0,60,0.4); }
+        .channel-btn.active i { color: white; }
 
-        .site-footer { text-align: center; padding: 25px 15px; border-top: 1px solid #222; color: #666; font-size: 12px; background: #0a0b0e; line-height: 1.8; margin-top: auto; }
-        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 30; }
+        .site-footer { text-align: center; padding: 25px 15px; border-top: 1px solid var(--glass-border); color: #777; font-size: 12px; margin-top: auto; }
+        
+        /* LOADER */
+        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45px; height: 45px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--accent-red); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+
     <div class="header">
-        <div class="logo" id="_0xtgBtn">MKS <span>STUDY</span></div>
+        <div class="logo" id="_0xSecLogo">MKS <span>STUDY</span></div>
         <div class="head-btns">
             <a href="https://t.me/MKSSports_3" class="h-btn hb-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Join</a>
             <a href="https://youtube.com/@mkssports3" class="h-btn hb-yt" target="_blank"><i class="fab fa-youtube"></i> Sub</a>
@@ -69,8 +92,7 @@
         <div class="player-box">
             <div class="video-wrapper" id="videoWrapper">
                 <div class="live-overlay">
-                    <span class="live-dot"></span> LIVE <span style="margin: 0 5px; opacity: 0.3;">|</span>
-                    <i class="fas fa-eye"></i> <span id="_0xfv"></span>
+                    <span class="live-dot"></span> LIVE &nbsp;|&nbsp; <i class="fas fa-eye"></i> <span id="_0xfv"></span>
                 </div>
                 
                 <div id="shaka-container" data-shaka-player-container data-shaka-player-cast-receiver-id="1DB8D405">
@@ -82,52 +104,52 @@
             </div>
             
             <div class="controls-box">
-                <a href="javascript:location.reload();" class="prominent-fix-btn">
-                    <i class="fas fa-sync-alt"></i> ⚡ Fix Lag / Refresh Stream
-                </a>
                 <div class="btn-grid">
-                    <a href="https://t.me/MKSSports_3" class="action-btn tg" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
-                    <a href="https://youtube.com/@mkssports3" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
+                    <a href="javascript:location.reload();" class="action-btn" style="color: #ffd700; border-color: rgba(255,215,0,0.3);">
+                        <i class="fas fa-sync-alt"></i> Refresh Stream
+                    </a>
+                    <a href="https://t.me/MKSSports_3" class="action-btn" target="_blank">
+                        <i class="fab fa-telegram"></i> Telegram
+                    </a>
                 </div>
             </div>
         </div>
         
-        <div id="secret-menu">
-            <div class="secret-title"><i class="fas fa-tv"></i> Select Channel to Play</div>
+        <div id="admin-panel">
+            <div class="secret-title"><i class="fas fa-user-shield"></i> Admin Panel - Select Channel</div>
             <div id="secret-grid"></div>
         </div>
     </div>
 
     <div class="site-footer">
-        © 2026 MKS STUDY SYSTEM — Made with <span style="color: #e50914;">❤️</span>.<br>
-        I am not the owner of any channels or content displayed. If you wish content removed, contact us and we will respond promptly.
+        © 2026 MKS STUDY SYSTEM — Premium Edition<br><br>
+        <span style="opacity: 0.5;">Secured System. Unauthorized access is prohibited.</span>
     </div>
         <script>
+        // 1. Basic Protections
         document.addEventListener('contextmenu', _0x1 => _0x1.preventDefault());
         document.onkeydown = _0x2 => { if(_0x2.keyCode==123||(_0x2.ctrlKey&&_0x2.shiftKey&&(_0x2.keyCode==73||_0x2.keyCode==74||_0x2.keyCode==67))||(_0x2.ctrlKey&&_0x2.keyCode==85)) return !1; };
-        document.getElementById('_0xfv').innerText = Math.floor(Math.random()*(1200-400+1))+400;
+        document.getElementById('_0xfv').innerText = Math.floor(Math.random()*(2500-1100+1))+1100; // Premium viewer count
 
         (function() {
-            // Broken & Obfuscated Channel Database (Test link added at top)
+            // 2. Only 3 Channels Data (Obfuscated & Split)
             const _0xData = [
-                { _i: "test", _n: "🟢 Player Test", _u: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", _if: !1 },
-                { _i: "willow", _n: "Willow HD", _u: "htt"+"ps://amg01269-amg01269c1-sportstribal-"+"emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/"+"amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", _if: !1 },
-                { _i: "ten", _n: "TEN CRICKET", _u: "htt"+"ps://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/"+"cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", _if: !1, _k: { ["294b576"+"1cefc22d0c6312939e13d8278"]: "52148f1"+"042d238849f0a7813f1da8a7b" } },
-                { _i: "Thala", _n: "Star Sports Hindi (OK.ru)", _u: "htt"+"ps://wcb-hindi-187646-live-cricket-151678."+"megastream.eu.cc/live_stream.m3u8", _if: !0 },
-                { _i: "English", _n: "CSK PODCAST 1", _u: "htt"+"ps://playerado.top/embed2.php?id="+"starsp1&v=su", _if: !0 },
-                { _i: "freeneetcoaching", _n: "Turito NEET", _u: "htt"+"ps://yuppnimrestreammum.akamaized.net/181224/smil:ymcc12thneet.smil/"+"playlist.m3u8?ads.channel=4721&ads.content_custom_1_param=FAST&ads.user=2", _if: !1 },
-                { _i: "Whistlepodu", _n: "CSK vs PBKS", _u: "htt"+"ps://go.webcric.com/"+"frame5.htm", _if: !0 },
-                { _i: "starhindi", _n: "Star Sports Hindi Live", _u: "htt"+"ps://muc001.myturn1.top:8088/live/webcricn02/"+"playlist.m3u8?vidictid=205509856948&id=115656&pk="+"fccf2df0bc67801056d188942d96b8ee907d84cf27cb224e9e393d0e690bac03ba120a0696b8925be50b7478e3db60e00ed3a1436b795dfbfa1ced303845ce5c", _if: !0 },
-                { _i: "cskvskkrhighlights", _n: "Star Sports English Live", _u: "htt"+"ps://hssportsprepack.akamaized.net/videos/cricket/1271507153/1540066363/in/hin/v2/avc/1776197276470/hls/plain/media-1/"+"index.m3u8", _if: !0 },
-                { _i: "tamil", _n: "Tamil", _u: "htt"+"ps://hellosports.gamesaved.xyz/p/"+"live-stream.html?id=c2&m=1", _if: !0 },
-                { _i: "tamil1", _n: "Hindi 2", _u: "htt"+"ps://fan18.pages.dev/1?id=101", _if: !0 },
-                { _i: "livematch", _n: "WebCric Link", _u: "htt"+"ps://go.webcric.com/"+"frame9.htm", _if: !0 },
-                { _i: "star_allrounder", _n: "Star Sports 1 (Allrounder)", _u: "htt"+"ps://allrounder-live2.pages.dev/"+"star/star-1-hindi", _if: !0 },
-                { _i: "SS1H", _n: "Star Sports 1 Hindi HD", _u: "htt"+"ps://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/"+"index.mpd", _if: !1, _k: { ["4001319"+"94b445d8c8817202248760fda"]: "2d56cb6"+"f07a75b9aff165d534ae2bfc4" }, _tk: "st=1777643097~exp=1777664697~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=182c6c44a8e0baecc0e021862381b991eacf7c73e50f770b5d122457d82830cb" },
-                { _i: "mkssports1", _n: "Star Sports 1 Hindi HD", _u: "htt"+"ps://qw.live.pv-cdn.net/OTTB/lhr-nitro/live/clients/dash/enc/"+"5sxuux529k/out/v1/bb548a3626cd4708afbb94a58d71dce9/cenc.mpd", _if: !1, _k: { ["1d96ab3"+"66bbe6451edf7407b58e2fa16"]: "0116201"+"f4a63ac5bf5787d2c610c41a7" } },
-                { _i: "mkssports2", _n: "Star Sports 1 HD", _u: "htt"+"ps://jiotvpllive.cdn.jio.com/bpk-tv//Star_Sports_HD1_BTS/output/"+"index.mpd", _if: !1, _k: { ["965dc2d"+"db1d85138ad787999a7f30ca5"]: "8596950"+"76e67fe961836b564db6d689c" } },
-                { _i: "mkssports3", _n: "Star Sports 2 Tamil HD", _u: "htt"+"ps://jiotvpllive.cdn.jio.com/bpk-tv//Star_Sports2_Tamil_HD_BTS/output/"+"index.mpd", _if: !1, _k: { ["dc44fe6"+"251825774b90d58dcfa7d94e0"]: "63e3ae8"+"53f483a86752b5b9e6d61eb20" } },
-                { _i: "1000", _n: "Star Sports Hindi 1", _u: "htt"+"ps://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_1_Hindi_BTS/output/"+"index.mpd", _if: !1, _k: { ["350c0aa"+"ffedf51cc1502e9543c7c885e"]: "8ea9b60"+"7549252068e260a5f4d7dd321" } }
+                { 
+                    _i: "c1", _n: "Willow HD", _ic: "fas fa-baseball-ball",
+                    _u: "htt"+"ps://amg01269-amg01269c1-sportstribal-"+"emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/"+"amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", 
+                    _if: !1 
+                },
+                { 
+                    _i: "c2", _n: "TEN Cricket", _ic: "fas fa-tv",
+                    _u: "htt"+"ps://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/"+"cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", 
+                    _if: !1, 
+                    _k: { ["294b576"+"1cefc22d0c6312939e13d8278"]: "52148f1"+"042d238849f0a7813f1da8a7b" } 
+                },
+                { 
+                    _i: "c3", _n: "Star Allrounder", _ic: "fas fa-star",
+                    _u: "htt"+"ps://allrounder-live2.pages.dev/"+"star/star-1-hindi", 
+                    _if: !0 
+                }
             ];
 
             let _0xP;
@@ -136,21 +158,47 @@
             const _0xI = document.getElementById('iframe-box');
             const _0xS = document.getElementById('shaka-container');
             const _0xG = document.getElementById('secret-grid');
-            const _0xM = document.getElementById('secret-menu');
+            const _0xAdmin = document.getElementById('admin-panel');
 
-            // Hamesha turant buttons bana do
+            // 3. Admin Unlock Logic (5 Clicks)
+            let clickCount = 0;
+            let clickTimer;
+            
+            document.getElementById('_0xSecLogo').addEventListener('click', () => {
+                clickCount++;
+                clearTimeout(clickTimer);
+                
+                // Reset count after 2.5 seconds if 5 clicks are not completed
+                clickTimer = setTimeout(() => { clickCount = 0; }, 2500); 
+                
+                if (clickCount === 5) {
+                    clickCount = 0; // Reset immediately
+                    const pwd = prompt("System Locked. Enter Admin Password:");
+                    if (pwd === "manas") {
+                        _0xAdmin.style.display = 'block';
+                        _0xAdmin.scrollIntoView({behavior: "smooth"});
+                        // Vibrate if supported
+                        if(navigator.vibrate) navigator.vibrate(100); 
+                    } else if (pwd !== null) {
+                        alert("Access Denied! Wrong Password.");
+                    }
+                }
+            });
+
+            // 4. Build Channel Buttons
             function _0xBuild() {
                 _0xG.innerHTML = '';
                 _0xData.forEach(_0xC => {
                     const b = document.createElement('button');
                     b.id = '_0xBtn-' + _0xC._i;
                     b.className = 'channel-btn';
-                    b.innerText = _0xC._n;
+                    b.innerHTML = `<i class="${_0xC._ic}"></i> ${_0xC._n}`;
                     b.onclick = () => _0xPlay(_0xC._i);
                     _0xG.appendChild(b);
                 });
             }
 
+            // 5. Play Logic
             async function _0xPlay(_0xID) {
                 _0xL.style.display = 'block';
                 document.querySelectorAll('.channel-btn').forEach(b => b.classList.remove('active'));
@@ -160,6 +208,7 @@
                 const _0xC = _0xData.find(c => c._i === _0xID);
                 if (!_0xC) return;
 
+                // Handle iFrame (Star Allrounder)
                 if (_0xC._if) {
                     if (_0xP) await _0xP.unload();
                     _0xS.style.display = 'none';
@@ -169,16 +218,13 @@
                     return;
                 }
 
+                // Handle Shaka Player (Willow & Ten)
                 _0xI.style.display = 'none';
                 _0xI.innerHTML = '';
                 _0xS.style.display = 'block';
 
-                let _0xUrl = _0xC._u;
-                if (_0xC._tk) _0xUrl += "?" + _0xC._tk;
-
-                // Player set na ho toh wait karo
                 if (!_0xP) {
-                    alert("Player abhi load ho raha hai, thoda wait kijiye...");
+                    alert("Player system is still loading. Please wait 2 seconds.");
                     _0xL.style.display = 'none';
                     return;
                 }
@@ -187,28 +233,21 @@
                 else _0xP.configure({ drm: { clearKeys: {} } });
 
                 try {
-                    await _0xP.load(_0xUrl);
+                    await _0xP.load(_0xC._u);
                     _0xV.play();
                 } catch (e) {
-                    console.error(e);
-                    alert("Stream load nahi ho payi. Link expire ho gaya hai ya block hai!");
+                    console.error("Stream Error", e);
+                    alert("Stream load nahi ho payi. Piche server block ya CORS issue hai!");
                 }
                 _0xL.style.display = 'none';
             }
 
-            // Page load hote hi buttons banao
+            // Init
             document.addEventListener('DOMContentLoaded', _0xBuild);
-
-            // Shaka UI load hone par player setup karo
             document.addEventListener('shaka-ui-loaded', (e) => {
                 _0xP = e.detail.ui.getControls().getPlayer();
             });
 
-            // Secret menu toggle
-            document.getElementById('_0xtgBtn').onclick = () => {
-                _0xM.style.display = _0xM.style.display === 'none' ? 'block' : 'none';
-                if(_0xM.style.display === 'block') _0xM.scrollIntoView({behavior: "smooth"});
-            };
         })();
     </script>
 </body>

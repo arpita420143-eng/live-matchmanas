@@ -7,6 +7,7 @@
     
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
     
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,71 +16,51 @@
         /* PREMIUM GLASSMORPHISM DARK THEME */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
         
-        :root { 
-            --bg-grad: linear-gradient(135deg, #0f111a, #1a1d29);
-            --accent-red: #ff003c; 
-            --accent-blue: #0078ff; 
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-        }
-        
+        :root { --bg-grad: linear-gradient(135deg, #0f111a, #1a1d29); --accent-red: #ff003c; --accent-blue: #0078ff; --glass-bg: rgba(255, 255, 255, 0.03); --glass-border: rgba(255, 255, 255, 0.08); }
         body { margin: 0; background: var(--bg-grad); color: #fff; font-family: 'Poppins', sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; -webkit-user-select: none; }
         
-        /* HEADER */
         .header { position: sticky; top: 0; z-index: 100; background: rgba(15, 17, 26, 0.85); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); backdrop-filter: blur(15px); }
         .logo { font-size: 22px; font-weight: 800; color: white; cursor: pointer; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,0,60,0.3); transition: 0.2s; }
-        .logo:active { transform: scale(0.95); }
-        .logo span { color: var(--accent-red); }
+        .logo:active { transform: scale(0.95); } .logo span { color: var(--accent-red); }
         
         .head-btns { display: flex; gap: 12px; }
         .h-btn { padding: 8px 18px; border-radius: 50px; font-size: 13px; font-weight: 600; text-decoration: none; color: white; display: flex; align-items: center; gap: 6px; transition: 0.3s; border: 1px solid transparent; }
         .hb-tg { background: rgba(0, 120, 255, 0.2); border-color: rgba(0, 120, 255, 0.5); color: #66b3ff; } 
         .hb-yt { background: rgba(255, 0, 60, 0.2); border-color: rgba(255, 0, 60, 0.5); color: #ff6685; }
-        .h-btn:hover { transform: translateY(-2px); filter: brightness(1.3); }
-
-        /* MAIN CONTAINER */
-        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 15px; width: 100%; max-width: 900px; margin: 0 auto; box-sizing: border-box; }
         
-        /* PLAYER BOX */
+        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 15px; width: 100%; max-width: 900px; margin: 0 auto; box-sizing: border-box; }
         .player-box { width: 100%; background: var(--glass-bg); border-radius: 16px; border: 1px solid var(--glass-border); box-shadow: 0 15px 35px rgba(0,0,0,0.6); overflow: hidden; backdrop-filter: blur(10px); }
         .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; aspect-ratio: 16/9; }
+        
         #shaka-container { width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
-        #iframe-box iframe { width: 100%; height: 100%; border: none; }
         
-        /* OVERLAYS */
         .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(255, 0, 60, 0.15); border: 1px solid rgba(255, 0, 60, 0.4); color: white; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; pointer-events: none; backdrop-filter: blur(5px); }
         .live-dot { width: 8px; height: 8px; background: #ff003c; border-radius: 50%; animation: blink 1s infinite alternate; box-shadow: 0 0 8px #ff003c; }
         @keyframes blink { 0% { opacity: 1; } 100% { opacity: 0.3; } }
         
-        /* CONTROLS BELOW PLAYER */
+        .settings-btn { position: absolute; top: 15px; right: 15px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 12px; border-radius: 8px; cursor: pointer; backdrop-filter: blur(5px); font-size: 16px; display: none; }
+        #quality-menu { position: absolute; top: 55px; right: 15px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; overflow: hidden; }
+        .q-item { padding: 12px; font-size: 13px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .q-item:hover { background: #333; } .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
+        
         .controls-box { padding: 25px; }
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .action-btn { padding: 15px; border-radius: 10px; color: white; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; transition: 0.3s; background: var(--glass-bg); border: 1px solid var(--glass-border); }
-        .action-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); }
         
-        /* ADMIN SECRET MENU */
-        #admin-panel { display: none; width: 100%; margin-top: 25px; background: rgba(0,0,0,0.3); padding: 25px; border-radius: 16px; border: 1px solid rgba(255, 215, 0, 0.3); box-sizing: border-box; box-shadow: 0 0 20px rgba(255, 215, 0, 0.05); }
+        #admin-panel { display: none; width: 100%; margin-top: 25px; background: rgba(0,0,0,0.3); padding: 25px; border-radius: 16px; border: 1px solid rgba(255, 215, 0, 0.3); box-sizing: border-box; }
         .secret-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #ffd700; display: flex; align-items: center; gap: 10px; }
-        .secret-title::after { content: ''; flex: 1; height: 1px; background: rgba(255, 215, 0, 0.2); }
-        
         #secret-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
-        .channel-btn { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.3s; text-align: center; font-family: 'Poppins', sans-serif; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .channel-btn i { font-size: 20px; color: #aaa; transition: 0.3s; }
-        .channel-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); }
-        .channel-btn.active { background: var(--accent-red); border-color: var(--accent-red); box-shadow: 0 8px 20px rgba(255,0,60,0.4); }
-        .channel-btn.active i { color: white; }
-
-        .site-footer { text-align: center; padding: 25px 15px; border-top: 1px solid var(--glass-border); color: #777; font-size: 12px; margin-top: auto; }
+        .channel-btn { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.3s; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .channel-btn.active { background: var(--accent-red); border-color: var(--accent-red); }
         
-        /* LOADER */
+        .site-footer { text-align: center; padding: 25px 15px; border-top: 1px solid var(--glass-border); color: #777; font-size: 12px; margin-top: auto; }
         #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45px; height: 45px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--accent-red); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-
     <div class="header">
         <div class="logo" id="_0xSecLogo">MKS <span>STUDY</span></div>
         <div class="head-btns">
@@ -92,11 +73,14 @@
         <div class="player-box">
             <div class="video-wrapper" id="videoWrapper">
                 <div class="live-overlay">
-                    <span class="live-dot"></span> LIVE &nbsp;|&nbsp; <i class="fas fa-eye"></i> <span id="_0xfv"></span>
+                    <span class="live-dot"></span> LIVE &nbsp;|&nbsp; <i class="fas fa-eye"></i> <span id="fake-viewers">2540</span>
                 </div>
                 
-                <div id="shaka-container" data-shaka-player-container data-shaka-player-cast-receiver-id="1DB8D405">
-                    <video id="_0xvid" data-shaka-player autoplay playsinline></video>
+                <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
+                <div id="quality-menu"><div id="quality-list"></div></div>
+                
+                <div id="shaka-container" data-shaka-player-container>
+                    <video id="video" data-shaka-player autoplay playsinline></video>
                 </div>
                 
                 <div id="iframe-box"></div>
@@ -105,12 +89,8 @@
             
             <div class="controls-box">
                 <div class="btn-grid">
-                    <a href="javascript:location.reload();" class="action-btn" style="color: #ffd700; border-color: rgba(255,215,0,0.3);">
-                        <i class="fas fa-sync-alt"></i> Refresh Stream
-                    </a>
-                    <a href="https://t.me/MKSSports_3" class="action-btn" target="_blank">
-                        <i class="fab fa-telegram"></i> Telegram
-                    </a>
+                    <a href="javascript:location.reload();" class="action-btn" style="color: #ffd700; border-color: rgba(255,215,0,0.3);"><i class="fas fa-sync-alt"></i> Refresh</a>
+                    <a href="https://t.me/MKSSports_3" class="action-btn" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
                 </div>
             </div>
         </div>
@@ -120,135 +100,165 @@
             <div id="secret-grid"></div>
         </div>
     </div>
-
-    <div class="site-footer">
-        © 2026 MKS STUDY SYSTEM — Premium Edition<br><br>
-        <span style="opacity: 0.5;">Secured System. Unauthorized access is prohibited.</span>
-    </div>
         <script>
-        // 1. Basic Protections
-        document.addEventListener('contextmenu', _0x1 => _0x1.preventDefault());
-        document.onkeydown = _0x2 => { if(_0x2.keyCode==123||(_0x2.ctrlKey&&_0x2.shiftKey&&(_0x2.keyCode==73||_0x2.keyCode==74||_0x2.keyCode==67))||(_0x2.ctrlKey&&_0x2.keyCode==85)) return !1; };
-        document.getElementById('_0xfv').innerText = Math.floor(Math.random()*(2500-1100+1))+1100; // Premium viewer count
+        // Security Protections
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = e => { if(e.keyCode==123||(e.ctrlKey&&e.shiftKey&&(e.keyCode==73||e.keyCode==74||e.keyCode==67))||(e.ctrlKey&&e.keyCode==85)) return !1; };
 
-        (function() {
-            // 2. Only 3 Channels Data (Obfuscated & Split)
-            const _0xData = [
-                { 
-                    _i: "c1", _n: "Willow HD", _ic: "fas fa-baseball-ball",
-                    _u: "htt"+"ps://amg01269-amg01269c1-sportstribal-"+"emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/"+"amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", 
-                    _if: !1 
-                },
-                { 
-                    _i: "c2", _n: "TEN Cricket", _ic: "fas fa-tv",
-                    _u: "htt"+"ps://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/"+"cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", 
-                    _if: !1, 
-                    _k: { ["294b576"+"1cefc22d0c6312939e13d8278"]: "52148f1"+"042d238849f0a7813f1da8a7b" } 
-                },
-                { 
-                    _i: "c3", _n: "Star Allrounder", _ic: "fas fa-star",
-                    _u: "htt"+"ps://allrounder-live2.pages.dev/"+"star/star-1-hindi", 
-                    _if: !0 
-                }
-            ];
+        // Channel Data (Only 3 Channels)
+        const channels = [
+            { id: "c1", name: "Willow HD", icon: "fas fa-baseball-ball", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", type: "hls" },
+            { id: "c2", name: "TEN Cricket", icon: "fas fa-tv", url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", type: "dash", keys: { "294b5761cefc22d0c6312939e13d8278": "52148f1042d238849f0a7813f1da8a7b" } },
+            { id: "c3", name: "Star Allrounder", icon: "fas fa-star", url: "https://allrounder-live2.pages.dev/star/star-1-hindi", isIframe: true }
+        ];
 
-            let _0xP;
-            const _0xV = document.getElementById('_0xvid');
-            const _0xL = document.getElementById('loader');
-            const _0xI = document.getElementById('iframe-box');
-            const _0xS = document.getElementById('shaka-container');
-            const _0xG = document.getElementById('secret-grid');
-            const _0xAdmin = document.getElementById('admin-panel');
+        let hls = null, shakaPlayerInstance = null, shakaUI = null, clickCount = 0;
 
-            // 3. Admin Unlock Logic (5 Clicks)
-            let clickCount = 0;
-            let clickTimer;
+        // 5-Click Admin Logic
+        let clickTimer;
+        document.getElementById('_0xSecLogo').addEventListener('click', () => {
+            clickCount++;
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => { clickCount = 0; }, 2500);
             
-            document.getElementById('_0xSecLogo').addEventListener('click', () => {
-                clickCount++;
-                clearTimeout(clickTimer);
-                
-                // Reset count after 2.5 seconds if 5 clicks are not completed
-                clickTimer = setTimeout(() => { clickCount = 0; }, 2500); 
-                
-                if (clickCount === 5) {
-                    clickCount = 0; // Reset immediately
-                    const pwd = prompt("System Locked. Enter Admin Password:");
-                    if (pwd === "manas") {
-                        _0xAdmin.style.display = 'block';
-                        _0xAdmin.scrollIntoView({behavior: "smooth"});
-                        // Vibrate if supported
-                        if(navigator.vibrate) navigator.vibrate(100); 
-                    } else if (pwd !== null) {
-                        alert("Access Denied! Wrong Password.");
-                    }
+            if (clickCount === 5) {
+                clickCount = 0;
+                if (prompt("Enter Admin Password:") === "manas") {
+                    document.getElementById('admin-panel').style.display = 'block';
+                    document.getElementById('admin-panel').scrollIntoView({behavior: "smooth"});
                 }
-            });
-
-            // 4. Build Channel Buttons
-            function _0xBuild() {
-                _0xG.innerHTML = '';
-                _0xData.forEach(_0xC => {
-                    const b = document.createElement('button');
-                    b.id = '_0xBtn-' + _0xC._i;
-                    b.className = 'channel-btn';
-                    b.innerHTML = `<i class="${_0xC._ic}"></i> ${_0xC._n}`;
-                    b.onclick = () => _0xPlay(_0xC._i);
-                    _0xG.appendChild(b);
-                });
             }
+        });
 
-            // 5. Play Logic
-            async function _0xPlay(_0xID) {
-                _0xL.style.display = 'block';
-                document.querySelectorAll('.channel-btn').forEach(b => b.classList.remove('active'));
-                const _0xBtn = document.getElementById('_0xBtn-' + _0xID);
-                if(_0xBtn) _0xBtn.classList.add('active');
+        // Advanced Jio Fetcher
+        async function fetchJioToken() {
+            try {
+                const listRes = await fetch("https://raw.githubusercontent.com/Shubhamkur/Tv/refs/heads/main/Cookies");
+                const urlArray = await listRes.json();
+                const response = await fetch(urlArray[0]);
+                const rawText = await response.text();
+                const match = rawText.match(/(__hdnea__=[^"'\s&|]+)/);
+                return match ? match[1] : "";
+            } catch (error) { return ""; }
+        }
 
-                const _0xC = _0xData.find(c => c._i === _0xID);
-                if (!_0xC) return;
-
-                // Handle iFrame (Star Allrounder)
-                if (_0xC._if) {
-                    if (_0xP) await _0xP.unload();
-                    _0xS.style.display = 'none';
-                    _0xI.style.display = 'block';
-                    _0xI.innerHTML = `<iframe src="${_0xC._u}" allow="autoplay; fullscreen; encrypted-media" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"></iframe>`;
-                    _0xL.style.display = 'none';
-                    return;
-                }
-
-                // Handle Shaka Player (Willow & Ten)
-                _0xI.style.display = 'none';
-                _0xI.innerHTML = '';
-                _0xS.style.display = 'block';
-
-                if (!_0xP) {
-                    alert("Player system is still loading. Please wait 2 seconds.");
-                    _0xL.style.display = 'none';
-                    return;
-                }
-
-                if (_0xC._k) _0xP.configure({ drm: { clearKeys: _0xC._k } });
-                else _0xP.configure({ drm: { clearKeys: {} } });
-
-                try {
-                    await _0xP.load(_0xC._u);
-                    _0xV.play();
-                } catch (e) {
-                    console.error("Stream Error", e);
-                    alert("Stream load nahi ho payi. Piche server block ya CORS issue hai!");
-                }
-                _0xL.style.display = 'none';
-            }
-
-            // Init
-            document.addEventListener('DOMContentLoaded', _0xBuild);
-            document.addEventListener('shaka-ui-loaded', (e) => {
-                _0xP = e.detail.ui.getControls().getPlayer();
+        // Build UI Menu
+        function initMenu() {
+            const grid = document.getElementById('secret-grid');
+            channels.forEach(ch => {
+                const btn = document.createElement('button');
+                btn.id = 'btn-' + ch.id;
+                btn.className = 'channel-btn';
+                btn.innerHTML = `<i class="${ch.icon}"></i> ${ch.name}`;
+                btn.onclick = () => loadPlayer(ch);
+                grid.appendChild(btn);
             });
+        }
 
-        })();
+        // Your Perfect Player Logic Integrator
+        async function loadPlayer(ch) {
+            const video = document.getElementById('video');
+            const shakaContainer = document.getElementById('shaka-container');
+            const iframeBox = document.getElementById('iframe-box');
+            const loader = document.getElementById('loader');
+            const settingsBtn = document.getElementById('settings-btn');
+            
+            document.querySelectorAll('.channel-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + ch.id).classList.add('active');
+
+            loader.style.display = 'block';
+            document.getElementById('quality-menu').style.display = 'none';
+
+            if(hls) { hls.destroy(); hls = null; }
+            if(shakaUI) { shakaUI.destroy(); shakaUI = null; }
+            if(shakaPlayerInstance) { shakaPlayerInstance.destroy(); shakaPlayerInstance = null; }
+
+            // Handle iFrame
+            if (ch.isIframe) {
+                shakaContainer.style.display = 'none'; settingsBtn.style.display = 'none'; iframeBox.style.display = 'block';
+                iframeBox.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
+                setTimeout(() => loader.style.display = 'none', 1500);
+            } 
+            // Handle DASH (Shaka)
+            else if (ch.type === "dash") {
+                shakaContainer.style.display = 'block'; settingsBtn.style.display = 'none'; iframeBox.style.display = 'none';
+                iframeBox.innerHTML = ""; video.controls = false;
+
+                shaka.polyfill.installAll();
+                if (shaka.Player.isBrowserSupported()) {
+                    shakaPlayerInstance = new shaka.Player(video);
+                    shakaUI = new shaka.ui.Overlay(shakaPlayerInstance, shakaContainer, video);
+
+                    shakaPlayerInstance.configure({
+                        drm: ch.keys ? { clearKeys: ch.keys } : {},
+                        streaming: { lowLatencyMode: true }
+                    });
+
+                    let jioToken = "";
+                    if (ch.url.includes('jio.com')) jioToken = await fetchJioToken();
+
+                    shakaPlayerInstance.getNetworkingEngine().registerRequestFilter((type, request) => {
+                        if (request.uris[0].includes('jio.com')) {
+                            request.headers['Referer'] = 'https://www.jiotv.com/';
+                            if (jioToken && (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT)) {
+                                request.uris[0] = request.uris[0].split('?')[0] + '?' + jioToken;
+                            }
+                        }
+                    });
+
+                    try {
+                        await shakaPlayerInstance.load(ch.url);
+                        loader.style.display = 'none';
+                        video.play();
+                    } catch (e) { loader.style.display = 'none'; alert("DASH Stream Error"); }
+                }
+            } 
+            // Handle HLS (HLS.js) - Works perfect for Willow!
+            else {
+                iframeBox.style.display = 'none'; iframeBox.innerHTML = "";
+                shakaContainer.style.display = 'block'; video.controls = true; settingsBtn.style.display = 'block';
+
+                if (Hls.isSupported()) {
+                    hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => { 
+                        loader.style.display = 'none'; 
+                        video.play();
+                        buildQualityMenu();
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = ch.url;
+                    video.addEventListener('loadedmetadata', () => { loader.style.display = 'none'; video.play(); });
+                }
+            }
+        }
+
+        // Quality Menu Logic
+        function toggleQualityMenu() {
+            const menu = document.getElementById('quality-menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function buildQualityMenu() {
+            if (!hls) return;
+            const list = document.getElementById('quality-list'); list.innerHTML = "";
+            let autoBtn = document.createElement('div'); autoBtn.className = 'q-item active'; autoBtn.innerText = 'Auto';
+            autoBtn.onclick = () => {
+                hls.currentLevel = -1; toggleQualityMenu();
+                document.querySelectorAll('.q-item').forEach(el => el.classList.remove('active')); autoBtn.classList.add('active');
+            };
+            list.appendChild(autoBtn);
+
+            hls.levels.forEach((level, index) => {
+                let btn = document.createElement('div'); btn.className = 'q-item'; btn.innerText = level.height + 'p';
+                btn.onclick = () => {
+                    hls.currentLevel = index; toggleQualityMenu();
+                    document.querySelectorAll('.q-item').forEach(el => el.classList.remove('active')); btn.classList.add('active');
+                };
+                list.appendChild(btn);
+            });
+        }
+
+        window.onload = initMenu;
     </script>
 </body>
 </html>

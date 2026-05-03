@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MKS Study System - Match Center</title>
+    <title>MKS Pro Player - Royal Edition</title>
     
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -12,18 +12,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* --- PREMIUM ROYAL NAVY & GOLD THEME --- */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
         :root { --bg: #0B132B; --card: #1C2541; --gold: #D4AF37; --gold-l: #FBEA9D; }
-        body { margin: 0; padding: 0; background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         
-        .header { background: rgba(11, 19, 43, 0.95); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-        .logo-text { font-size: 20px; font-weight: 900; background: linear-gradient(to right, var(--gold-l), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; cursor: pointer; }
+        .header { background: rgba(11, 19, 43, 0.95); padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+        .logo-text { font-size: 20px; font-weight: 900; background: linear-gradient(to right, var(--gold-l), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
         
-        .main-container { padding: 15px; width: 100%; max-width: 750px; margin: 0 auto; box-sizing: border-box; flex: 1; }
-        .video-card { background: var(--card); border: 2px solid var(--gold); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 20px; position: relative; }
-        .video-wrapper { position: relative; width: 100%; background: #000; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; }
-        video { width: 100%; height: 100%; display: block; }
-        #iframe-box { position: absolute; inset: 0; z-index: 10; display: none; }
+        .main-container { padding: 15px; width: 100%; max-width: 700px; margin: 0 auto; box-sizing: border-box; }
+        .video-card { background: var(--card); border: 2px solid var(--gold); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; }
+        .shaka-video-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center; }
+        video { width: 100%; height: 100%; }
+
+        /* QUALITY BUTTON FOR WILLOW (HLS) */
+        .settings-btn { position: absolute; top: 12px; right: 12px; z-index: 50; background: rgba(0,0,0,0.6); color: var(--gold); border: 1px solid var(--gold); width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        #quality-menu { position: absolute; top: 52px; right: 12px; z-index: 60; background: var(--card); border-radius: 8px; width: 110px; display: none; border: 1px solid var(--gold); overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .q-item { padding: 10px; font-size: 12px; font-weight: 700; text-align: center; color: #ccc; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .q-item.active { background: var(--gold); color: #000; }
 
         .top-badges { position: absolute; top: 12px; left: 12px; z-index: 25; display: flex; gap: 8px; pointer-events: none; }
         .badge { background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; border: 1px solid rgba(255,255,255,0.2); }
@@ -31,146 +37,150 @@
         .live-dot { width: 6px; height: 6px; background: #ff4d4d; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1.2s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        .controls-box { padding: 15px; display: flex; flex-direction: column; gap: 12px; }
-        .btn-gold { background: linear-gradient(to right, #AA8222, var(--gold-l), var(--gold)); color: #000; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 900; text-transform: uppercase; text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); cursor: pointer; }
+        .controls-box { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+        .btn-gold { background: linear-gradient(to right, #AA8222, var(--gold)); color: #000; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 900; text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); border:none; cursor:pointer; }
+        
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .s-btn { padding: 12px; border-radius: 8px; color: #fff; font-weight: 700; text-decoration: none; text-align: center; font-size: 13px; }
+        .s-btn { padding: 12px; border-radius: 8px; color: #fff; font-weight: 700; text-decoration: none; text-align: center; font-size: 13px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; gap: 8px; }
 
-        .select-title { font-size: 13px; color: var(--gold); font-weight: 800; text-align: center; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-        .channel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .ch-card { background: var(--card); border: 1px solid rgba(212, 175, 55, 0.2); padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .ch-card.active { border: 2px solid var(--gold); background: rgba(212, 175, 55, 0.1); }
-        .ch-card i { font-size: 22px; color: var(--gold); display: block; margin-bottom: 8px; }
-        .ch-card span { font-size: 11px; font-weight: 700; color: #ddd; display: block; }
+        .ch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .ch-card { background: var(--card); border: 1px solid rgba(212, 175, 55, 0.2); padding: 12px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .ch-card.active { border-color: var(--gold); background: rgba(212, 175, 55, 0.15); }
+        .ch-card i { font-size: 20px; color: var(--gold); display: block; margin-bottom: 5px; }
+        .ch-card span { font-size: 11px; font-weight: 600; color: #ccc; }
 
         #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .site-footer { text-align: center; padding: 25px; color: #555; font-size: 11px; }
         .shaka-current-time, .shaka-text-container { display: none !important; }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="logo-text" id="_0xLogo">MKS STUDY SYSTEM</div>
-        <div style="display: flex; gap: 10px;">
-            <a href="https://t.me/MKSSports_3" target="_blank" style="color: #0088cc;"><i class="fab fa-telegram fa-lg"></i></a>
-            <a href="https://youtube.com/@mkssports3" target="_blank" style="color: #ff0000;"><i class="fab fa-youtube fa-lg"></i></a>
-        </div>
+        <div class="logo-text">MKS STUDY SYSTEM</div>
     </div>
     <div class="main-container">
         <div class="video-card">
-            <div class="video-wrapper" id="player-container">
+            <div class="shaka-video-container" id="player-container">
                 <div class="top-badges">
                     <div class="badge live"><span class="live-dot"></span>LIVE</div>
                     <div class="badge" style="color:var(--gold)"><i class="fas fa-users"></i> <span id="v-count">1238</span></div>
                 </div>
+                
+                <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
+                <div id="quality-menu"><div id="quality-list"></div></div>
+                
                 <video id="video" autoplay muted playsinline></video>
-                <div id="iframe-box"></div>
                 <div id="loader"></div>
             </div>
             <div class="controls-box">
-                <a href="javascript:location.reload();" class="btn-gold">FIX LAG / REFRESH STREAM</a>
+                <button class="btn-gold" onclick="location.reload()"><i class="fas fa-sync-alt"></i> REFRESH STREAM</button>
                 <div class="btn-grid">
-                    <a href="https://t.me/MKSSports_3" class="s-btn" style="background:#0088cc">TELEGRAM</a>
-                    <a href="https://youtube.com/@mkssports3" class="s-btn" style="background:#ff0000">YOUTUBE</a>
+                    <a href="https://t.me/MKSSports_3" class="s-btn" style="background:#0088cc" target="_blank">TELEGRAM</a>
+                    <a href="https://youtube.com/@mkssports3" class="s-btn" style="background:#ff0000" target="_blank">YOUTUBE</a>
                 </div>
             </div>
         </div>
-        <div class="select-title">IPL 2026 - SELECT SERVER</div>
-        <div class="channel-grid" id="ch-grid"></div>
+        <div style="font-size: 12px; color: var(--gold); font-weight: 800; text-align: center; margin: 10px 0;">SELECT SERVER</div>
+        <div class="ch-grid" id="ch-grid"></div>
     </div>
-    <div class="site-footer" style="text-align:center; padding:20px; font-size:10px; color:#555;">© 2026 MKS STUDY — Made with ❤️</div>
     <script>
 (function(){
-    // Security
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.onkeydown = e => { if(e.keyCode==123||(e.ctrlKey&&e.shiftKey&&(e.keyCode==73||e.keyCode==74||e.keyCode==67))||(e.ctrlKey&&e.keyCode==85)) return !1; };
-
-    // Viewer Count
     let views = 1238;
     setInterval(() => { views += Math.floor(Math.random()*10)-4; document.getElementById('v-count').innerText = views; }, 5000);
 
-    // ✅ UPDATED CHANNEL CONFIG WITH YOUR NEW STAR SPORTS LINKS
+    // ✅ CHANNELS WITH WILLOW AMAGI (AMAL) ADDED
     const CHANNELS = {
-        mks: {
-            name: "Star Sports 1 Hindi", icon: "fas fa-play-circle",
-            url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/index.mpd",
-            kid: "400131994b445d8c8817202248760fda", key: "2d56cb6f07a75b9aff165d534ae2bfc4",
-            cookie: "__hdnea__=st=1777815603~exp=1777837203~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=a019653f0d0170eca9b371bcd2dacde9582da043ca8f25574ddecb2d3e05878c"
-        },
-        mks1: {
-            name: "Star Sports 1", icon: "fas fa-tv",
-            url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_BTS/WDVLive/index.mpd",
-            kid: "965dc2ddb1d85138ad787999a7f30ca5", key: "859695076e67fe961836b564db6d689c",
-            cookie: "__hdnea__=st=1777815603~exp=1777837203~acl=/bpk-tv/Star_Sports_HD1_BTS/WDVLive/*~hmac=a81447d576ad4642cb96f0d889f102165e53bf3796d5170c594ed604069fccfb"
-        },
-        SS2H: {
-            name: "Star Sports 2 Hindi", icon: "fas fa-play-circle",
-            url: "https://jiotvpllive.cdn.jio.com/bpk-tv/StarSportsHD2Hin_BTS/WDVLive/index.mpd",
-            kid: "bd1ea6a1c1fb5dcdb709434e0826bbc0", key: "f57f22cba32739ce7beb1fab3f3d060b",
-            cookie: "__hdnea__=st=1777795787~exp=1777817387~acl=/bpk-tv/StarSportsHD2Hin_BTS/WDVLive/*~hmac=588d4e04984fe51a387af59008192efc06d56a1c3ed5e38f69cd13a42f408698"
-        },
-        SS2E: {
-            name: "Star Sports 2", icon: "fas fa-tv",
-            url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD2_BTS/WDVLive/index.mpd",
-            kid: "9457eb90129456fa8ea95e10ba4ac51e", key: "e620a970cea474c491ac78ae71a4d764",
-            cookie: "__hdnea__=st=1777795787~exp=1777817387~acl=/bpk-tv/Star_Sports_HD2_BTS/WDVLive/*~hmac=a9d76f0b88e517a8f7c035aa4c08808d0cbcf66d35cacb92c2de244da607d6ae"
-        },
-        willow: { name: "Willow HD", icon: "fas fa-baseball-ball", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", type: "hls" },
-        c3: { name: "Star Allrounder", icon: "fas fa-star", url: "https://allrounder-live2.pages.dev/star/star-1-hindi", isIframe: true }
+        AMAL: { name: "Willow HD (Amagi)", icon: "fas fa-baseball-ball", type: "hls", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
+        SS1H: { name: "Star Hindi (Jio)", icon: "fas fa-play-circle", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/index.mpd", kid: "400131994b445d8c8817202248760fda", key: "2d56cb6f07a75b9aff165d534ae2bfc4", cookie: "__hdnea__=st=1777815603~exp=1777837203~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=a019653f0d0170eca9b371bcd2dacde9582da043ca8f25574ddecb2d3e05878c" },
+        SS1E: { name: "Star English (Jio)", icon: "fas fa-tv", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_BTS/WDVLive/index.mpd", kid: "965dc2ddb1d85138ad787999a7f30ca5", key: "859695076e67fe961836b564db6d689c", cookie: "__hdnea__=st=1777815603~exp=1777837203~acl=/bpk-tv/Star_Sports_HD1_BTS/WDVLive/*~hmac=a81447d576ad4642cb96f0d889f102165e53bf3796d5170c594ed604069fccfb" },
+        ALLR: { name: "Star Allrounder", icon: "fas fa-star", url: "https://allrounder-live2.pages.dev/star/star-1-hindi", isIframe: true }
     };
 
     let player, ui, hls;
 
-    async function loadPlayer(id) {
+    function toggleQualityMenu() { const m = document.getElementById('quality-menu'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
+
+    function buildQualityMenu() {
+        if (!hls) return;
+        const list = document.getElementById('quality-list'); list.innerHTML = "";
+        let autoBtn = document.createElement('div'); autoBtn.className = 'q-item active'; autoBtn.innerText = 'Auto';
+        autoBtn.onclick = () => { hls.currentLevel = -1; toggleQualityMenu(); };
+        list.appendChild(autoBtn);
+        hls.levels.forEach((lvl, idx) => {
+            let btn = document.createElement('div'); btn.className = 'q-item'; btn.innerText = lvl.height + 'p';
+            btn.onclick = () => { hls.currentLevel = idx; toggleQualityMenu(); };
+            list.appendChild(btn);
+        });
+    }
+
+    async function initPlayer(id) {
         const config = CHANNELS[id];
-        const video = document.getElementById("video"), container = document.getElementById("player-container"), iframe = document.getElementById("iframe-box"), loader = document.getElementById("loader");
-        loader.style.display = "block"; iframe.style.display = "none"; video.style.display = "block";
-        if (hls) hls.destroy(); if (player) await player.destroy();
+        const video = document.getElementById("video"), container = document.getElementById("player-container"), loader = document.getElementById("loader"), setBtn = document.getElementById("settings-btn");
+        
+        loader.style.display = "block"; setBtn.style.display = "none";
+        if (hls) { hls.destroy(); hls = null; }
+        if (player) { await player.destroy(); player = null; }
 
         if (config.isIframe) {
-            video.style.display = "none"; iframe.style.display = "block";
-            iframe.innerHTML = `<iframe src="${config.url}" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
+            video.style.display = "none";
             loader.style.display = "none";
+            container.innerHTML += `<div id="temp-iframe" style="position:absolute;inset:0;z-index:10;"><iframe src="${config.url}" width="100%" height="100%" frameborder="0" allowfullscreen></iframe></div>`;
         } else if (config.type === "hls") {
+            const temp = document.getElementById("temp-iframe"); if(temp) temp.remove();
+            video.style.display = "block";
+            setBtn.style.display = "flex";
             if (Hls.isSupported()) {
                 hls = new Hls(); hls.loadSource(config.url); hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => { loader.style.display = "none"; video.play(); });
+                hls.on(Hls.Events.MANIFEST_PARSED, () => { loader.style.display = "none"; video.play(); buildQualityMenu(); });
             }
         } else {
+            const temp = document.getElementById("temp-iframe"); if(temp) temp.remove();
+            video.style.display = "block";
             shaka.polyfill.installAll();
-            player = new shaka.Player(video);
-            ui = new shaka.ui.Overlay(player, container, video);
+            player = new shaka.Player();
+            await player.attach(video);
+            if (!ui) ui = new shaka.ui.Overlay(player, container, video);
             ui.configure({ controlPanelElements: ["mute", "play_pause", "spacer", "quality", "fullscreen"] });
+            
             player.configure({
                 drm: { clearKeys: { [config.kid]: config.key } },
-                streaming: { bufferingGoal: 30, rebufferingGoal: 5, lowLatencyMode: false }
+                streaming: { lowLatencyMode: false, bufferingGoal: 15 }
             });
+
             player.getNetworkingEngine().registerRequestFilter((type, request) => {
                 request.headers["Referer"] = "https://www.jiotv.com/";
                 request.headers["User-Agent"] = "plaYtv/7.1.5";
+                request.headers["Cookie"] = config.cookie;
                 const urlCookie = config.cookie.replace("__hdnea__=", "");
-                if (!request.uris[0].includes("__hdnea__")) {
+                if ((type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT) && !request.uris[0].includes("__hdnea__")) {
                     const sep = request.uris[0].includes("?") ? "&" : "?";
                     request.uris[0] += sep + "__hdnea__=" + urlCookie;
                 }
             });
-            try { await player.load(config.url); loader.style.display = "none"; video.play(); } catch (e) { loader.style.display = "none"; }
+
+            try { await player.load(config.url); loader.style.display = "none"; video.play(); video.muted = false; } catch (e) { console.error(e); }
         }
     }
 
     window.onload = () => {
         const grid = document.getElementById("ch-grid");
-        Object.keys(CHANNELS).forEach(id => {
+        const params = new URLSearchParams(window.location.search);
+        const startId = params.get("id") || "AMAL";
+
+        Object.keys(CHANNELS).forEach(key => {
             const card = document.createElement("div");
-            card.className = "ch-card";
-            card.innerHTML = `<i class="${CHANNELS[id].icon}"></i><span>${CHANNELS[id].name}</span>`;
+            card.className = `ch-card ${key === startId ? 'active' : ''}`;
+            card.innerHTML = `<i class="${CHANNELS[key].icon}"></i><span>${CHANNELS[key].name}</span>`;
             card.onclick = () => {
+                window.history.pushState({}, '', `?id=${key}`);
+                initPlayer(key);
                 document.querySelectorAll('.ch-card').forEach(c => c.classList.remove('active'));
-                card.classList.add('active'); loadPlayer(id);
+                card.classList.add('active');
             };
             grid.appendChild(card);
         });
-        loadPlayer("SS1H"); // Default loading Star Sports 1 Hindi
+        initPlayer(startId);
     };
 })();
 </script>

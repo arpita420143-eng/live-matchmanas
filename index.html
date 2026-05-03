@@ -3,340 +3,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas - Live Sports</title>
+    <title>MKS Study System - Live</title>
+    
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --bg: #090b10;
-            --card-bg: #151922;
-            --accent: #e50914; /* Red Theme */
-            --accent-glow: rgba(229, 9, 20, 0.5);
-            --telegram: #0088cc;
-            --youtube: #ff0000;
-            --text: #ffffff;
-        }
-
-        body { 
-            margin: 0; background-color: var(--bg); color: var(--text); 
-            font-family: 'Segoe UI', sans-serif; overflow-x: hidden; 
-            background-image: radial-gradient(circle at top right, rgba(229,9,20,0.15), transparent 40%);
-        }
-
-        /* 🔥 HEADER 🔥 */
-        .header {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(9, 11, 16, 0.95); backdrop-filter: blur(12px);
-            padding: 12px 15px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .logo { font-size: 20px; font-weight: 900; letter-spacing: 0.5px; }
-        .logo span { color: var(--accent); }
-
-        .social-box { display: flex; gap: 8px; }
-        .social-btn {
-            padding: 6px 12px; border-radius: 50px; font-size: 11px; font-weight: 700;
-            text-decoration: none; color: white; display: flex; align-items: center; gap: 5px;
-            transition: 0.3s;
-        }
-        .btn-tg { background: var(--telegram); }
-        .btn-yt { background: var(--youtube); }
-        .social-btn:active { transform: scale(0.95); }
-
-        /* 🔥 SEARCH 🔥 */
-        .search-area { padding: 15px; text-align: center; }
-        .search-input {
-            width: 100%; max-width: 500px; padding: 12px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
-            background: #1c212c; color: white; font-size: 14px; outline: none; transition: 0.3s;
-        }
-        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
-
-        /* 🔥 GRID 🔥 */
-        .grid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); 
-            gap: 12px; padding: 0 15px 100px; 
-        }
-        .card {
-            background: linear-gradient(145deg, #1c212c, #151922);
-            border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 1/1; cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.2s;
-        }
-        .card:active { transform: scale(0.95); }
+        /* --- PREMIUM DARK THEME --- */
+        :root { --bg-main: #0a0b0e; --bg-card: #14161c; --accent-red: #e50914; --accent-blue: #0088cc; --text-main: #ffffff; }
+        body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; -webkit-user-select: none; }
         
-        .card-icon {
-            width: 100%; height: 100%; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; position: relative;
-        }
-        .ch-initial { font-size: 40px; font-weight: 900; opacity: 0.1; position: absolute; }
-        .play-icon { font-size: 35px; color: var(--accent); z-index: 2; filter: drop-shadow(0 0 10px red); }
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(20, 22, 28, 0.95); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #222; backdrop-filter: blur(10px); }
+        .logo { font-size: 18px; font-weight: 900; color: white; cursor: pointer; text-transform: uppercase; }
+        .logo span { color: var(--accent-red); }
+        .head-btns { display: flex; gap: 8px; }
+        .h-btn { padding: 6px 10px; border-radius: 50px; font-size: 10px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 5px; }
+        .hb-tg { background: var(--accent-blue); } .hb-yt { background: var(--accent-red); }
 
-        .ch-name {
-            position: absolute; bottom: 0; width: 100%; padding: 8px; text-align: center;
-            font-size: 10px; font-weight: 700; background: rgba(0,0,0,0.8); color: #e0e0e0;
-        }
-        .live-badge {
-            position: absolute; top: 8px; right: 8px; background: #e50914; color: white;
-            font-size: 8px; padding: 2px 6px; border-radius: 4px; font-weight: bold; animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.5;} 100% {opacity: 1;} }
-
-        /* 🔥 PLAYER OVERLAY 🔥 */
-        #player-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000;
-            z-index: 200; display: none; flex-direction: column;
-        }
-        .player-nav {
-            position: absolute; top: 0; width: 100%; padding: 15px; z-index: 10;
-            display: flex; justify-content: space-between; align-items: center;
-            background: linear-gradient(to bottom, black, transparent);
-        }
+        .main-container { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
+        .player-box { width: 100%; max-width: 800px; background: var(--bg-card); overflow: hidden; border-bottom: 1px solid #333; margin-top: 0; }
+        @media(min-width: 600px) { .main-container { padding: 10px; } .player-box { border-radius: 12px; border: 1px solid #333; margin-top: 5px; } }
         
-        .video-box { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-        video { width: 100%; max-height: 100%; }
-
-        /* Controls */
-        .controls-area {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            display: flex; flex-direction: column; gap: 10px; z-index: 20; width: 90%; align-items: center;
-        }
-        .server-row { display: flex; gap: 10px; width: 100%; justify-content: center; }
-        .social-row { display: flex; gap: 10px; width: 100%; justify-content: center; margin-top: 5px; }
-
-        .srv-btn, .soc-btn-player {
-            flex: 1; padding: 10px; border-radius: 8px; border: none;
-            color: white; font-weight: 600; cursor: pointer; font-size: 12px; text-align: center; text-decoration: none;
-        }
-        .srv-btn { background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); }
-        .srv-btn.active { background: var(--accent); }
+        .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; height: 320px; }
+        @media(min-width: 600px) { .video-wrapper { height: 450px; aspect-ratio: 9/16; } }
         
-        .tg-player { background: var(--telegram); }
-        .yt-player { background: var(--youtube); }
-
-        #error-msg {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(20, 20, 20, 0.95); padding: 20px; border-radius: 12px; border: 1px solid red;
-            text-align: center; display: none; z-index: 25;
-        }
+        #shaka-container { width: 100%; height: 100%; position: relative; }
+        video { width: 100%; height: 100%; display: block; object-fit: contain; }
+        #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
+        #iframe-box iframe { width: 100%; height: 100%; border: none; }
         
-        /* Quality Menu */
-        #qualities { 
-            position: absolute; top: 60px; right: 15px; background: rgba(20,20,20,0.95); 
-            border-radius: 8px; display: none; min-width: 120px; z-index: 30; border: 1px solid #333; 
-        }
-        .q-opt { padding: 12px; color: #ccc; border-bottom: 1px solid #333; font-size: 13px; cursor: pointer; text-align: left;}
-        .q-opt:hover { background: var(--accent); color: white; }
+        .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(0, 0, 0, 0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 8px; pointer-events: none; }
+        .live-dot { width: 8px; height: 8px; background: #e50914; border-radius: 50%; animation: blink 1.2s infinite ease-in-out; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .settings-btn { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 6px; cursor: pointer; backdrop-filter: blur(5px); font-size: 16px; transition: 0.3s; display: none; }
+        #quality-menu { position: absolute; top: 45px; right: 10px; z-index: 30; background: rgba(15, 15, 15, 0.95); border: 1px solid #444; border-radius: 8px; width: 140px; display: none; overflow: hidden; }
+        .q-item { padding: 10px 12px; font-size: 13px; color: #ddd; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .q-item:hover { background: #333; } .q-item.active { background: var(--accent-red); color: white; font-weight: bold; }
+        
+        .controls-box { padding: 15px 10px; }
+        .prominent-fix-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; margin-bottom: 15px; background: linear-gradient(45deg, #ffb400, #ff8800); color: #000; font-weight: 900; font-size: 16px; border-radius: 12px; text-decoration: none; text-transform: uppercase; animation: glow 2s infinite; text-align: center; }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 5px #ffb400; } 50% { box-shadow: 0 0 20px #ffb400; } }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+        .action-btn { padding: 12px; border-radius: 8px; color: white; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .tg { background: var(--accent-blue); } .yt { background: var(--accent-red); }
+        
+        .site-footer { text-align: center; padding: 20px 10px; border-top: 1px solid #222; color: #777; font-size: 11px; background: #0a0b0e; line-height: 1.6; }
+        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 1s linear infinite; display: none; z-index: 5; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-
     <div class="header">
-        <div class="logo">MATCH <span>MANAS</span></div>
-        <div class="social-box">
-            <a href="https://t.me/MKSSports_3" class="social-btn btn-tg" target="_blank">
-                <i class="fab fa-telegram"></i> Join
-            </a>
-            <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="social-btn btn-yt" target="_blank">
-                <i class="fab fa-youtube"></i> Sub
-            </a>
+        <div class="logo" onclick="unlockSecret()">MKS <span>STUDY SYSTEM</span></div>
+        <div class="head-btns">
+            <a href="https://t.me/MKSSports_3" class="h-btn hb-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Join</a>
+            <a href="https://youtube.com/@mkssports3" class="h-btn hb-yt" target="_blank"><i class="fab fa-youtube"></i> Sub</a>
         </div>
     </div>
 
-    <div class="search-area">
-        <input type="text" id="searchBar" class="search-input" placeholder="Search Sports Channels..." onkeyup="renderChannels()">
-    </div>
-
-    <div id="grid" class="grid"></div>
-
-    <div id="player-overlay">
-        <div class="player-nav">
-            <i class="fas fa-arrow-left" style="font-size:24px; cursor:pointer; color:white;" onclick="closePlayer()"></i>
-            <span id="player-title" style="font-weight:bold; font-size:16px;">LIVE TV</span>
-            <i class="fas fa-cog" style="font-size:24px; color:white; opacity:0.9;" onclick="toggleQ()"></i>
-        </div>
-        
-        <div id="qualities"><div class="q-opt">Auto</div></div>
-
-        <div class="video-box">
-            <video id="video" controls autoplay playsinline></video>
-            
-            <div id="error-msg">
-                <p style="margin:0 0 10px 0;">Stream Offline?</p>
-                <button class="srv-btn" style="background:red; width:100%;" onclick="playCurrent(2)">Tap to Fix (Server 2)</button>
-            </div>
-
-            <div class="controls-area">
-                <div class="server-row">
-                    <button class="srv-btn active" onclick="playCurrent(1)">Server 1</button>
-                    <button class="srv-btn" onclick="playCurrent(2)">Server 2 (Fix)</button>
+    <div class="main-container">
+        <div class="player-box">
+            <div class="video-wrapper" id="videoWrapper">
+                <div class="live-overlay">
+                    <span class="live-dot"></span> LIVE <span style="margin: 0 5px; opacity: 0.3;">|</span>
+                    <i class="fas fa-eye"></i> <span id="fake-viewers">45</span>
                 </div>
                 
-                <div class="social-row">
-                    <a href="https://t.me/MKSSports_3" class="soc-btn-player tg-player" target="_blank">
-                        <i class="fab fa-telegram"></i> Telegram
-                    </a>
-                    <a href="https://youtube.com/@mkssports3?si=9XNRUtdeTvqivd9e&sub_confirmation=1" class="soc-btn-player yt-player" target="_blank">
-                        <i class="fab fa-youtube"></i> Subscribe
-                    </a>
+                <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
+                <div id="quality-menu"><div id="quality-list"></div></div>
+                
+                <div id="shaka-container">
+                    <video id="video" autoplay playsinline></video>
+                </div>
+                
+                <div id="iframe-box"></div>
+                <div id="loader"></div>
+            </div>
+            
+            <div class="controls-box">
+                <a href="javascript:location.reload();" class="prominent-fix-btn">
+                    <i class="fas fa-sync-alt"></i> ⚡ Fix Lag / Refresh Stream
+                </a>
+
+                <div class="btn-grid">
+                    <a href="https://t.me/MKSSports_3" class="action-btn tg" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
+                    <a href="https://youtube.com/@mkssports3" class="action-btn yt" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
                 </div>
             </div>
         </div>
+        
+        <div id="secret-menu" style="display: none; width: 100%; max-width: 800px; margin-top: 20px; background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333;">
+            <div id="secret-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;"></div>
+        </div>
     </div>
 
-    <script>
-        // 🔥 YOUR SPORTS DATABASE 🔥
+    <div class="site-footer">
+        © MKS STUDY SYSTEM — Made with <span style="color: #e50914;">❤️</span>.<br>
+        I am not the owner of any channels or content displayed. If you wish content removed, contact us and we will respond promptly.
+    </div>
+        <script>
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && e.keyCode == 85)) { return false; }
+        };
+
         const channels = [
-            { 
-                id: "willow", 
-                name: "Willow HD", 
-                url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8"
-            },
-            { 
-                id: "sky", 
-                name: "Sky Cricket", 
-                url: "https://skysports-cricket.amagi.tv/playlist.m3u8"
-            },
-            { 
-                id: "dds", 
-                name: "DD Sports", 
-                url: "https://cdn-6.pishow.tv/live/13/master.m3u8"
-            },
-            { 
-                id: "tnt1", 
-                name: "TNT Sports 1", 
-                url: "https://tnt-sports-1.amagi.tv/playlist.m3u8"
-            },
-            { 
-                id: "tnt2", 
-                name: "TNT Sports 2", 
-                url: "https://tnt-sports-2.amagi.tv/index.m3u8"
-            },
-            { 
-                id: "tnt3", 
-                name: "TNT Sports 3", 
-                url: "https://tnt-sports-3.amagi.tv/playlist.m3u8"
-            },
-            { 
-                id: "tnt4", 
-                name: "TNT Sports 4", 
-                url: "https://tnt-sports-4.amagi.tv/index.m3u8"
-            },
-            { 
-                id: "sony", 
-                name: "Sony Ten 1", 
-                url: "https://skysports-cricket.amagi.tv/playlist.m3u8"
-            }
+            { id: "willow", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", type: "hls" },
+            { id: "ten", name: "TEN CRICKET", url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", type: "dash", keys: { "294b5761cefc22d0c6312939e13d8278": "52148f1042d238849f0a7813f1da8a7b" } },
+            { id: "Thala", name: "Star Sports Hindi (OK.ru)", url: "https://wcb-hindi-187646-live-cricket-151678.megastream.eu.cc/live_stream.m3u8", isIframe: true },
+            { id: "English", name: "CSK PODCAST 1", url: "https://playerado.top/embed2.php?id=starsp1&v=su", isIframe: true },
+            { id: "freeneetcoaching", name: "CSK vs PBKS", url: "https://yuppnimrestreammum.akamaized.net/181224/smil:ymcc12thneet.smil/playlist.m3u8?ads.channel=4721&ads.content_custom_1_param=FAST&ads.user=2&ads.content_custom_3_param=YuppFastIndia&hdnts=st=1775651060~exp=1775672660~acl=!*/181224/smil:ymcc12thneet.smil/*!/payload/yupptvott_61_-1_ef49fb37-443e-4d6d-69b7-aaedbd819006_IN_49.42.185.94_yuppfast_2_channel_252_-1/*~data=yupptvott_61_-1_ef49fb37-443e-4d6d-69b7-aaedbd819006_IN_49.42.185.94_yuppfast_2_channel_252_-1~hmac=836793a2d62fe1fb81bb502d756d1f82b162752449b33718068888937afa9ead&ads.network_name=yuppfast&ads.app_store_url=&ads.app_bundle=&ads.content_livestream=1&ads.content_genre=EDUCATION&ads.channel_name=TuritoNEET&ads.language=ENG&ads.user=0", type: "hls" },
+            { id: "Whistlepodu", name: "CSK vs PBKS", url: "https://go.webcric.com/frame5.htm", isIframe: true },
+            { id: "starhindi", name: "Star Sports hindi Live", url: "https://muc001.myturn1.top:8088/live/webcricn02/playlist.m3u8?vidictid=205509856948&id=115656&pk=fccf2df0bc67801056d188942d96b8ee907d84cf27cb224e9e393d0e690bac03ba120a0696b8925be50b7478e3db60e00ed3a1436b795dfbfa1ced303845ce5c", isIframe: true },
+            { id: "cskvskkrhighlights", name: "Star Sports English Live", url: "https://hssportsprepack.akamaized.net/videos/cricket/1271507153/1540066363/in/hin/v2/avc/1776197276470/hls/plain/media-1/index.m3u8", isIframe: true },
+            { id: "tamil", name: "tamil", url: "https://hellosports.gamesaved.xyz/p/live-stream.html?id=c2&m=1", isIframe: true },
+            { id: "tamil1", name: "Hindi", url: "https://fan18.pages.dev/1?id=101", isIframe: true },
+            { id: "livematch", name: "WebCric Link", url: "https://go.webcric.com/frame9.htm", isIframe: true },
+            { id: "star_allrounder", name: "Star Sports 1 (Allrounder)", url: "https://allrounder-live2.pages.dev/star/star-1-hindi", isIframe: true },
+            { id: "SS1H", name: "Star Sports 1 Hindi HD", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/index.mpd", type: "dash", keys: { "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4" },token: "st=1777643097~exp=1777664697~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=182c6c44a8e0baecc0e021862381b991eacf7c73e50f770b5d122457d82830cb" },
+            { id: "mkssports1", name: "Star Sports 1 Hindi HD", urls: ["https://qw.live.pv-cdn.net/OTTB/lhr-nitro/live/clients/dash/enc/5sxuux529k/out/v1/bb548a3626cd4708afbb94a58d71dce9/cenc.mpd"], type: "dash", keys: { "1d96ab366bbe6451edf7407b58e2fa16": "0116201f4a63ac5bf5787d2c610c41a7" } },
+            { id: "mkssports2", name: "Star Sports 1 HD", urls: ["https://jiotvpllive.cdn.jio.com/bpk-tv//Star_Sports_HD1_BTS/output/index.mpd", "https://jiotvmblive.cdn.jio.com/bpk-tv//Star_Sports_HD1_BTS/output/index.mpd", "https://jiotvbpkmob.cdn.jio.com/bpk-tv//Star_Sports_HD1_BTS/output/index.mpd"], type: "dash", keys: { "965dc2ddb1d85138ad787999a7f30ca5": "859695076e67fe961836b564db6d689c" } },
+            { id: "mkssports3", name: "Star Sports 2 Tamil HD", urls: ["https://jiotvpllive.cdn.jio.com/bpk-tv//Star_Sports2_Tamil_HD_BTS/output/index.mpd", "https://jiotvmblive.cdn.jio.com/bpk-tv//Star_Sports2_Tamil_HD_BTS/output/index.mpd", "https://jiotvbpkmob.cdn.jio.com/bpk-tv//Star_Sports2_Tamil_HD_BTS/output/index.mpd"], type: "dash", keys: { "dc44fe6251825774b90d58dcfa7d94e0": "63e3ae853f483a86752b5b9e6d61eb20" } },
+            { id: "1000", name: "Star Sports Hindi 1", urls: ["https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_1_Hindi_BTS/output/index.mpd" , "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_1_Hindi_BTS/output/index.mpd" , "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_1_Hindi_BTS/output/index.mpd"], type: "dash", keys: { "350c0aaffedf51cc1502e9543c7c885e": "8ea9b607549252068e260a5f4d7dd321" } }
         ];
+            
+            let hls = null, shakaPlayerInstance = null, shakaUI = null, activeCh = null, clickCount = 0, viewerCount = Math.floor(Math.random() * 30) + 40; 
 
-        let hls = null;
-        let activeCh = null;
+        async function fetchJioToken() {
+            try {
+                const listRes = await fetch("https://raw.githubusercontent.com/Shubhamkur/Tv/refs/heads/main/Cookies");
+                const urlArray = await listRes.json();
+                const response = await fetch(urlArray[0]);
+                const rawText = await response.text();
+                const match = rawText.match(/(__hdnea__=[^"'\s&|]+)/);
+                return match ? match[1] : "";
+            } catch (error) { return ""; }
+        }
 
-        function renderChannels() {
-            const grid = document.getElementById('grid');
-            const search = document.getElementById('searchBar').value.toLowerCase();
-            grid.innerHTML = '';
+        function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            activeCh = channels.find(c => c.id === urlParams.get('id')) || channels[0];
+            loadPlayer(activeCh);
+            renderSecretMenu();
+        }
+
+        function unlockSecret() { 
+            clickCount++; 
+            if (clickCount === 5) { 
+                clickCount = 0; 
+                if (prompt("Password:") === "manas") { document.getElementById('secret-menu').style.display = 'block'; }
+            } 
+        }
+
+        function renderSecretMenu() {
+            const grid = document.getElementById('secret-grid');
+            grid.innerHTML = "";
             channels.forEach(ch => {
-                if (ch.name.toLowerCase().includes(search)) {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <div class="card-icon">
-                            <span class="ch-initial">${ch.name[0]}</span>
-                            <i class="fas fa-play-circle play-icon"></i>
-                            <div class="live-badge">LIVE</div>
-                        </div>
-                        <div class="ch-name">${ch.name}</div>
-                    `;
-                    card.onclick = () => loadPlayer(ch);
-                    grid.appendChild(card);
-                }
+                const btn = document.createElement('div');
+                btn.style.cssText = "background: #222; padding: 10px; text-align: center; border-radius: 8px; cursor: pointer; color: white; font-size: 12px; border: 1px solid #333;";
+                btn.innerText = ch.name;
+                btn.onclick = () => { loadPlayer(ch); document.getElementById('secret-menu').style.display = 'none'; };
+                grid.appendChild(btn);
             });
         }
 
-        function loadPlayer(ch) {
+        async function loadPlayer(ch) {
             activeCh = ch;
-            document.getElementById('player-overlay').style.display = 'flex';
-            document.getElementById('player-title').innerText = ch.name;
-            document.getElementById('error-msg').style.display = 'none';
-            document.getElementById('qualities').innerHTML = '<div class="q-opt">Auto</div>';
-
-            // URL Update
-            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?id=' + ch.id;
-            window.history.pushState({path:newUrl}, '', newUrl);
-            
-            // Auto-Fix Logic for TNT/DD
-            if (ch.name.includes("TNT") || ch.name.includes("DD")) {
-                playCurrent(2);
-            } else {
-                playCurrent(1);
-            }
-        }
-
-        function playCurrent(serverNum) {
             const video = document.getElementById('video');
-            let url = activeCh.url;
+            const shakaContainer = document.getElementById('shaka-container');
+            const iframeBox = document.getElementById('iframe-box');
+            const loader = document.getElementById('loader');
+            const wrapper = document.getElementById('videoWrapper');
+            const settingsBtn = document.getElementById('settings-btn');
+            const qualityMenu = document.getElementById('quality-menu');
+
+            wrapper.style.display = 'flex'; loader.style.display = 'block'; qualityMenu.style.display = 'none';
             
-            // Server 2 = Proxy Fix
-            if (serverNum === 2) {
-                url = "https://corsproxy.io/?" + encodeURIComponent(activeCh.url);
+            if(hls) { hls.destroy(); hls = null; }
+            if(shakaUI) { shakaUI.destroy(); shakaUI = null; }
+            if(shakaPlayerInstance) { shakaPlayerInstance.destroy(); shakaPlayerInstance = null; }
+
+            if (ch.isIframe) {
+                shakaContainer.style.display = 'none'; settingsBtn.style.display = 'none'; iframeBox.style.display = 'block';
+                iframeBox.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; encrypted-media" scrolling="no"></iframe>`;
+                setTimeout(() => { loader.style.display = 'none'; }, 2000);
+            } else if (ch.type === "dash") {
+                shakaContainer.style.display = 'block'; settingsBtn.style.display = 'none'; iframeBox.style.display = 'none';
+                iframeBox.innerHTML = ""; video.controls = false; 
+
+                shaka.polyfill.installAll();
+                if (shaka.Player.isBrowserSupported()) {
+                    shakaPlayerInstance = new shaka.Player(video);
+                    shakaUI = new shaka.ui.Overlay(shakaPlayerInstance, shakaContainer, video);
+                    shakaUI.configure({ 'controlPanelElements': ['play_pause', 'spacer', 'mute', 'quality', 'fullscreen'] });
+
+                    shakaPlayerInstance.configure({
+                        drm: ch.keys ? { clearKeys: ch.keys } : {},
+                        manifest: { defaultPresentationDelay: 5 },
+                        streaming: { safeSeekOffset: 5, bufferingGoal: 10, rebufferingGoal: 2, lowLatencyMode: true }
+                    });
+
+                    let jioToken = "";
+                    if ((ch.url && ch.url.includes('jio.com')) || (ch.urls && ch.urls[0].includes('jio.com'))) { jioToken = await fetchJioToken(); }
+
+                    shakaPlayerInstance.getNetworkingEngine().registerRequestFilter((type, request) => {
+                        if (request.uris[0].includes('jio.com')) {
+                            request.headers['Referer'] = 'https://www.jiotv.com/';
+                            request.headers['User-Agent'] = 'plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6';
+                            if (jioToken && (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT)) {
+                                request.uris[0] = request.uris[0].split('?')[0] + '?' + jioToken;
+                            }
+                        }
+                    });
+
+                    let urlsToTry = ch.urls ? ch.urls : [ch.url];
+                    let streamLoaded = false;
+                    for (let i = 0; i < urlsToTry.length; i++) {
+                        try {
+                            await shakaPlayerInstance.load(urlsToTry[i]);
+                            loader.style.display = 'none';
+                            video.play().catch(() => { video.muted = true; video.play(); });
+                            streamLoaded = true; break; 
+                        } catch (e) { }
+                    }
+                    if (!streamLoaded) { loader.style.display = 'none'; }
+                }
+            } else {
+                iframeBox.style.display = 'none'; iframeBox.innerHTML = "";
+                shakaContainer.style.display = 'block'; video.controls = true; settingsBtn.style.display = 'block';
+
+                if (Hls.isSupported()) {
+                    hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(video);
+                    
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => { 
+                        loader.style.display = 'none'; 
+                        video.play().catch(() => { video.muted = true; video.play(); });
+                        buildQualityMenu();
+                    });
+
+                    hls.on(Hls.Events.ERROR, function (event, data) {
+                        if (data.fatal) {
+                            switch (data.type) {
+                                case Hls.ErrorTypes.NETWORK_ERROR: hls.startLoad(); break;
+                                case Hls.ErrorTypes.MEDIA_ERROR: hls.recoverMediaError(); break;
+                                default: hls.destroy(); break;
+                            }
+                        }
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = ch.url;
+                    video.addEventListener('loadedmetadata', () => {
+                        loader.style.display = 'none';
+                        video.play().catch(() => { video.muted = true; video.play(); });
+                    });
+                }
             }
-
-            document.querySelectorAll('.srv-btn').forEach((b, i) => b.classList.toggle('active', i === serverNum - 1));
-            document.getElementById('error-msg').style.display = 'none';
-
-            if (Hls.isSupported()) {
-                if(hls) hls.destroy();
-                hls = new Hls();
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play();
-                    generateQualities();
-                });
-                hls.on(Hls.Events.ERROR, (e, data) => {
-                    if (data.fatal && serverNum === 1) document.getElementById('error-msg').style.display = 'block';
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = url;
-                video.play();
-            }
         }
 
-        function generateQualities() {
-            const levels = hls.levels;
-            const qMenu = document.getElementById('qualities');
-            if(levels.length > 1) {
-                qMenu.innerHTML = `<div class="q-opt" onclick="setQ(-1)">Auto</div>`;
-                levels.forEach((l, i) => {
-                    qMenu.innerHTML += `<div class="q-opt" onclick="setQ(${i})">${l.height}p</div>`;
-                });
-            }
+        function toggleQualityMenu() {
+            const menu = document.getElementById('quality-menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
 
-        function setQ(idx) { if(hls) hls.currentLevel = idx; toggleQ(); }
-        function toggleQ() { 
-            const q = document.getElementById('qualities');
-            q.style.display = q.style.display === 'block' ? 'none' : 'block'; 
+        function buildQualityMenu() {
+            if (!hls) return;
+            const list = document.getElementById('quality-list'); list.innerHTML = "";
+            hls.levels.forEach((level, index) => {
+                let btn = document.createElement('div'); btn.className = 'q-item'; btn.innerText = level.height + 'p';
+                btn.onclick = () => {
+                    hls.currentLevel = index; toggleQualityMenu();
+                    document.querySelectorAll('.q-item').forEach(el => el.classList.remove('active')); btn.classList.add('active');
+                };
+                list.appendChild(btn);
+            });
+            let autoBtn = document.createElement('div'); autoBtn.className = 'q-item active'; autoBtn.innerText = 'Auto';
+            autoBtn.onclick = () => {
+                hls.currentLevel = -1; toggleQualityMenu();
+                document.querySelectorAll('.q-item').forEach(el => el.classList.remove('active')); autoBtn.classList.add('active');
+            };
+            list.insertBefore(autoBtn, list.firstChild);
         }
 
-        function closePlayer() {
-            document.getElementById('player-overlay').style.display = 'none';
-            document.getElementById('video').pause();
-            if(hls) hls.destroy();
-            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            window.history.pushState({path:cleanUrl}, '', cleanUrl);
-        }
+        setInterval(() => {
+            viewerCount += Math.floor(Math.random() * 5) - 2;
+            if (viewerCount < 20) viewerCount = 20; 
+            document.getElementById('fake-viewers').innerText = viewerCount;
+        }, 5000);
 
-        // Auto-Load from URL
-        window.onload = function() {
-            renderChannels();
-            const urlParams = new URLSearchParams(window.location.search);
-            const channelId = urlParams.get('id');
-            if (channelId) {
-                const found = channels.find(c => c.id === channelId);
-                if (found) loadPlayer(found);
-            }
-        }
+        window.onload = init;
     </script>
 </body>
 </html>

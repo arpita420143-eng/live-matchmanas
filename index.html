@@ -3,230 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Match Manas Live</title>
+    <meta name="referrer" content="no-referrer">
+    <title>MKS Sports Live - IND vs NZ</title>
     
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        :root { --bg: #000; --surface: #121212; --primary: #3a86ff; --accent: #ff0055; --text: #fff; }
+        :root { --bg: #050505; --surface: #121212; --primary: #0078FF; --telegram: #0088cc; --whatsapp: #25D366; --text: #fff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; padding-bottom: 20px; }
+        
+        body { 
+            margin: 0; background: #050505;
+            color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; 
+        }
 
-        /* HEADER */
+        /* 1. Header */
         .header {
             display: flex; justify-content: space-between; align-items: center;
-            background: linear-gradient(180deg, rgba(0,0,0,0.9), transparent);
-            padding: 15px; position: absolute; top: 0; width: 100%; z-index: 50; pointer-events: none;
+            background: #111; padding: 10px 15px; border-bottom: 2px solid var(--primary); 
+            z-index: 50; position: sticky; top: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
-        .logo { font-weight: 900; font-size: 16px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); pointer-events: auto; }
-        .live-tag { background: red; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; animation: pulse 1s infinite; pointer-events: auto; }
+        .logo { font-weight: 900; font-size: 16px; letter-spacing: 0.5px; color: #fff; }
+        .logo span { color: var(--primary); }
+        .live-tag { background: #e62429; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; }
 
-        /* VIDEO PLAYER */
-        .video-wrapper { position: relative; width: 100%; background: #000; z-index: 40; }
-        .video-box {
-            position: relative; width: 100%; aspect-ratio: 16/9;
-            background: #000; border-bottom: 1px solid #333; overflow: hidden;
-        }
-        iframe, video { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
-
-        /* 🔥 REACTION BUTTONS 🔥 */
-        .reaction-layer {
-            position: absolute; bottom: 15px; right: 10px; z-index: 60;
-            display: flex; gap: 10px; flex-direction: column; pointer-events: auto;
-        }
-        .react-btn {
-            background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3);
-            width: 40px; height: 40px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; cursor: pointer; backdrop-filter: blur(4px);
-            transition: transform 0.1s; color: white;
-        }
-        .react-btn:active { transform: scale(0.8); background: rgba(255,255,255,0.2); }
+        /* 2. Video Player */
+        .video-wrapper { position: relative; width: 100%; background: #000; }
+        .video-box { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; }
+        iframe, video { width: 100%; height: 100%; border: none; }
         
-        .floating-emoji {
-            position: absolute; bottom: 50px; right: 20px; font-size: 30px;
-            animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 55;
+        .video-overlay-views { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 5px; pointer-events: none; }
+        .view-count { font-size: 11px; font-weight: 800; color: #fff; }
+        .live-dot { width: 6px; height: 6px; background: red; border-radius: 50%; box-shadow: 0 0 5px red; }
+
+        /* 3. News Ticker */
+        .news-ticker { background: var(--primary); color: white; font-size: 11px; font-weight: 700; padding: 6px 0; white-space: nowrap; overflow: hidden; border-bottom: 1px solid #333; }
+        .ticker-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
+
+        /* 4. SERVER LIST (Compact & Vertical) */
+        .server-section {
+            padding: 10px 15px; display: flex; flex-direction: column; gap: 8px;
+            background: #0a0a0a; border-bottom: 1px solid #222;
         }
-        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(1.5); opacity: 0; } }
-
-        /* 🔥 MATCH BANNER (Zero Maintenance) 🔥 */
-        .match-banner {
-            background: #1a1a1a; padding: 15px; 
-            display: flex; justify-content: space-around; align-items: center;
-            border-bottom: 1px solid #333;
+        .server-label { font-size: 10px; color: #aaa; font-weight: 700; margin-bottom: 2px; text-transform: uppercase; }
+        
+        .server-btn-large {
+            width: 100%; padding: 10px 12px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px;
+            color: white; font-size: 12px; font-weight: 700;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; transition: all 0.2s;
         }
-        .team-box { text-align: center; }
-        .flag { font-size: 28px; display: block; margin-bottom: 4px; }
-        .t-name { font-weight: 900; font-size: 14px; color: #fff; letter-spacing: 1px; }
-        .vs-tag { font-size: 12px; font-weight: bold; color: #555; background: #111; padding: 6px; border-radius: 50%; border: 1px solid #333; }
-
-        /* 🔥 VIEW COUNTER 🔥 */
-        .views-bar {
-            background: #111; text-align: center; padding: 8px;
-            font-size: 12px; color: #aaa; font-weight: bold;
-            border-bottom: 1px solid #222;
+        .server-btn-large i { font-size: 14px; color: #666; }
+        
+        .server-btn-large.active { 
+            background: linear-gradient(90deg, #222, #1a1a1a); border-color: var(--primary); 
+            box-shadow: 0 0 8px rgba(0, 120, 255, 0.2);
         }
-        .views-bar span { color: #fff; }
+        .server-btn-large.active i { color: var(--primary); }
+        .server-name { display: flex; align-items: center; gap: 8px; }
+        .status-dot { width: 6px; height: 6px; background: #444; border-radius: 50%; }
+        .server-btn-large.active .status-dot { background: #0f0; box-shadow: 0 0 5px #0f0; }
 
-        /* TABS */
-        .tabs { display: flex; background: #000; border-bottom: 1px solid #222; margin-top: 0; }
-        .tab { flex: 1; padding: 14px; text-align: center; font-size: 13px; font-weight: 600; color: #777; cursor: pointer; }
-        .tab.active { color: white; border-bottom: 3px solid var(--primary); }
+        /* 5. Scoreboard */
+        .match-card {
+            margin: 10px 15px; background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
+            border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .team { text-align: center; flex: 1; }
+        .flag { font-size: 30px; display: block; margin-bottom: 4px; }
+        .t-name { font-weight: 800; font-size: 13px; color: #fff; letter-spacing: 0.5px; }
+        
+        /* Premium Circle VS Box */
+        .vs-box { 
+            width: 35px; height: 35px; 
+            background: #222; border: 2px solid #333; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 900; color: #888;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+        }
 
-        .content { display: none; padding: 15px; }
-        .content.active { display: block; }
+        /* 6. Buttons */
+        .action-area { padding: 0 15px 25px 15px; display: flex; flex-direction: column; gap: 10px; }
+        .big-btn { 
+            display: flex; align-items: center; justify-content: center; gap: 8px; 
+            padding: 12px; border-radius: 8px; text-decoration: none; color: white; 
+            font-weight: 800; font-size: 13px; text-transform: uppercase; 
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+        }
+        .btn-yt { background: #cc0000; border: 1px solid #ff3333; }
+        .btn-tg { background: #0088cc; border: 1px solid #3399ff; }
+        .btn-wa { background: #25D366; border: 1px solid #4cd980; }
+        .big-btn i { font-size: 16px; }
 
-        /* SOCIAL BUTTONS */
-        .social-row { display: flex; gap: 10px; margin-bottom: 20px; }
-        .s-btn { flex: 1; padding: 12px; border-radius: 10px; text-decoration: none; color: white; font-weight: bold; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .yt { background: linear-gradient(135deg, #ff0000, #990000); }
-        .tg { background: linear-gradient(135deg, #0088cc, #005580); }
-
-        /* CHAT */
-        .chat-box { height: 250px; overflow-y: auto; display: flex; flex-direction: column-reverse; padding-right: 5px; }
-        .msg { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13px; }
-        .av { width: 30px; height: 30px; background: #333; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#aaa; flex-shrink: 0; }
-        .txt { background: #222; padding: 8px 12px; border-radius: 0 12px 12px 12px; color: #ddd; }
-
-        .input-area { display: flex; gap: 10px; margin-top: 10px; }
-        .inp { flex: 1; background: #1a1a1a; border: 1px solid #333; padding: 12px; border-radius: 25px; color: white; outline: none; }
-        .send-btn { width: 45px; height: 45px; border-radius: 50%; background: var(--primary); border: none; color: white; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="logo">MATCH <span style="color:var(--primary)">MANAS</span></div>
+        <div class="logo">MKS <span>SPORTS</span></div>
         <div class="live-tag">● LIVE</div>
     </div>
 
     <div class="video-wrapper">
         <div class="video-box" id="playerContainer"></div>
-
-        <div class="reaction-layer">
-            <div class="react-btn" onclick="triggerReaction('❤️')">❤️</div>
-            <div class="react-btn" onclick="triggerReaction('🔥')">🔥</div>
-            <div class="react-btn" onclick="triggerCelebration()">🎉</div>
+        <div class="video-overlay-views">
+            <div class="live-dot"></div>
+            <span class="view-count" id="viewers">1,245</span>
         </div>
     </div>
 
-    <div class="match-banner">
-        <div class="team-box">
+    <div class="news-ticker">
+        <div class="ticker-content">
+            📢 LIVE: INDIA VS NEW ZEALAND • WATCH HD STREAM FREE • JOIN TELEGRAM FOR UPDATES • SHARE WITH FRIENDS! 📢
+        </div>
+    </div>
+
+    <div class="server-section">
+        <div class="server-label">Select Stream Server</div>
+        
+        <div class="server-btn-large active" onclick="changeServer(1, this)">
+            <div class="server-name"><div class="status-dot"></div> SERVER 1 (HD)</div>
+            <i class="fas fa-play-circle"></i>
+        </div>
+        
+        <div class="server-btn-large" onclick="changeServer(2, this)">
+            <div class="server-name"><div class="status-dot"></div> SERVER 2 (FAST)</div>
+            <i class="fas fa-bolt"></i>
+        </div>
+        
+        <div class="server-btn-large" onclick="changeServer(3, this)">
+            <div class="server-name"><div class="status-dot"></div> SERVER 3 (BACKUP)</div>
+            <i class="fas fa-shield-alt"></i>
+        </div>
+    </div>
+
+    <div class="match-card">
+        <div class="team">
             <span class="flag">🇮🇳</span>
             <div class="t-name">IND</div>
         </div>
-        <div class="vs-tag">VS</div>
-        <div class="team-box">
+        <div class="vs-box">VS</div>
+        <div class="team">
             <span class="flag">🇳🇿</span>
             <div class="t-name">NZ</div>
         </div>
     </div>
 
-    <div class="views-bar">
-        <i class="fas fa-eye" style="color:red;"></i> 
-        <span id="viewers">12,500</span> Watching Now
-    </div>
-
-    <div class="tabs">
-        <div class="tab active" onclick="openTab('chat')">Live Chat</div>
-        <div class="tab" onclick="openTab('links')">Links</div>
-    </div>
-
-    <div id="chat" class="content active">
-        <div class="chat-box" id="chatList"></div>
-        <div class="input-area">
-            <input type="text" id="chatInput" class="inp" placeholder="Cheer for your team...">
-            <button class="send-btn" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <div id="links" class="content">
-        <div class="social-row">
-            <a href="https://youtube.com/@mkssports3" class="s-btn yt"><i class="fab fa-youtube"></i> YouTube</a>
-            <a href="https://t.me/MKSSports_3" class="s-btn tg"><i class="fab fa-telegram"></i> Telegram</a>
-        </div>
-        <p style="text-align:center; color:#555; font-size:12px;">Enjoy Ad-free Streaming!</p>
+    <div class="action-area">
+        <a href="https://youtube.com/@mkssports3" target="_blank" class="big-btn btn-yt">
+            <i class="fab fa-youtube"></i> Subscribe YouTube
+        </a>
+        <a href="https://t.me/MKSSports_3" target="_blank" class="big-btn btn-tg">
+            <i class="fab fa-telegram"></i> Join Telegram
+        </a>
+        <a href="whatsapp://send?text=Watch IND vs NZ Live Match HD Free! 👇 Click Here: https://matchmanas.pages.dev" class="big-btn btn-wa">
+            <i class="fab fa-whatsapp"></i> Share with Friends
+        </a>
     </div>
 
     <script>
-        // ==========================================
-        // 🔥 LINK CONFIGURATION 🔥
-        // ==========================================
-        const streamLink = "https://www.youtube.com/live/GLlHqWwWMms?si=feAM_NfBI9q2_40n";
-        // ==========================================
+        // 🔥 LINKS UPDATE KAREIN 🔥
+        const server1 = "https://tgs1.myluck1.top:8088/mobile/stream5_240p/playlist.m3u8?vidictid=204707278658&id=18&pk=ae85b3ec0f635ab534b3b39a7e88b37f4fd9513ca22bc57b2206fec7a7a5e8f76f9db76673ebf3cb5670a5787da7d423d6cd49f84bd7dc4947eee8e805444206";
+        const server2 = "Link_2"; 
+        const server3 = "Link_3";
 
-        // 🔥 FAKE VIEWS LOGIC (1000 - 15000) 🔥
-        function updateViewers() {
-            const min = 1000;
-            const max = 15000;
-            let count = Math.floor(Math.random() * (max - min + 1)) + min;
-            document.getElementById("viewers").innerText = count.toLocaleString();
-        }
-        setInterval(updateViewers, 3000); // Har 3 second me change hoga
-        updateViewers();
+        let currentUrl = server1;
 
-        // Player Logic
         function initPlayer(url) {
             const box = document.getElementById('playerContainer');
-            if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                let vId = url.includes('/live/') ? url.split('/live/')[1].split('?')[0] : url.split('v=')[1].split('&')[0];
-                box.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}?autoplay=1&mute=0&rel=0&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-            } else if (url.includes('.m3u8')) {
+            box.innerHTML = ''; 
+            if (url.includes('.m3u8') && url !== "Link_2" && url !== "Link_3") {
                 const vid = document.createElement('video');
-                vid.controls = true; vid.autoplay = true; vid.style.width="100%"; vid.style.height="100%";
+                vid.controls = true; vid.autoplay = true; vid.playsInline = true;
+                vid.style.width="100%"; vid.style.height="100%";
                 box.appendChild(vid);
-                if (Hls.isSupported()) { const hls = new Hls(); hls.loadSource(url); hls.attachMedia(vid); }
-                else { vid.src = url; }
-            } else { box.innerHTML = `<iframe src="${url}" allowfullscreen></iframe>`; }
+                if (Hls.isSupported()) { 
+                    const hls = new Hls(); hls.loadSource(url); hls.attachMedia(vid);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() { vid.play().catch(e => console.log(e)); });
+                }
+                else if (vid.canPlayType('application/vnd.apple.mpegurl')) { 
+                    vid.src = url; vid.addEventListener('loadedmetadata', function() { vid.play(); });
+                }
+            } else {
+                box.innerHTML = '<div style="color:white;text-align:center;padding:50px;font-size:14px;">Link Loading / Not Available</div>';
+            }
         }
-        initPlayer(streamLink);
+        initPlayer(currentUrl);
 
-        function openTab(id) {
-            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.target.classList.add('active');
+        function changeServer(num, btn) {
+            document.querySelectorAll('.server-btn-large').forEach(b => {
+                b.classList.remove('active');
+                b.querySelector('.status-dot').style.background = '#444';
+                b.querySelector('i').style.color = '#666';
+            });
+            btn.classList.add('active');
+            btn.querySelector('.status-dot').style.background = '#0f0';
+            btn.querySelector('i').style.color = '#0078FF';
+
+            if(num === 1) initPlayer(server1);
+            if(num === 2) initPlayer(server2);
+            if(num === 3) initPlayer(server3);
         }
 
-        // Celebration Logic
-        function triggerCelebration() {
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff0000', '#00ff00', '#0000ff'] });
-            triggerReaction('🎉');
+        // 🔥 REALISTIC ORGANIC VIEWERS LOGIC 🔥
+        // Start with a realistic number between 1000 and 2000
+        let currentViewers = 1245; 
+
+        function updateViewers() {
+            // Decide whether to add or subtract viewers (Randomly)
+            // 50-50 chance to go up or down
+            let isIncreasing = Math.random() > 0.5;
+            
+            // Change amount: Random number between 5 and 20
+            let change = Math.floor(Math.random() * 15) + 5; 
+
+            if (isIncreasing) {
+                currentViewers += change;
+            } else {
+                currentViewers -= change;
+            }
+
+            // Safety Check: Keep between 1000 and 2000
+            if (currentViewers < 1000) currentViewers = 1000 + Math.floor(Math.random() * 50);
+            if (currentViewers > 2000) currentViewers = 2000 - Math.floor(Math.random() * 50);
+
+            document.getElementById("viewers").innerText = currentViewers.toLocaleString();
         }
 
-        function triggerReaction(emoji) {
-            const container = document.querySelector('.video-wrapper');
-            const el = document.createElement('div');
-            el.innerText = emoji; el.className = 'floating-emoji';
-            el.style.right = (Math.floor(Math.random() * 50) + 10) + 'px';
-            container.appendChild(el);
-            setTimeout(() => el.remove(), 2000);
-        }
-
-        // Chat Logic
-        const chats = ["India Jeetega!", "Kohli 🔥", "Sixer!", "Wicket!", "Full Support", "Maza aa gaya"];
-        function addFake() {
-            const c = document.getElementById('chatList');
-            const t = chats[Math.floor(Math.random()*chats.length)];
-            const d = document.createElement('div'); d.className='msg';
-            d.innerHTML = `<div class="av">${t[0]}</div><div class="txt">${t}</div>`;
-            c.prepend(d);
-        }
-        setInterval(addFake, 2000);
-
-        function sendMsg() {
-            const inp = document.getElementById('chatInput');
-            if(!inp.value) return;
-            const c = document.getElementById('chatList');
-            const d = document.createElement('div'); d.className='msg';
-            d.innerHTML = `<div class="av" style="background:var(--primary)">Y</div><div class="txt" style="background:#1a2e4d; border:1px solid var(--primary)">${inp.value}</div>`;
-            c.prepend(d);
-            inp.value = "";
-        }
+        // Update every 5 seconds
+        setInterval(updateViewers, 5000);
+        
+        // Initial call
+        updateViewers();
     </script>
 </body>
 </html>

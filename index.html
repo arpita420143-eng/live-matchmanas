@@ -102,15 +102,15 @@
         © 2026 MKS STUDY SYSTEM — Made with <span style="color: #e50914;">❤️</span>.<br>
         I am not the owner of any channels or content displayed. If you wish content removed, contact us and we will respond promptly.
     </div>
-
-    <script>
+        <script>
         document.addEventListener('contextmenu', _0x1 => _0x1.preventDefault());
         document.onkeydown = _0x2 => { if(_0x2.keyCode==123||(_0x2.ctrlKey&&_0x2.shiftKey&&(_0x2.keyCode==73||_0x2.keyCode==74||_0x2.keyCode==67))||(_0x2.ctrlKey&&_0x2.keyCode==85)) return !1; };
         document.getElementById('_0xfv').innerText = Math.floor(Math.random()*(1200-400+1))+400;
 
         (function() {
-            // Broken & Obfuscated Channel Database
+            // Broken & Obfuscated Channel Database (Test link added at top)
             const _0xData = [
+                { _i: "test", _n: "🟢 Player Test", _u: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", _if: !1 },
                 { _i: "willow", _n: "Willow HD", _u: "htt"+"ps://amg01269-amg01269c1-sportstribal-"+"emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/"+"amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", _if: !1 },
                 { _i: "ten", _n: "TEN CRICKET", _u: "htt"+"ps://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/"+"cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", _if: !1, _k: { ["294b576"+"1cefc22d0c6312939e13d8278"]: "52148f1"+"042d238849f0a7813f1da8a7b" } },
                 { _i: "Thala", _n: "Star Sports Hindi (OK.ru)", _u: "htt"+"ps://wcb-hindi-187646-live-cricket-151678."+"megastream.eu.cc/live_stream.m3u8", _if: !0 },
@@ -138,13 +138,17 @@
             const _0xG = document.getElementById('secret-grid');
             const _0xM = document.getElementById('secret-menu');
 
-            async function _0xInit() {
-                shaka.polyfill.installAll();
-                if (shaka.Player.isBrowserSupported()) {
-                    const _0xUI = _0xV['ui'];
-                    _0xP = _0xUI.getControls().getPlayer();
-                    _0xBuild();
-                }
+            // Hamesha turant buttons bana do
+            function _0xBuild() {
+                _0xG.innerHTML = '';
+                _0xData.forEach(_0xC => {
+                    const b = document.createElement('button');
+                    b.id = '_0xBtn-' + _0xC._i;
+                    b.className = 'channel-btn';
+                    b.innerText = _0xC._n;
+                    b.onclick = () => _0xPlay(_0xC._i);
+                    _0xG.appendChild(b);
+                });
             }
 
             async function _0xPlay(_0xID) {
@@ -172,6 +176,13 @@
                 let _0xUrl = _0xC._u;
                 if (_0xC._tk) _0xUrl += "?" + _0xC._tk;
 
+                // Player set na ho toh wait karo
+                if (!_0xP) {
+                    alert("Player abhi load ho raha hai, thoda wait kijiye...");
+                    _0xL.style.display = 'none';
+                    return;
+                }
+
                 if (_0xC._k) _0xP.configure({ drm: { clearKeys: _0xC._k } });
                 else _0xP.configure({ drm: { clearKeys: {} } });
 
@@ -179,29 +190,25 @@
                     await _0xP.load(_0xUrl);
                     _0xV.play();
                 } catch (e) {
-                    alert("Stream loading error!");
+                    console.error(e);
+                    alert("Stream load nahi ho payi. Link expire ho gaya hai ya block hai!");
                 }
                 _0xL.style.display = 'none';
             }
 
-            function _0xBuild() {
-                _0xG.innerHTML = '';
-                _0xData.forEach(_0xC => {
-                    const b = document.createElement('button');
-                    b.id = '_0xBtn-' + _0xC._i;
-                    b.className = 'channel-btn';
-                    b.innerText = _0xC._n;
-                    b.onclick = () => _0xPlay(_0xC._i);
-                    _0xG.appendChild(b);
-                });
-            }
+            // Page load hote hi buttons banao
+            document.addEventListener('DOMContentLoaded', _0xBuild);
 
+            // Shaka UI load hone par player setup karo
+            document.addEventListener('shaka-ui-loaded', (e) => {
+                _0xP = e.detail.ui.getControls().getPlayer();
+            });
+
+            // Secret menu toggle
             document.getElementById('_0xtgBtn').onclick = () => {
                 _0xM.style.display = _0xM.style.display === 'none' ? 'block' : 'none';
                 if(_0xM.style.display === 'block') _0xM.scrollIntoView({behavior: "smooth"});
             };
-
-            document.addEventListener('DOMContentLoaded', _0xInit);
         })();
     </script>
 </body>

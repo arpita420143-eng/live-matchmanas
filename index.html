@@ -6,185 +6,125 @@
     <title>MKS Study System - Royal Edition</title>
     
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- ROYAL NAVY & GOLD PREMIUM THEME --- */
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
-        
-        :root { 
-            --bg-deep: #0B132B; --bg-card: #1C2541; --gold-light: #FBEA9D;
-            --gold-main: #D4AF37; --gold-dark: #AA8222; --btn-blue: #235789;
-            --btn-red: #C1292E; --text-main: #FFFFFF;
-        }
-        
-        body { margin: 0; padding: 0; background: var(--bg-deep); color: var(--text-main); font-family: 'Montserrat', sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; -webkit-tap-highlight-color: transparent; }
-        
-        .header { background: rgba(11, 19, 43, 0.95); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold-main); box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
-        .logo-container { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .logo-text { font-size: 22px; font-weight: 900; background: linear-gradient(to right, var(--gold-light), var(--gold-main), var(--gold-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; text-transform: uppercase; }
-        .logo-sub { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: 2px; display: block; margin-top: -4px; text-transform: uppercase; }
-        
-        .head-btns { display: flex; gap: 10px; }
-        .h-btn { padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; }
-        .hb-tg { background: linear-gradient(135deg, #1cb5e0, #000046); } 
-        .hb-yt { background: linear-gradient(135deg, #cb2d3e, #ef473a); }
-
+        :root { --bg-deep: #0B132B; --bg-card: #1C2541; --gold-light: #FBEA9D; --gold-main: #D4AF37; --gold-dark: #AA8222; --text-main: #FFFFFF; }
+        body { margin: 0; padding: 0; background: var(--bg-deep); color: var(--text-main); font-family: 'Montserrat', sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; }
+        .header { background: rgba(11, 19, 43, 0.95); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold-main); position: sticky; top: 0; z-index: 100; }
+        .logo-text { font-size: 22px; font-weight: 900; background: linear-gradient(to right, var(--gold-light), var(--gold-main), var(--gold-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
         .main-container { padding: 20px 15px; width: 100%; max-width: 700px; margin: 0 auto; box-sizing: border-box; flex: 1; }
         .video-card { background: var(--bg-card); border: 2px solid var(--gold-main); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
         .video-wrapper { position: relative; width: 100%; background: #000; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; }
-        
         #shaka-container { width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
-        
-        .top-badges { position: absolute; top: 15px; left: 15px; z-index: 25; display: flex; gap: 10px; pointer-events: none; }
+        .top-badges { position: absolute; top: 15px; left: 15px; z-index: 25; display: flex; gap: 10px; }
         .badge-live { background: rgba(0,0,0,0.7); border: 1px solid #ff4d4d; color: #ff4d4d; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
         .live-dot { width: 6px; height: 6px; background: #ff4d4d; border-radius: 50%; animation: blink 1s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        
-        .badge-viewers { background: rgba(212, 175, 55, 0.2); border: 1px solid var(--gold-main); color: var(--gold-main); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-
         .settings-btn { position: absolute; top: 15px; right: 15px; z-index: 20; background: rgba(11, 19, 43, 0.8); color: var(--gold-main); border: 1px solid var(--gold-main); width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: none; align-items: center; justify-content: center; }
-        #quality-menu { position: absolute; top: 55px; right: 15px; z-index: 30; background: var(--bg-card); border-radius: 8px; width: 120px; display: none; overflow: hidden; border: 1px solid var(--gold-main); }
-        .q-item { padding: 10px 15px; font-size: 13px; font-weight: 600; color: #ccc; cursor: pointer; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        #quality-menu { position: absolute; top: 55px; right: 15px; z-index: 30; background: var(--bg-card); border-radius: 8px; width: 120px; display: none; border: 1px solid var(--gold-main); }
+        .q-item { padding: 10px 15px; font-size: 13px; font-weight: 600; color: #ccc; cursor: pointer; text-align: center; }
         .q-item.active { background: var(--gold-main); color: #000; }
-
         .controls-box { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .btn-gold { background: linear-gradient(to right, var(--gold-dark), var(--gold-light), var(--gold-main)); color: #000; border: none; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; cursor: pointer; }
-        
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .action-btn { padding: 14px; border-radius: 10px; color: white; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid rgba(255,255,255,0.1); }
-        .btn-tg-large { background: #235789; } .btn-yt-large { background: #C1292E; }
-
+        .btn-gold { background: linear-gradient(to right, var(--gold-dark), var(--gold-light), var(--gold-main)); color: #000; border: none; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 900; text-transform: uppercase; text-align: center; text-decoration: none; cursor: pointer; }
         #admin-panel { display: none; margin-top: 15px; }
-        .secret-title { font-size: 14px; font-weight: 800; margin-bottom: 15px; color: var(--gold-main); text-transform: uppercase; text-align: center; }
-        
         #secret-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .channel-card { background: var(--bg-card); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; }
-        .channel-card i { font-size: 28px; color: #888; }
         .channel-card.active { border: 2px solid var(--gold-main); background: rgba(212, 175, 55, 0.1); }
-        .channel-card.active i { color: var(--gold-main); }
-
-        .site-footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
         #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45px; height: 45px; border: 4px solid rgba(212, 175, 55, 0.2); border-top: 4px solid var(--gold-main); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .shaka-current-time, .shaka-text-container { display: none !important; }
     </style>
 </head>
 <body>
-
     <div class="header">
-        <div class="logo-container" id="_0xSecLogo">
-            <div><div class="logo-text">MKS STUDY</div><div class="logo-sub">SYSTEM</div></div>
-        </div>
-        <div class="head-btns">
-            <a href="https://t.me/MKSSports_3" class="h-btn hb-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Join</a>
-            <a href="https://youtube.com/@mkssports3" class="h-btn hb-yt" target="_blank"><i class="fab fa-youtube"></i> Sub</a>
+        <div class="logo-container" id="_0xSecLogo"><div class="logo-text">MKS STUDY</div></div>
+        <div style="display: flex; gap: 10px;">
+            <a href="https://t.me/MKSSports_3" style="background:#0088cc; color:white; padding:8px 15px; border-radius:8px; text-decoration:none; font-size:12px; font-weight:bold;">Telegram</a>
         </div>
     </div>
-
     <div class="main-container">
         <div class="video-card">
             <div class="video-wrapper" id="videoWrapper">
-                <div class="top-badges">
-                    <div class="badge-live"><span class="live-dot"></span> LIVE</div>
-                    <div class="badge-viewers"><i class="fas fa-users"></i> <span id="fake-viewers">1238</span> VIEWERS</div>
-                </div>
+                <div class="top-badges"><div class="badge-live"><span class="live-dot"></span> LIVE</div></div>
                 <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
                 <div id="quality-menu"><div id="quality-list"></div></div>
-                <div id="shaka-container" data-shaka-player-container>
-                    <video id="video" data-shaka-player autoplay playsinline></video>
-                </div>
-                <div id="iframe-box"></div>
-                <div id="loader"></div>
+                <div id="shaka-container" data-shaka-player-container><video id="video" data-shaka-player autoplay playsinline></video></div>
+                <div id="iframe-box"></div><div id="loader"></div>
             </div>
             <div class="controls-box">
-                <a href="javascript:location.reload();" class="btn-gold"><i class="fas fa-sync"></i> FIX LAG / REFRESH STREAM</a>
-                <div class="btn-grid">
-                    <a href="https://t.me/MKSSports_3" class="action-btn btn-tg-large" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram</a>
-                    <a href="https://youtube.com/@mkssports3" class="action-btn btn-yt-large" target="_blank"><i class="fab fa-youtube"></i> Subscribe</a>
-                </div>
+                <a href="javascript:location.reload();" class="btn-gold">FIX LAG / REFRESH</a>
             </div>
         </div>
         <div id="admin-panel">
-            <div class="secret-title"><i class="fas fa-tv"></i> Select Channel</div>
             <div id="secret-grid"></div>
         </div>
     </div>
-
-    <div class="site-footer">© 2026 MKS STUDY SYSTEM — Royal Edition</div>
         <script>
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.onkeydown = e => { if(e.keyCode==123||(e.ctrlKey&&e.shiftKey&&(e.keyCode==73||e.keyCode==74||e.keyCode==67))||(e.ctrlKey&&e.keyCode==85)) return !1; };
-
         const channels = [
-            { id: "SS2", name: "Star Sports 1", icon: "fas fa-tv", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_BTS/WDVLive/index.mpd?__hdnea__=st=1777729116~exp=1777750716~acl=/bpk-tv/Star_Sports_HD1_BTS/WDVLive/*~hmac=f41648a187e3889e31ad82cd82fe917fe600314dfd94aee52af0985f6498ac91", type: "dash", keys: { "965dc2ddb1d85138ad787999a7f30ca5": "859695076e67fe961836b564db6d689c" } },
-            { id: "SS2H", name: "Star Sports 1 Hindi", icon: "fas fa-play-circle", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/index.mpd?__hdnea__=st=1777729117~exp=1777750717~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=1764abf410c1e437f30e8d659535e3346c6e6c793f5a438da169931a67d46533", type: "dash", keys: { "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4" } },
-            { id: "SS1", name: "Star Sports 2", icon: "fas fa-tv", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD2_BTS/WDVLive/index.mpd?__hdnea__=st=1777795787~exp=1777817387~acl=/bpk-tv/Star_Sports_HD2_BTS/WDVLive/*~hmac=a9d76f0b88e517a8f7c035aa4c08808d0cbcf66d35cacb92c2de244da607d6ae", type: "dash", keys: { "9457eb90129456fa8ea95e10ba4ac51e": "e620a970cea474c491ac78ae71a4d764" } },
-            { id: "SS1H", name: "Star Sports 2 Hindi", icon: "fas fa-play-circle", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/StarSportsHD2Hin_BTS/WDVLive/index.mpd?__hdnea__=st=1777795787~exp=1777817387~acl=/bpk-tv/StarSportsHD2Hin_BTS/WDVLive/*~hmac=588d4e04984fe51a387af59008192efc06d56a1c3ed5e38f69cd13a42f408698", type: "dash", keys: { "bd1ea6a1c1fb5dcdb709434e0826bbc0": "f57f22cba32739ce7beb1fab3f3d060b" } },
-            { id: "c1", name: "Willow HD", icon: "fas fa-baseball-ball", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", type: "hls" },
-            { id: "c3", name: "Star Allrounder", icon: "fas fa-star", url: "https://allrounder-live2.pages.dev/star/star-1-hindi", isIframe: true }
+            { id: "SS2", name: "Star Sports 1", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_BTS/WDVLive/index.mpd?__hdnea__=st=1777729116~exp=1777750716~acl=/bpk-tv/Star_Sports_HD1_BTS/WDVLive/*~hmac=f41648a187e3889e31ad82cd82fe917fe600314dfd94aee52af0985f6498ac91", type: "dash", keys: { "965dc2ddb1d85138ad787999a7f30ca5": "859695076e67fe961836b564db6d689c" } },
+            { id: "SS2H", name: "Star Sports 1 Hindi", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/index.mpd?__hdnea__=st=1777729117~exp=1777750717~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=1764abf410c1e437f30e8d659535e3346c6e6c793f5a438da169931a67d46533", type: "dash", keys: { "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4" } },
+            { id: "SS1", name: "Star Sports 2", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD2_BTS/WDVLive/index.mpd?__hdnea__=st=1777795787~exp=1777817387~acl=/bpk-tv/Star_Sports_HD2_BTS/WDVLive/*~hmac=a9d76f0b88e517a8f7c035aa4c08808d0cbcf66d35cacb92c2de244da607d6ae", type: "dash", keys: { "9457eb90129456fa8ea95e10ba4ac51e": "e620a970cea474c491ac78ae71a4d764" } },
+            { id: "SS1H", name: "Star Sports 2 Hindi", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/StarSportsHD2Hin_BTS/WDVLive/index.mpd?__hdnea__=st=1777795787~exp=1777817387~acl=/bpk-tv/StarSportsHD2Hin_BTS/WDVLive/*~hmac=588d4e04984fe51a387af59008192efc06d56a1c3ed5e38f69cd13a42f408698", type: "dash", keys: { "bd1ea6a1c1fb5dcdb709434e0826bbc0": "f57f22cba32739ce7beb1fab3f3d060b" } },
+            { id: "c1", name: "Willow HD", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", type: "hls" },
+            { id: "c3", name: "Star Allrounder", url: "https://allrounder-live2.pages.dev/star/star-1-hindi", isIframe: true }
         ];
 
         let hls = null, shakaP = null, shakaUI = null, clickCount = 0;
-        let clickTimer;
-        document.getElementById('_0xSecLogo').addEventListener('click', () => {
-            clickCount++; clearTimeout(clickTimer); clickTimer = setTimeout(() => clickCount = 0, 2500);
-            if (clickCount === 5) {
-                clickCount = 0; if (prompt("Password:") === "manas") {
-                    document.getElementById('admin-panel').style.display = 'block';
-                    document.getElementById('admin-panel').scrollIntoView({behavior: "smooth"});
-                }
-            }
-        });
+        document.getElementById('_0xSecLogo').onclick = () => {
+            clickCount++; if (clickCount === 5) { clickCount = 0; if (prompt("Pass:") === "manas") document.getElementById('admin-panel').style.display = 'block'; }
+        };
 
         function toggleQualityMenu() { const m = document.getElementById('quality-menu'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
-        function buildQualityMenu() {
-            if (!hls) return; const list = document.getElementById('quality-list'); list.innerHTML = "";
-            let auto = document.createElement('div'); auto.className = 'q-item active'; auto.innerText = 'Auto';
-            auto.onclick = () => { hls.currentLevel = -1; toggleQualityMenu(); }; list.appendChild(auto);
-            hls.levels.forEach((l, i) => {
-                let b = document.createElement('div'); b.className = 'q-item'; b.innerText = l.height + 'p';
-                b.onclick = () => { hls.currentLevel = i; toggleQualityMenu(); }; list.appendChild(b);
-            });
-        }
-
+        
         async function loadPlayer(ch) {
             const v = document.getElementById('video'), sC = document.getElementById('shaka-container'), iB = document.getElementById('iframe-box'), ld = document.getElementById('loader'), setB = document.getElementById('settings-btn');
-            document.querySelectorAll('.channel-card').forEach(b => b.classList.remove('active'));
-            if(document.getElementById('card-' + ch.id)) document.getElementById('card-' + ch.id).classList.add('active');
-            ld.style.display = 'block'; document.getElementById('quality-menu').style.display = 'none'; setB.style.display = 'none';
+            ld.style.display = 'block'; iB.style.display = 'none'; setB.style.display = 'none';
             if(hls) hls.destroy(); if(shakaUI) shakaUI.destroy(); if(shakaP) shakaP.destroy();
-            if (ch.isIframe) { sC.style.display = 'none'; iB.style.display = 'block'; iB.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay"></iframe>`; setTimeout(() => ld.style.display = 'none', 1500); } 
-            else if (ch.type === "dash") {
-                sC.style.display = 'block'; iB.style.display = 'none'; iB.innerHTML = ""; v.controls = false;
-                shaka.polyfill.installAll(); if (shaka.Player.isBrowserSupported()) {
+
+            if (ch.isIframe) {
+                sC.style.display = 'none'; iB.style.display = 'block';
+                iB.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
+                setTimeout(() => ld.style.display = 'none', 1500);
+            } else if (ch.type === "dash") {
+                sC.style.display = 'block'; v.controls = false;
+                shaka.polyfill.installAll();
+                if (shaka.Player.isBrowserSupported()) {
                     shakaP = new shaka.Player(v); shakaUI = new shaka.ui.Overlay(shakaP, sC, v);
                     shakaUI.configure({ 'controlPanelElements': ['play_pause', 'spacer', 'mute', 'volume', 'quality', 'fullscreen'] });
-                    shakaP.configure({ drm: { clearKeys: ch.keys }, streaming: { lowLatencyMode: true } });
-                    shakaP.getNetworkingEngine().registerRequestFilter((t, r) => { if (r.uris[0].includes('jio.com')) r.headers['Referer'] = 'https://www.jiotv.com/'; });
+                    shakaP.configure({ drm: { clearKeys: ch.keys }, streaming: { lowLatencyMode: true, rebufferingGoal: 1 } });
+                    
+                    // --- ADVANCED BYPASS FOR JIO ---
+                    shakaP.getNetworkingEngine().registerRequestFilter((type, request) => {
+                        if (request.uris[0].includes('jio.com')) {
+                            request.headers['Referer'] = 'https://www.jiotv.com/';
+                            request.headers['Origin'] = 'https://www.jiotv.com';
+                        }
+                    });
+
                     try { await shakaP.load(ch.url); ld.style.display = 'none'; v.play(); } catch (e) { ld.style.display = 'none'; }
                 }
             } else {
-                iB.style.display = 'none'; sC.style.display = 'block'; v.controls = true; setB.style.display = 'flex';
-                if (Hls.isSupported()) { hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(v); hls.on(Hls.Events.MANIFEST_PARSED, () => { ld.style.display = 'none'; v.play(); buildQualityMenu(); }); }
+                sC.style.display = 'block'; v.controls = true; setB.style.display = 'flex';
+                if (Hls.isSupported()) { hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(v); hls.on(Hls.Events.MANIFEST_PARSED, () => { ld.style.display = 'none'; v.play(); }); }
             }
         }
 
         window.onload = () => {
             const grid = document.getElementById('secret-grid');
             channels.forEach(ch => {
-                const card = document.createElement('div'); card.id = 'card-' + ch.id; card.className = 'channel-card';
-                card.innerHTML = `<i class="${ch.icon}"></i><div class="channel-name">${ch.name}</div>`;
+                const card = document.createElement('div'); card.className = 'channel-card';
+                card.innerHTML = `<div class="channel-name">${ch.name}</div>`;
                 card.onclick = () => loadPlayer(ch); grid.appendChild(card);
             });
             const urlParams = new URLSearchParams(window.location.search);
-            const reqId = urlParams.get('id'); if(reqId) { const autoCh = channels.find(c => c.id === reqId); if(autoCh) setTimeout(() => loadPlayer(autoCh), 1000); }
+            const reqId = urlParams.get('id');
+            if(reqId) { const autoCh = channels.find(c => c.id === reqId); if(autoCh) setTimeout(() => loadPlayer(autoCh), 500); }
         };
     </script>
 </body>

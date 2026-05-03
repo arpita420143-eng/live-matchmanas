@@ -6,6 +6,7 @@
     <title>MKS Study System - Royal Edition</title>
     
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css" rel="stylesheet">
@@ -59,6 +60,13 @@
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         
         .badge-viewers { background: rgba(212, 175, 55, 0.2); border: 1px solid var(--gold-main); color: var(--gold-main); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(5px); }
+
+        /* --- QUALITY BUTTON SETTINGS --- */
+        .settings-btn { position: absolute; top: 15px; right: 15px; z-index: 20; background: rgba(11, 19, 43, 0.8); color: var(--gold-main); border: 1px solid var(--gold-main); width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); display: none; font-size: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        #quality-menu { position: absolute; top: 55px; right: 15px; z-index: 30; background: var(--bg-card); border-radius: 8px; width: 120px; display: none; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.8); border: 1px solid var(--gold-main); }
+        .q-item { padding: 10px 15px; font-size: 13px; font-weight: 600; color: #ccc; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        .q-item:hover { background: rgba(212, 175, 55, 0.1); }
+        .q-item.active { background: var(--gold-main); color: #000; font-weight: 800; }
 
         /* ACTION BUTTONS */
         .controls-box { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
@@ -116,6 +124,9 @@
                     <div class="badge-viewers"><i class="fas fa-users"></i> <span id="fake-viewers">1177</span> VIEWERS</div>
                 </div>
                 
+                <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
+                <div id="quality-menu"><div id="quality-list"></div></div>
+                
                 <div id="shaka-container" data-shaka-player-container>
                     <video id="video" data-shaka-player autoplay playsinline></video>
                 </div>
@@ -162,11 +173,12 @@
             document.getElementById('fake-viewers').innerText = vCount;
         }, 4000);
 
-        // Channel Data (IDs: c1, c2, c3)
+        // Channel Data (All 4 Channels included)
         const channels = [
             { id: "c1", name: "Willow HD", icon: "fas fa-baseball-ball", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", type: "hls" },
             { id: "c2", name: "TEN Cricket", icon: "fas fa-tv", url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", type: "dash", keys: { "294b5761cefc22d0c6312939e13d8278": "52148f1042d238849f0a7813f1da8a7b" } },
-            { id: "c3", name: "Star Allrounder", icon: "fas fa-star", url: "https://allrounder-live2.pages.dev/star/star-1-hindi", isIframe: true }
+            { id: "c3", name: "Star Allrounder", icon: "fas fa-star", url: "https://allrounder-live2.pages.dev/star/star-1-hindi", isIframe: true },
+            { id: "c4", name: "Star Sports Hindi", icon: "fas fa-play-circle", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/index.mpd?__hdnea__=st=1777797642~exp=1777819242~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=9ec9e5ea8b9a2cb03b1e5ae3649b4bf50a34aaf10636983e1c19cc0870e47dcf", type: "dash", keys: { "400131994b445d8c8817202248760fda": "2d56cb6f07a75b9aff165d534ae2bfc4" } }
         ];
 
         let hls = null, shakaPlayerInstance = null, shakaUI = null, clickCount = 0;
@@ -200,6 +212,32 @@
             } catch (error) { return ""; }
         }
 
+        // --- QUALITY MENU LOGIC ---
+        function toggleQualityMenu() {
+            const menu = document.getElementById('quality-menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function buildQualityMenu() {
+            if (!hls) return;
+            const list = document.getElementById('quality-list'); list.innerHTML = "";
+            let autoBtn = document.createElement('div'); autoBtn.className = 'q-item active'; autoBtn.innerText = 'Auto';
+            autoBtn.onclick = () => {
+                hls.currentLevel = -1; toggleQualityMenu();
+                document.querySelectorAll('.q-item').forEach(el => el.classList.remove('active')); autoBtn.classList.add('active');
+            };
+            list.appendChild(autoBtn);
+
+            hls.levels.forEach((level, index) => {
+                let btn = document.createElement('div'); btn.className = 'q-item'; btn.innerText = level.height + 'p';
+                btn.onclick = () => {
+                    hls.currentLevel = index; toggleQualityMenu();
+                    document.querySelectorAll('.q-item').forEach(el => el.classList.remove('active')); btn.classList.add('active');
+                };
+                list.appendChild(btn);
+            });
+        }
+
         // Build Royal UI Menu & Auto-Play
         function initMenu() {
             const grid = document.getElementById('secret-grid');
@@ -228,6 +266,7 @@
             const shakaContainer = document.getElementById('shaka-container');
             const iframeBox = document.getElementById('iframe-box');
             const loader = document.getElementById('loader');
+            const settingsBtn = document.getElementById('settings-btn');
             
             // Highlight active card
             document.querySelectorAll('.channel-card').forEach(b => b.classList.remove('active'));
@@ -235,6 +274,8 @@
             if(activeCard) activeCard.classList.add('active');
 
             loader.style.display = 'block';
+            document.getElementById('quality-menu').style.display = 'none';
+            settingsBtn.style.display = 'none'; 
 
             if(hls) { hls.destroy(); hls = null; }
             if(shakaUI) { shakaUI.destroy(); shakaUI = null; }
@@ -247,7 +288,7 @@
                 iframeBox.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
                 setTimeout(() => loader.style.display = 'none', 1500);
             } 
-            // Handle DASH
+            // Handle DASH (Shaka)
             else if (ch.type === "dash") {
                 shakaContainer.style.display = 'block'; 
                 iframeBox.style.display = 'none';
@@ -259,7 +300,7 @@
                     shakaUI = new shaka.ui.Overlay(shakaPlayerInstance, shakaContainer, video);
                     
                     shakaUI.configure({
-                        'controlPanelElements': ['play_pause', 'spacer', 'mute', 'volume', 'fullscreen']
+                        'controlPanelElements': ['play_pause', 'spacer', 'mute', 'volume', 'quality', 'fullscreen']
                     });
 
                     shakaPlayerInstance.configure({
@@ -292,12 +333,14 @@
                 iframeBox.innerHTML = "";
                 shakaContainer.style.display = 'block'; 
                 video.controls = true;
+                settingsBtn.style.display = 'flex'; 
 
                 if (Hls.isSupported()) {
                     hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(video);
                     hls.on(Hls.Events.MANIFEST_PARSED, () => { 
                         loader.style.display = 'none'; 
                         video.play();
+                        buildQualityMenu(); 
                     });
                 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                     video.src = ch.url;

@@ -6,107 +6,69 @@
     <title>MKS Study System - Premium Live</title>
     
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/shaka-player.ui.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.6/controls.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- ULTIMATE GLOWING & ANIMATED THEME --- */
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;900&display=swap');
+        /* --- PURE PREMIUM DARK THEME (JioCinema / Hotstar Style) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
         
-        :root { 
-            --accent-red: #ff1a40; 
-            --accent-glow: #ff0055;
-            --text-main: #ffffff;
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --glass-bg: rgba(20, 25, 40, 0.4);
-        }
+        :root { --bg-dark: #000000; --card-bg: #0f1014; --accent: #e50914; --text-main: #ffffff; }
         
-        /* Moving Gradient Background */
-        body { 
-            margin: 0; 
-            background: linear-gradient(-45deg, #0f0c29, #302b63, #240b36, #1a0000);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: var(--text-main); 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            display: flex; flex-direction: column; min-height: 100vh; 
-            user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; 
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        /* Zero padding/margin for Edge-to-Edge display */
+        body { margin: 0; padding: 0; background: var(--bg-dark); color: var(--text-main); font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         
-        /* HEADER - GLASSY & GLOWING */
-        .header { position: sticky; top: 0; z-index: 100; background: rgba(0, 0, 0, 0.3); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); backdrop-filter: blur(25px); box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        /* HEADER */
+        .header { position: sticky; top: 0; z-index: 100; background: #000; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; }
+        .logo { font-size: 20px; font-weight: 900; color: white; cursor: pointer; letter-spacing: 0.5px; }
+        .logo span { color: var(--accent); }
         
-        /* Glowing Logo */
-        .logo { font-size: 22px; font-weight: 900; color: white; cursor: pointer; letter-spacing: 0.5px; white-space: nowrap; display: flex; align-items: baseline; gap: 4px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
-        .logo span { background: linear-gradient(90deg, #ff1a40, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(255, 26, 64, 0.8)); }
+        .head-btns { display: flex; gap: 8px; }
+        .h-btn { padding: 8px 14px; border-radius: 4px; font-size: 13px; font-weight: 500; text-decoration: none; color: white; display: flex; align-items: center; gap: 6px; border: 1px solid #333; background: #111; }
+        .hb-yt { background: var(--accent); border: none; }
         
-        .head-btns { display: flex; gap: 10px; }
-        .h-btn { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; text-decoration: none; color: white; display: flex; align-items: center; gap: 6px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); }
-        .hb-tg { background: linear-gradient(45deg, rgba(0, 136, 204, 0.5), rgba(0, 85, 128, 0.5)); box-shadow: 0 0 10px rgba(0, 136, 204, 0.4); } 
-        .hb-yt { background: linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(153, 0, 0, 0.5)); box-shadow: 0 0 10px rgba(255, 0, 0, 0.4); }
-        .h-btn:active { transform: scale(0.9); }
-
-        /* MAIN CONTAINER */
-        .main-container { flex: 1; display: flex; flex-direction: column; padding: 15px; width: 100%; max-width: 800px; margin: 0 auto; box-sizing: border-box; }
+        /* PLAYER BOX - FULL WIDTH & BIGGER */
+        .main-container { flex: 1; display: flex; flex-direction: column; width: 100%; margin: 0; padding: 0; }
+        .player-box { width: 100%; background: #000; border-bottom: 1px solid #1a1a1a; }
         
-        /* GLOWING PLAYER BOX */
-        .player-box { width: 100%; background: var(--glass-bg); border-radius: 18px; box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px rgba(255,26,64,0.2); overflow: hidden; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(15px); }
-        .video-wrapper { position: relative; width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; aspect-ratio: 16/9; }
+        /* Force video wrapper to take full width and scale height automatically */
+        .video-wrapper { position: relative; width: 100vw; max-width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; aspect-ratio: 16/9; min-height: 230px; }
         
         #shaka-container { width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
         
-        /* LIVE BADGE - NEON STYLE */
-        .live-overlay { position: absolute; top: 12px; left: 12px; z-index: 25; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255,26,64,0.5); color: white; padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 6px; pointer-events: none; backdrop-filter: blur(8px); box-shadow: 0 0 10px rgba(255,26,64,0.3); }
-        .live-dot { width: 8px; height: 8px; background: #fff; border-radius: 50%; animation: neonBlink 1s infinite; }
-        @keyframes neonBlink { 0%, 100% { background: #fff; box-shadow: 0 0 10px #fff, 0 0 20px var(--accent-red); } 50% { background: var(--accent-red); box-shadow: none; } }
+        /* HIDE WEIRD TIMESTAMPS FROM SHAKA PLAYER */
+        .shaka-current-time { display: none !important; }
+        .shaka-text-container { display: none !important; }
         
-        .settings-btn { position: absolute; top: 12px; right: 12px; z-index: 20; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.2); width: 34px; height: 34px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        #quality-menu { position: absolute; top: 55px; right: 12px; z-index: 30; background: rgba(10, 15, 25, 0.95); border-radius: 12px; width: 130px; display: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
-        .q-item { padding: 12px 15px; font-size: 13px; font-weight: 600; color: #ccc; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
-        .q-item.active { background: linear-gradient(90deg, var(--accent-red), #cc0033); color: white; }
+        /* LIVE BADGE - ADJUSTED FOR BIGGER SCREEN */
+        .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(229, 9, 20, 0.2); color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; pointer-events: none; border: 1px solid rgba(229, 9, 20, 0.5); backdrop-filter: blur(5px); }
+        .live-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         
-        /* CHAMAK WALE BUTTONS */
-        .controls-box { padding: 18px; }
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .action-btn { position: relative; padding: 14px; border-radius: 12px; color: white; font-weight: 800; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; border: none; overflow: hidden; }
+        /* CONTROLS BELOW PLAYER */
+        .controls-box { padding: 15px; background: var(--card-bg); width: 100%; box-sizing: border-box; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .action-btn { padding: 14px; border-radius: 6px; color: white; font-weight: 500; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; background: #1a1a1a; border: 1px solid #2a2a2a; }
+        .btn-tg { background: #0088cc; border: none; }
         
-        /* The Magic Shine Effect */
-        .action-btn::after {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
-            transform: skewX(-25deg); animation: shine 3s infinite;
-        }
-        @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
-
-        .btn-refresh { background: linear-gradient(135deg, #ff416c, #ff4b2b); box-shadow: 0 8px 20px rgba(255, 65, 108, 0.4); border: 1px solid rgba(255,255,255,0.2); }
-        .btn-tg { background: linear-gradient(135deg, #1cb5e0, #000046); box-shadow: 0 8px 20px rgba(28, 181, 224, 0.4); border: 1px solid rgba(255,255,255,0.2); }
-        .action-btn:active { transform: scale(0.95); box-shadow: none; }
+        /* ADMIN PANEL */
+        #admin-panel { display: none; width: 100%; background: var(--card-bg); padding: 20px 15px; border-top: 1px solid #1a1a1a; box-sizing: border-box; }
+        .secret-title { font-size: 14px; font-weight: 700; margin-bottom: 15px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
         
-        /* PREMIUM ADMIN PANEL */
-        #admin-panel { display: none; width: 100%; margin-top: 25px; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 16px; border: 1px solid rgba(255, 215, 0, 0.3); box-shadow: 0 0 30px rgba(255,215,0,0.1); backdrop-filter: blur(15px); }
-        .secret-title { font-size: 15px; font-weight: 900; margin-bottom: 18px; color: #ffd700; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+        #secret-grid { display: flex; flex-direction: column; gap: 10px; }
+        .channel-btn { background: #16181e; color: #ddd; border: 1px solid #222; padding: 16px; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 15px; display: flex; align-items: center; gap: 12px; font-family: inherit; }
+        .channel-btn i { font-size: 18px; color: #666; width: 24px; text-align: center; }
+        .channel-btn.active { background: rgba(229, 9, 20, 0.1); border-color: var(--accent); color: #fff; }
+        .channel-btn.active i { color: var(--accent); }
         
-        #secret-grid { display: flex; flex-direction: column; gap: 12px; }
-        .channel-btn { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 15px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 15px; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
-        .channel-btn i { font-size: 20px; color: #ccc; transition: 0.3s; }
-        .channel-btn.active { background: linear-gradient(90deg, rgba(255,26,64,0.4), transparent); border-color: var(--accent-red); box-shadow: 0 0 15px rgba(255,26,64,0.3), inset 0 0 20px rgba(255,26,64,0.2); }
-        .channel-btn.active i { color: var(--accent-red); text-shadow: 0 0 10px var(--accent-red); }
+        .site-footer { text-align: center; padding: 25px 15px; color: #555; font-size: 12px; margin-top: auto; }
         
-        .site-footer { text-align: center; padding: 25px; color: rgba(255,255,255,0.4); font-size: 12px; margin-top: auto; font-weight: 600; }
-        
-        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45px; height: 45px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent-red); border-radius: 50%; animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; display: none; z-index: 30; box-shadow: 0 0 20px var(--accent-red); }
-        @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45px; height: 45px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -125,9 +87,6 @@
                     <span class="live-dot"></span> LIVE &nbsp;|&nbsp; <i class="fas fa-eye"></i> <span id="fake-viewers">2540</span>
                 </div>
                 
-                <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
-                <div id="quality-menu"><div id="quality-list"></div></div>
-                
                 <div id="shaka-container" data-shaka-player-container>
                     <video id="video" data-shaka-player autoplay playsinline></video>
                 </div>
@@ -138,14 +97,14 @@
             
             <div class="controls-box">
                 <div class="btn-grid">
-                    <a href="javascript:location.reload();" class="action-btn btn-refresh"><i class="fas fa-sync-alt"></i> Fix Lag / Refresh</a>
+                    <a href="javascript:location.reload();" class="action-btn"><i class="fas fa-sync-alt"></i> Fix Lag</a>
                     <a href="https://t.me/MKSSports_3" class="action-btn btn-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram</a>
                 </div>
             </div>
         </div>
         
         <div id="admin-panel">
-            <div class="secret-title"><i class="fas fa-shield-alt"></i> System Admin Panel</div>
+            <div class="secret-title">Select Stream</div>
             <div id="secret-grid"></div>
         </div>
     </div>
@@ -154,7 +113,7 @@
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = e => { if(e.keyCode==123||(e.ctrlKey&&e.shiftKey&&(e.keyCode==73||e.keyCode==74||e.keyCode==67))||(e.ctrlKey&&e.keyCode==85)) return !1; };
 
-        // Channel Data (Only 3 Channels)
+        // Channel Data
         const channels = [
             { id: "c1", name: "Willow HD", icon: "fas fa-baseball-ball", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", type: "hls" },
             { id: "c2", name: "TEN Cricket", icon: "fas fa-tv", url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", type: "dash", keys: { "294b5761cefc22d0c6312939e13d8278": "52148f1042d238849f0a7813f1da8a7b" } },
@@ -204,19 +163,17 @@
             });
         }
 
-        // Your Perfect Player Logic Integrator
+        // The Player Integrator
         async function loadPlayer(ch) {
             const video = document.getElementById('video');
             const shakaContainer = document.getElementById('shaka-container');
             const iframeBox = document.getElementById('iframe-box');
             const loader = document.getElementById('loader');
-            const settingsBtn = document.getElementById('settings-btn');
             
             document.querySelectorAll('.channel-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + ch.id).classList.add('active');
 
             loader.style.display = 'block';
-            document.getElementById('quality-menu').style.display = 'none';
 
             if(hls) { hls.destroy(); hls = null; }
             if(shakaUI) { shakaUI.destroy(); shakaUI = null; }
@@ -224,19 +181,24 @@
 
             // Handle iFrame
             if (ch.isIframe) {
-                shakaContainer.style.display = 'none'; settingsBtn.style.display = 'none'; iframeBox.style.display = 'block';
+                shakaContainer.style.display = 'none'; iframeBox.style.display = 'block';
                 iframeBox.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
                 setTimeout(() => loader.style.display = 'none', 1500);
             } 
             // Handle DASH (Shaka)
             else if (ch.type === "dash") {
-                shakaContainer.style.display = 'block'; settingsBtn.style.display = 'none'; iframeBox.style.display = 'none';
+                shakaContainer.style.display = 'block'; iframeBox.style.display = 'none';
                 iframeBox.innerHTML = ""; video.controls = false;
 
                 shaka.polyfill.installAll();
                 if (shaka.Player.isBrowserSupported()) {
                     shakaPlayerInstance = new shaka.Player(video);
                     shakaUI = new shaka.ui.Overlay(shakaPlayerInstance, shakaContainer, video);
+                    
+                    // Fixed the UI to remove the ugly time elements completely
+                    shakaUI.configure({
+                        'controlPanelElements': ['play_pause', 'spacer', 'mute', 'volume', 'fullscreen']
+                    });
 
                     shakaPlayerInstance.configure({
                         drm: ch.keys ? { clearKeys: ch.keys } : {},
@@ -262,49 +224,22 @@
                     } catch (e) { loader.style.display = 'none'; alert("DASH Stream Error"); }
                 }
             } 
-            // Handle HLS (HLS.js) - Works perfect for Willow!
+            // Handle HLS
             else {
                 iframeBox.style.display = 'none'; iframeBox.innerHTML = "";
-                shakaContainer.style.display = 'block'; video.controls = true; settingsBtn.style.display = 'block';
+                shakaContainer.style.display = 'block'; video.controls = true;
 
                 if (Hls.isSupported()) {
                     hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(video);
                     hls.on(Hls.Events.MANIFEST_PARSED, () => { 
                         loader.style.display = 'none'; 
                         video.play();
-                        buildQualityMenu();
                     });
                 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                     video.src = ch.url;
                     video.addEventListener('loadedmetadata', () => { loader.style.display = 'none'; video.play(); });
                 }
             }
-        }
-
-        // Quality Menu Logic
-        function toggleQualityMenu() {
-            const menu = document.getElementById('quality-menu');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function buildQualityMenu() {
-            if (!hls) return;
-            const list = document.getElementById('quality-list'); list.innerHTML = "";
-            let autoBtn = document.createElement('div'); autoBtn.className = 'q-item active'; autoBtn.innerText = 'Auto';
-            autoBtn.onclick = () => {
-                hls.currentLevel = -1; toggleQualityMenu();
-                document.querySelectorAll('.q-item').forEach(el => el.classList.remove('active')); autoBtn.classList.add('active');
-            };
-            list.appendChild(autoBtn);
-
-            hls.levels.forEach((level, index) => {
-                let btn = document.createElement('div'); btn.className = 'q-item'; btn.innerText = level.height + 'p';
-                btn.onclick = () => {
-                    hls.currentLevel = index; toggleQualityMenu();
-                    document.querySelectorAll('.q-item').forEach(el => el.classList.remove('active')); btn.classList.add('active');
-                };
-                list.appendChild(btn);
-            });
         }
 
         window.onload = initMenu;

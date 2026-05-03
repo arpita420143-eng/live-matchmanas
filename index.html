@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MKS Study System - Premium Live</title>
+    <title>MKS Study System - App UI</title>
     
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -12,108 +12,161 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- PURE PREMIUM DARK THEME (JioCinema / Hotstar Style) --- */
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
+        /* --- EXACT MATCH THEME (DEEP PURPLE & NEON BORDERS) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap');
         
-        :root { --bg-dark: #000000; --card-bg: #0f1014; --accent: #e50914; --text-main: #ffffff; }
+        :root { 
+            --bg-color: #120322; 
+            --card-bg: #1a0b2e;
+            --border-yellow: #ffc107;
+            --border-pink: #e91e63;
+            --btn-red: #ea4335;
+            --btn-blue: #0088cc;
+            --text-main: #ffffff;
+        }
         
-        /* Zero padding/margin for Edge-to-Edge display */
-        body { margin: 0; padding: 0; background: var(--bg-dark); color: var(--text-main); font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+        body { margin: 0; padding: 0; background: var(--bg-color); color: var(--text-main); font-family: 'Poppins', sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; -webkit-tap-highlight-color: transparent; }
         
         /* HEADER */
-        .header { position: sticky; top: 0; z-index: 100; background: #000; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; }
-        .logo { font-size: 20px; font-weight: 900; color: white; cursor: pointer; letter-spacing: 0.5px; }
-        .logo span { color: var(--accent); }
+        .header { background: #160429; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2a1147; }
+        .logo-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .logo-icon { background: #000; color: #fff; border: 2px solid var(--border-yellow); border-radius: 8px; padding: 4px 8px; font-weight: 900; font-size: 16px; font-style: italic; }
+        .logo-text { font-size: 15px; font-weight: 800; color: white; letter-spacing: 0.5px; }
+        .logo-text span { color: #aaa; }
         
-        .head-btns { display: flex; gap: 8px; }
-        .h-btn { padding: 8px 14px; border-radius: 4px; font-size: 13px; font-weight: 500; text-decoration: none; color: white; display: flex; align-items: center; gap: 6px; border: 1px solid #333; background: #111; }
-        .hb-yt { background: var(--accent); border: none; }
+        .btn-header-join { background: var(--btn-red); color: white; border: none; padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; text-decoration: none; box-shadow: 0 4px 10px rgba(234, 67, 53, 0.3); }
+
+        /* MAIN CONTAINER */
+        .main-container { padding: 15px; width: 100%; max-width: 600px; margin: 0 auto; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; }
         
-        /* PLAYER BOX - FULL WIDTH & BIGGER */
-        .main-container { flex: 1; display: flex; flex-direction: column; width: 100%; margin: 0; padding: 0; }
-        .player-box { width: 100%; background: #000; border-bottom: 1px solid #1a1a1a; }
-        
-        /* Force video wrapper to take full width and scale height automatically */
-        .video-wrapper { position: relative; width: 100vw; max-width: 100%; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; aspect-ratio: 16/9; min-height: 230px; }
+        /* VIDEO CARD (YELLOW BORDER) */
+        .video-card { background: var(--card-bg); border: 2px solid var(--border-yellow); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 15px rgba(255, 193, 7, 0.1); }
+        .video-wrapper { position: relative; width: 100%; background: #000; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; }
         
         #shaka-container { width: 100%; height: 100%; position: relative; }
         video { width: 100%; height: 100%; display: block; object-fit: contain; }
         #iframe-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none; }
         
-        /* HIDE WEIRD TIMESTAMPS FROM SHAKA PLAYER */
-        .shaka-current-time { display: none !important; }
-        .shaka-text-container { display: none !important; }
+        /* VIDEO INFO BAR (Logo, Title, Tags, Live Badge) */
+        .video-info { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .info-left { display: flex; align-items: center; gap: 12px; }
+        .channel-logo { width: 45px; height: 45px; background: #000; border: 2px solid var(--border-yellow); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+        .channel-details h3 { margin: 0 0 4px 0; font-size: 18px; font-weight: 800; color: var(--border-yellow); }
+        .channel-tags { font-size: 11px; color: #aaa; display: flex; gap: 10px; font-weight: 500; }
         
-        /* LIVE BADGE - ADJUSTED FOR BIGGER SCREEN */
-        .live-overlay { position: absolute; top: 15px; left: 15px; z-index: 25; background: rgba(229, 9, 20, 0.2); color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; pointer-events: none; border: 1px solid rgba(229, 9, 20, 0.5); backdrop-filter: blur(5px); }
-        .live-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: blink 1.5s infinite; }
+        .live-badge { background: rgba(234, 67, 53, 0.1); border: 1px solid rgba(234, 67, 53, 0.5); color: #ff4d4d; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+        .live-dot { width: 6px; height: 6px; background: #ff4d4d; border-radius: 50%; animation: blink 1s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* TELEGRAM & SHARE CARD (PINK BORDER) */
+        .promo-card { background: var(--card-bg); border: 2px solid var(--border-pink); border-radius: 16px; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 15px rgba(233, 30, 99, 0.1); text-align: center; }
+        .bell-icon { background: var(--border-yellow); color: #000; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 15px; }
+        .promo-card h2 { margin: 0 0 5px 0; font-size: 16px; font-weight: 800; text-align: left;}
+        .promo-card p { margin: 0 0 20px 0; font-size: 12px; color: #aaa; text-align: left; }
         
-        /* CONTROLS BELOW PLAYER */
-        .controls-box { padding: 15px; background: var(--card-bg); width: 100%; box-sizing: border-box; }
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .action-btn { padding: 14px; border-radius: 6px; color: white; font-weight: 500; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; background: #1a1a1a; border: 1px solid #2a2a2a; }
-        .btn-tg { background: #0088cc; border: none; }
+        .btn-tg-large { background: var(--btn-blue); color: white; border: none; padding: 14px; border-radius: 10px; width: 100%; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; margin-bottom: 25px; }
         
+        .share-title { font-size: 15px; font-weight: 800; margin-bottom: 15px; }
+        .social-icons { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .s-icon { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; color: white; text-decoration: none; }
+        .s-wa { background: #25D366; } .s-tg { background: #0088cc; } .s-fb { background: #1877F2; } .s-ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+        
+        .btn-share-large { background: var(--border-yellow); color: #000; border: none; padding: 14px; border-radius: 10px; width: 100%; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
+
         /* ADMIN PANEL */
-        #admin-panel { display: none; width: 100%; background: var(--card-bg); padding: 20px 15px; border-top: 1px solid #1a1a1a; box-sizing: border-box; }
-        .secret-title { font-size: 14px; font-weight: 700; margin-bottom: 15px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-        
+        #admin-panel { display: none; background: #1a1125; padding: 15px; border-radius: 12px; border: 1px solid #4a2b75; margin-top: 10px; }
+        .secret-title { font-size: 14px; font-weight: 700; margin-bottom: 15px; color: var(--border-yellow); }
         #secret-grid { display: flex; flex-direction: column; gap: 10px; }
-        .channel-btn { background: #16181e; color: #ddd; border: 1px solid #222; padding: 16px; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 15px; display: flex; align-items: center; gap: 12px; font-family: inherit; }
-        .channel-btn i { font-size: 18px; color: #666; width: 24px; text-align: center; }
-        .channel-btn.active { background: rgba(229, 9, 20, 0.1); border-color: var(--accent); color: #fff; }
-        .channel-btn.active i { color: var(--accent); }
-        
-        .site-footer { text-align: center; padding: 25px 15px; color: #555; font-size: 12px; margin-top: auto; }
-        
-        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45px; height: 45px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
+        .channel-btn { background: #251838; color: white; border: 1px solid #3c255c; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+        .channel-btn.active { background: var(--border-pink); border-color: var(--border-pink); }
+
+        .site-footer { text-align: center; padding: 20px 15px; color: #777; font-size: 11px; margin-top: auto; line-height: 1.6; }
+        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--border-yellow); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .shaka-current-time, .shaka-text-container { display: none !important; }
     </style>
 </head>
 <body>
+
     <div class="header">
-        <div class="logo" id="_0xSecLogo">MKS <span>STUDY</span></div>
-        <div class="head-btns">
-            <a href="https://t.me/MKSSports_3" class="h-btn hb-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Join</a>
-            <a href="https://youtube.com/@mkssports3" class="h-btn hb-yt" target="_blank"><i class="fab fa-youtube"></i> Sub</a>
+        <div class="logo-container" id="_0xSecLogo">
+            <div class="logo-icon">MKS</div>
+            <div class="logo-text">MKS STUDY <span>• LIVE</span></div>
         </div>
+        <a href="https://t.me/MKSSports_3" class="btn-header-join" target="_blank">
+            <i class="fab fa-telegram-plane"></i> Join Telegram
+        </a>
     </div>
 
     <div class="main-container">
-        <div class="player-box">
+        
+        <div class="video-card">
             <div class="video-wrapper" id="videoWrapper">
-                <div class="live-overlay">
-                    <span class="live-dot"></span> LIVE &nbsp;|&nbsp; <i class="fas fa-eye"></i> <span id="fake-viewers">2540</span>
-                </div>
-                
                 <div id="shaka-container" data-shaka-player-container>
                     <video id="video" data-shaka-player autoplay playsinline></video>
                 </div>
-                
                 <div id="iframe-box"></div>
                 <div id="loader"></div>
             </div>
             
-            <div class="controls-box">
-                <div class="btn-grid">
-                    <a href="javascript:location.reload();" class="action-btn"><i class="fas fa-sync-alt"></i> Fix Lag</a>
-                    <a href="https://t.me/MKSSports_3" class="action-btn btn-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram</a>
+            <div class="video-info">
+                <div class="info-left">
+                    <div class="channel-logo"><i class="fas fa-play"></i></div>
+                    <div class="channel-details">
+                        <h3 id="current-channel-name">Select Stream</h3>
+                        <div class="channel-tags">
+                            <span><i class="fas fa-tag"></i> Sports</span>
+                            <span><i class="fas fa-globe"></i> English</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="live-badge">
+                    <span class="live-dot"></span> LIVE
                 </div>
             </div>
         </div>
+
+        <div class="promo-card">
+            <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                <div class="bell-icon"><i class="fas fa-bell"></i></div>
+                <h2>Join Telegram For Updates</h2>
+                <p>Instant updates & more links</p>
+            </div>
+            
+            <a href="https://t.me/MKSSports_3" class="btn-tg-large" target="_blank">
+                <i class="fab fa-telegram-plane"></i> Join Telegram For More Links
+            </a>
+            
+            <div class="share-title">Share This Page</div>
+            <div class="social-icons">
+                <a href="whatsapp://send?text=Watch Live Match Here: https://live-matchmanas.pages.dev" class="s-icon s-wa"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://t.me/share/url?url=https://live-matchmanas.pages.dev" class="s-icon s-tg"><i class="fab fa-telegram-plane"></i></a>
+                <a href="#" class="s-icon s-fb"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="s-icon s-ig"><i class="fab fa-instagram"></i></a>
+            </div>
+            
+            <button class="btn-share-large" onclick="shareLink()">
+                <i class="fas fa-share-alt"></i> Share This Link
+            </button>
+        </div>
         
         <div id="admin-panel">
-            <div class="secret-title">Select Stream</div>
+            <div class="secret-title">Select Channel Manually</div>
             <div id="secret-grid"></div>
         </div>
+        
+    </div>
+
+    <div class="site-footer">
+        © MKS STUDY — Made with <span style="color: red;">❤️</span>. I am not the owner of any channels or content displayed. All streams are aggregated from publicly available sources.
     </div>
         <script>
         // Security Protections
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = e => { if(e.keyCode==123||(e.ctrlKey&&e.shiftKey&&(e.keyCode==73||e.keyCode==74||e.keyCode==67))||(e.ctrlKey&&e.keyCode==85)) return !1; };
 
-        // Channel Data
+        // Channel Data (IDs fixed to c1, c2, c3)
         const channels = [
             { id: "c1", name: "Willow HD", icon: "fas fa-baseball-ball", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8", type: "hls" },
             { id: "c2", name: "TEN Cricket", icon: "fas fa-tv", url: "https://otte.cache.aiv-cdn.net/bom-nitro/live/clients/dash/enc/cllekigzzn/out/v1/bd3b0c314fff4bb1ab4693358f3cd2d3/cenc.mpd", type: "dash", keys: { "294b5761cefc22d0c6312939e13d8278": "52148f1042d238849f0a7813f1da8a7b" } },
@@ -121,6 +174,17 @@
         ];
 
         let hls = null, shakaPlayerInstance = null, shakaUI = null, clickCount = 0;
+
+        // Share Link Function
+        function shareLink() {
+            if (navigator.share) {
+                navigator.share({ title: 'MKS Study Live', text: 'Watch Live Matches here!', url: window.location.href })
+                .catch(console.error);
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Link Copied to Clipboard!");
+            }
+        }
 
         // 5-Click Admin Logic
         let clickTimer;
@@ -131,7 +195,8 @@
             
             if (clickCount === 5) {
                 clickCount = 0;
-                if (prompt("Enter Admin Password:") === "manas") {
+                const pwd = prompt("Enter Admin Password:");
+                if (pwd === "manas") {
                     document.getElementById('admin-panel').style.display = 'block';
                     document.getElementById('admin-panel').scrollIntoView({behavior: "smooth"});
                 }
@@ -150,7 +215,7 @@
             } catch (error) { return ""; }
         }
 
-        // Build UI Menu
+        // Build UI Menu & URL Auto-Play
         function initMenu() {
             const grid = document.getElementById('secret-grid');
             channels.forEach(ch => {
@@ -161,6 +226,16 @@
                 btn.onclick = () => loadPlayer(ch);
                 grid.appendChild(btn);
             });
+
+            // Check URL for ?id=c3 etc.
+            const urlParams = new URLSearchParams(window.location.search);
+            const reqId = urlParams.get('id');
+            if(reqId) {
+                const autoCh = channels.find(c => c.id === reqId);
+                if(autoCh) {
+                    setTimeout(() => loadPlayer(autoCh), 1000);
+                }
+            }
         }
 
         // The Player Integrator
@@ -170,8 +245,13 @@
             const iframeBox = document.getElementById('iframe-box');
             const loader = document.getElementById('loader');
             
+            // Update UI
             document.querySelectorAll('.channel-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + ch.id).classList.add('active');
+            const activeBtn = document.getElementById('btn-' + ch.id);
+            if(activeBtn) activeBtn.classList.add('active');
+            
+            // Update Channel Name under video
+            document.getElementById('current-channel-name').innerText = ch.name;
 
             loader.style.display = 'block';
 
@@ -179,15 +259,17 @@
             if(shakaUI) { shakaUI.destroy(); shakaUI = null; }
             if(shakaPlayerInstance) { shakaPlayerInstance.destroy(); shakaPlayerInstance = null; }
 
-            // Handle iFrame
+            // Handle iFrame (c3 - Star Allrounder)
             if (ch.isIframe) {
-                shakaContainer.style.display = 'none'; iframeBox.style.display = 'block';
+                shakaContainer.style.display = 'none'; 
+                iframeBox.style.display = 'block';
                 iframeBox.innerHTML = `<iframe src="${ch.url}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
                 setTimeout(() => loader.style.display = 'none', 1500);
             } 
-            // Handle DASH (Shaka)
+            // Handle DASH (c2 - Ten Cricket)
             else if (ch.type === "dash") {
-                shakaContainer.style.display = 'block'; iframeBox.style.display = 'none';
+                shakaContainer.style.display = 'block'; 
+                iframeBox.style.display = 'none';
                 iframeBox.innerHTML = ""; video.controls = false;
 
                 shaka.polyfill.installAll();
@@ -195,7 +277,6 @@
                     shakaPlayerInstance = new shaka.Player(video);
                     shakaUI = new shaka.ui.Overlay(shakaPlayerInstance, shakaContainer, video);
                     
-                    // Fixed the UI to remove the ugly time elements completely
                     shakaUI.configure({
                         'controlPanelElements': ['play_pause', 'spacer', 'mute', 'volume', 'fullscreen']
                     });
@@ -221,13 +302,15 @@
                         await shakaPlayerInstance.load(ch.url);
                         loader.style.display = 'none';
                         video.play();
-                    } catch (e) { loader.style.display = 'none'; alert("DASH Stream Error"); }
+                    } catch (e) { loader.style.display = 'none'; }
                 }
             } 
-            // Handle HLS
+            // Handle HLS (c1 - Willow)
             else {
-                iframeBox.style.display = 'none'; iframeBox.innerHTML = "";
-                shakaContainer.style.display = 'block'; video.controls = true;
+                iframeBox.style.display = 'none'; 
+                iframeBox.innerHTML = "";
+                shakaContainer.style.display = 'block'; 
+                video.controls = true;
 
                 if (Hls.isSupported()) {
                     hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(video);

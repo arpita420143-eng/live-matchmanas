@@ -51,7 +51,6 @@
 
         #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .site-footer { text-align: center; padding: 25px; color: #555; font-size: 11px; }
         .shaka-current-time, .shaka-text-container { display: none !important; }
     </style>
 </head>
@@ -89,11 +88,18 @@
     let views = 1238;
     setInterval(() => { views += Math.floor(Math.random()*10)-4; document.getElementById('v-count').innerText = views; }, 5000);
 
-    // ✅ CHANNELS WITH WILLOW AMAGI (AMAL) ADDED
+    // ✅ CHANNELS LIST UPDATED
     const CHANNELS = {
+        // Yeh naya AUTO FETCH channel hai jo tune bheje hue code se liya gaya hai!
+        star_auto: { 
+            name: "Star Hindi (Auto)", 
+            icon: "fas fa-bolt", 
+            type: "dynamic_api", 
+            jsonUrl: "https://raw.githubusercontent.com/live4wap/skyrealname/refs/heads/main/tv4wap",
+            targetId: "ss1h" // Star Sports 1 Hindi
+        },
+        star_sk: { name: "Star Hindi (Server 2)", icon: "fas fa-broadcast-tower", type: "hls", url: "https://Hghndasw.gbgdhdffhf.shop/sec/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHJlYW0iOiJzdGFyLXNwb3J0LTEtaGluZGkiLCJleHAiOjE3Nzc5MDkxNzR9.IlpaUjRkff3TuNsjMos9CApCtPGWI9olwqYAQS7g5PQ/f/star-sport-1-hindi/CkOH67RG_JpXfKxn_uxZcxARBE7GKLQJTc3ku6fMIj4GPFMYX_NPENV_R5GF_A3MnZ8nAchvNrTu4P9-xvljGe9zGpm4OWpxoGfQMB7EzalXdKd1jhU82oFABwzEqETq1tiNbMC4BCzfkCq9PCLfjbDPsKlr3V8j_xW4mJ9eMxVa8dnEsV-58nPtko-MwLPlmLaKbCQ8FGDVWw72SrkYnk9lNjs-B_8.m3u8" },
         willow: { name: "Willow HD (Amagi)", icon: "fas fa-baseball-ball", type: "hls", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
-        mks: { name: "Star Hindi (Jio)", icon: "fas fa-play-circle", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/index.mpd", kid: "400131994b445d8c8817202248760fda", key: "2d56cb6f07a75b9aff165d534ae2bfc4", cookie: "__hdnea__=st=1777815603~exp=1777837203~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=a019653f0d0170eca9b371bcd2dacde9582da043ca8f25574ddecb2d3e05878c" },
-        mks2: { name: "Star English (Jio)", icon: "fas fa-tv", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_BTS/WDVLive/index.mpd", kid: "965dc2ddb1d85138ad787999a7f30ca5", key: "859695076e67fe961836b564db6d689c", cookie: "__hdnea__=st=1777815603~exp=1777837203~acl=/bpk-tv/Star_Sports_HD1_BTS/WDVLive/*~hmac=a81447d576ad4642cb96f0d889f102165e53bf3796d5170c594ed604069fccfb" },
         mks3: { name: "Star Allrounder", icon: "fas fa-star", url: "https://allrounder-live2.pages.dev/star/star-1-hindi", isIframe: true }
     };
 
@@ -115,12 +121,28 @@
     }
 
     async function initPlayer(id) {
-        const config = CHANNELS[id];
+        let config = CHANNELS[id];
         const video = document.getElementById("video"), container = document.getElementById("player-container"), loader = document.getElementById("loader"), setBtn = document.getElementById("settings-btn");
         
         loader.style.display = "block"; setBtn.style.display = "none";
         if (hls) { hls.destroy(); hls = null; }
         if (player) { await player.destroy(); player = null; }
+
+        // ✅ AUTO FETCH LOGIC - Jo GitHub API se direct naya link aur key layega
+        if (config.type === "dynamic_api") {
+            try {
+                const res = await fetch(config.jsonUrl);
+                const data = await res.json();
+                const chan = data.find(c => String(c.id) === config.targetId);
+                if (chan) {
+                    config = { type: "dash", url: chan.url, kid: chan.keyId, key: chan.key, cookie: chan.cookie };
+                } else {
+                    alert("Channel data not found in API!"); loader.style.display = "none"; return;
+                }
+            } catch (error) {
+                alert("Failed to fetch dynamic stream data."); loader.style.display = "none"; return;
+            }
+        }
 
         if (config.isIframe) {
             video.style.display = "none";
@@ -134,7 +156,7 @@
                 hls = new Hls(); hls.loadSource(config.url); hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, () => { loader.style.display = "none"; video.play(); buildQualityMenu(); });
             }
-        } else {
+        } else if (config.type === "dash") {
             const temp = document.getElementById("temp-iframe"); if(temp) temp.remove();
             video.style.display = "block";
             shaka.polyfill.installAll();
@@ -145,17 +167,18 @@
             
             player.configure({
                 drm: { clearKeys: { [config.kid]: config.key } },
-                streaming: { lowLatencyMode: false, bufferingGoal: 15 }
+                streaming: { lowLatencyMode: true, bufferingGoal: 5 }
             });
 
+            // ✅ COOKIE INJECTION LOGIC
             player.getNetworkingEngine().registerRequestFilter((type, request) => {
                 request.headers["Referer"] = "https://www.jiotv.com/";
-                request.headers["User-Agent"] = "plaYtv/7.1.5";
-                request.headers["Cookie"] = config.cookie;
-                const urlCookie = config.cookie.replace("__hdnea__=", "");
-                if ((type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT) && !request.uris[0].includes("__hdnea__")) {
+                request.headers["User-Agent"] = "plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
+                
+                if (config.cookie && (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT)) {
                     const sep = request.uris[0].includes("?") ? "&" : "?";
-                    request.uris[0] += sep + "__hdnea__=" + urlCookie;
+                    // Append the cookie directly to the URL string just like the API script wants
+                    request.uris[0] += sep + config.cookie.replace("__hdnea__=", "__hdnea__="); 
                 }
             });
 
@@ -166,7 +189,7 @@
     window.onload = () => {
         const grid = document.getElementById("ch-grid");
         const params = new URLSearchParams(window.location.search);
-        const startId = params.get("id") || "AMAL";
+        const startId = params.get("id") || "star_auto"; // Default set to new Auto Fetch channel
 
         Object.keys(CHANNELS).forEach(key => {
             const card = document.createElement("div");

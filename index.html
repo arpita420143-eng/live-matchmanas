@@ -6,49 +6,48 @@
     <title>MKS Pro Player - Royal Edition</title>
     
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123) return false; // F12
+            if(e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
+            if(e.ctrlKey && (e.keyCode == 'U'.charCodeAt(0) || e.keyCode == 'S'.charCodeAt(0) || e.keyCode == 'P'.charCodeAt(0))) return false;
+        }
+    </script>
+    
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.16.2/dist/shaka-player.ui.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.16.2/dist/controls.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- PREMIUM ROYAL NAVY & GOLD THEME --- */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
         :root { --bg: #0B132B; --card: #1C2541; --gold: #D4AF37; --gold-l: #FBEA9D; }
         body { margin: 0; background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
-        
         .header { background: rgba(11, 19, 43, 0.95); padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
         .logo-text { font-size: 20px; font-weight: 900; background: linear-gradient(to right, var(--gold-l), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
-        
         .main-container { padding: 15px; width: 100%; max-width: 700px; margin: 0 auto; box-sizing: border-box; }
         .video-card { background: var(--card); border: 2px solid var(--gold); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; }
         .shaka-video-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; }
-
-        /* QUALITY BUTTON FOR WILLOW (HLS) */
         .settings-btn { position: absolute; top: 12px; right: 12px; z-index: 50; background: rgba(0,0,0,0.6); color: var(--gold); border: 1px solid var(--gold); width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         #quality-menu { position: absolute; top: 52px; right: 12px; z-index: 60; background: var(--card); border-radius: 8px; width: 110px; display: none; border: 1px solid var(--gold); overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .q-item { padding: 10px; font-size: 12px; font-weight: 700; text-align: center; color: #ccc; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .q-item.active { background: var(--gold); color: #000; }
-
         .top-badges { position: absolute; top: 12px; left: 12px; z-index: 25; display: flex; gap: 8px; pointer-events: none; }
         .badge { background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; border: 1px solid rgba(255,255,255,0.2); }
         .live { border-color: #ff4d4d; color: #ff4d4d; }
         .live-dot { width: 6px; height: 6px; background: #ff4d4d; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1.2s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
         .controls-box { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
         .btn-gold { background: linear-gradient(to right, #AA8222, var(--gold)); color: #000; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 900; text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); border:none; cursor:pointer; }
-        
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .s-btn { padding: 12px; border-radius: 8px; color: #fff; font-weight: 700; text-decoration: none; text-align: center; font-size: 13px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; gap: 8px; }
-
         .ch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .ch-card { background: var(--card); border: 1px solid rgba(212, 175, 55, 0.2); padding: 12px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; }
         .ch-card.active { border-color: var(--gold); background: rgba(212, 175, 55, 0.15); }
         .ch-card i { font-size: 20px; color: var(--gold); display: block; margin-bottom: 5px; }
         .ch-card span { font-size: 11px; font-weight: 600; color: #ccc; }
-
         #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .shaka-current-time, .shaka-text-container { display: none !important; }
@@ -88,19 +87,53 @@
     let views = 1238;
     setInterval(() => { views += Math.floor(Math.random()*10)-4; document.getElementById('v-count').innerText = views; }, 5000);
 
-    // ✅ CHANNELS LIST UPDATED
+    // 🔒 BASE64 ENCODED STRINGS (To hide URLs and Keys from plain sight)
+    const _D = (s) => atob(s);
+
     const CHANNELS = {
-        // Yeh naya AUTO FETCH channel hai jo tune bheje hue code se liya gaya hai!
         star_auto: { 
-            name: "Star Hindi (Auto)", 
+            name: "Star Hindi (Auto API)", 
             icon: "fas fa-bolt", 
             type: "dynamic_api", 
-            jsonUrl: "https://raw.githubusercontent.com/live4wap/skyrealname/refs/heads/main/tv4wap",
-            targetId: "ss1h" // Star Sports 1 Hindi
+            jsonUrl: _D("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2xpdmU0d2FwL3NreXJlYWxuYW1lL3JlZnMvaGVhZHMvbWFpbi90djR3YXA="),
+            targetId: "ss1h" 
         },
-        mks1: { name: "Star Hindi (Server 2)", icon: "fas fa-broadcast-tower", type: "hls", url: "https://Hghndasw.gbgdhdffhf.shop/sec/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHJlYW0iOiJzdGFyLXNwb3J0LTEtaGluZGkiLCJleHAiOjE3Nzc5MDkxNzR9.IlpaUjRkff3TuNsjMos9CApCtPGWI9olwqYAQS7g5PQ/f/star-sport-1-hindi/CkOH67RG_JpXfKxn_uxZcxARBE7GKLQJTc3ku6fMIj4GPFMYX_NPENV_R5GF_A3MnZ8nAchvNrTu4P9-xvljGe9zGpm4OWpxoGfQMB7EzalXdKd1jhU82oFABwzEqETq1tiNbMC4BCzfkCq9PCLfjbDPsKlr3V8j_xW4mJ9eMxVa8dnEsV-58nPtko-MwLPlmLaKbCQ8FGDVWw72SrkYnk9lNjs-B_8.m3u8" },
-        willow: { name: "Willow HD (Amagi)", icon: "fas fa-baseball-ball", type: "hls", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" },
-        mks3: { name: "Star Allrounder", icon: "fas fa-star", url: "https://allrounder-live2.pages.dev/star/star-1-hindi", isIframe: true }
+        ss1h: { 
+            name: "Star Hindi HD1", 
+            icon: "fas fa-tv", 
+            type: "dash", 
+            url: _D("aHR0cHM6Ly9qaW90dnBsbGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9XRFZMaXZlL2luZGV4Lm1wZA=="), 
+            kid: "400131994b445d8c8817202248760fda", 
+            key: "2d56cb6f07a75b9aff165d534ae2bfc4", 
+            cookie: "__hdnea__=st=1777895129~exp=1777916729~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=7d030ca1fafff931a36ea83e72380fe963bc2a3fc9e1fb92d9afe29249b03ae3" 
+        },
+        sts1hd: { 
+            name: "Star English HD1", 
+            icon: "fas fa-headset", 
+            type: "dash", 
+            url: _D("aHR0cHM6Ly9qaW90dnBsbGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0JUUy9XRFZMaXZlL2luZGV4Lm1wZA=="), 
+            kid: "965dc2ddb1d85138ad787999a7f30ca5", 
+            key: "859695076e67fe961836b564db6d689c", 
+            cookie: "__hdnea__=st=1777893016~exp=1777914616~acl=/bpk-tv/Star_Sports_HD1_BTS/WDVLive/*~hmac=e8fffbbf8504468eebf82192e9c3a1a797c74c6215b49e1fdbaf60fa4d514dd6" 
+        },
+        sts1tmhd: { 
+            name: "Star Tamil HD", 
+            icon: "fas fa-language", 
+            type: "dash", 
+            url: _D("aHR0cHM6Ly9qaW90dnBsbGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfMV9UYW1pbF9IRF9CVFMvV0RWTGl2ZS9pbmRleC5tcGQ="), 
+            kid: "2272c0bc6b2e5cb090b1f55996e0026c", 
+            key: "943923934de1d5536ab01c67fca8b337", 
+            cookie: "__hdnea__=st=1777898732~exp=1777920332~acl=/bpk-tv/Star_Sports_1_Tamil_HD_BTS/WDVLive/*~hmac=656079001bb40cea6ea01dcbd7c8b90df073b159aab655889a9c737b48f45eeb" 
+        },
+        sts1tghd: { 
+            name: "Star Telugu HD", 
+            icon: "fas fa-language", 
+            type: "dash", 
+            url: _D("aHR0cHM6Ly9qaW90dnBsbGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfMV9UZWx1Z3VfSERfQlRTL1dEVkxpdmUvaW5kZXgubXBk"), 
+            kid: "49e84b9edfd85379b90c81b7d2d3d2bf", 
+            key: "19c82d3ff094fa06af95820a1572ecb5", 
+            cookie: "__hdnea__=st=1777896892~exp=1777918492~acl=/bpk-tv/Star_Sports_1_Telugu_HD_BTS/WDVLive/*~hmac=8b26cc3f166fed8349ea7fe745eeb46b40da31769d1d119728a13756acb3d550" 
+        }
     };
 
     let player, ui, hls;
@@ -128,7 +161,6 @@
         if (hls) { hls.destroy(); hls = null; }
         if (player) { await player.destroy(); player = null; }
 
-        // ✅ AUTO FETCH LOGIC - Jo GitHub API se direct naya link aur key layega
         if (config.type === "dynamic_api") {
             try {
                 const res = await fetch(config.jsonUrl);
@@ -170,14 +202,12 @@
                 streaming: { lowLatencyMode: true, bufferingGoal: 5 }
             });
 
-            // ✅ COOKIE INJECTION LOGIC
             player.getNetworkingEngine().registerRequestFilter((type, request) => {
                 request.headers["Referer"] = "https://www.jiotv.com/";
                 request.headers["User-Agent"] = "plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
                 
                 if (config.cookie && (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT)) {
                     const sep = request.uris[0].includes("?") ? "&" : "?";
-                    // Append the cookie directly to the URL string just like the API script wants
                     request.uris[0] += sep + config.cookie.replace("__hdnea__=", "__hdnea__="); 
                 }
             });
@@ -189,7 +219,7 @@
     window.onload = () => {
         const grid = document.getElementById("ch-grid");
         const params = new URLSearchParams(window.location.search);
-        const startId = params.get("id") || "star_auto"; // Default set to new Auto Fetch channel
+        const startId = params.get("id") || "star_auto"; 
 
         Object.keys(CHANNELS).forEach(key => {
             const card = document.createElement("div");

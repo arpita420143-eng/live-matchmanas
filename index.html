@@ -21,33 +21,43 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* --- PREMIUM ROYAL NAVY & GOLD THEME --- */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
         :root { --bg: #0B132B; --card: #1C2541; --gold: #D4AF37; --gold-l: #FBEA9D; }
         body { margin: 0; background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+        
         .header { background: rgba(11, 19, 43, 0.95); padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
         .logo-text { font-size: 20px; font-weight: 900; background: linear-gradient(to right, var(--gold-l), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
+        
         .main-container { padding: 15px; width: 100%; max-width: 700px; margin: 0 auto; box-sizing: border-box; }
         .video-card { background: var(--card); border: 2px solid var(--gold); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; }
         .shaka-video-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; }
+
+        /* QUALITY BUTTON FOR WILLOW (HLS) */
         .settings-btn { position: absolute; top: 12px; right: 12px; z-index: 50; background: rgba(0,0,0,0.6); color: var(--gold); border: 1px solid var(--gold); width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         #quality-menu { position: absolute; top: 52px; right: 12px; z-index: 60; background: var(--card); border-radius: 8px; width: 110px; display: none; border: 1px solid var(--gold); overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .q-item { padding: 10px; font-size: 12px; font-weight: 700; text-align: center; color: #ccc; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .q-item.active { background: var(--gold); color: #000; }
+
         .top-badges { position: absolute; top: 12px; left: 12px; z-index: 25; display: flex; gap: 8px; pointer-events: none; }
         .badge { background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; border: 1px solid rgba(255,255,255,0.2); }
         .live { border-color: #ff4d4d; color: #ff4d4d; }
         .live-dot { width: 6px; height: 6px; background: #ff4d4d; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1.2s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
         .controls-box { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
         .btn-gold { background: linear-gradient(to right, #AA8222, var(--gold)); color: #000; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 900; text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); border:none; cursor:pointer; }
+        
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .s-btn { padding: 12px; border-radius: 8px; color: #fff; font-weight: 700; text-decoration: none; text-align: center; font-size: 13px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; gap: 8px; }
+
         .ch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .ch-card { background: var(--card); border: 1px solid rgba(212, 175, 55, 0.2); padding: 12px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; }
         .ch-card.active { border-color: var(--gold); background: rgba(212, 175, 55, 0.15); }
         .ch-card i { font-size: 20px; color: var(--gold); display: block; margin-bottom: 5px; }
         .ch-card span { font-size: 11px; font-weight: 600; color: #ccc; }
+
         #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .shaka-current-time, .shaka-text-container { display: none !important; }
@@ -87,12 +97,13 @@
     let views = 1238;
     setInterval(() => { views += Math.floor(Math.random()*10)-4; document.getElementById('v-count').innerText = views; }, 5000);
 
-    // 🔒 BASE64 ENCODED STRINGS (To hide URLs and Keys from plain sight)
+    // 🔒 BASE64 ENCODED STRINGS (To hide URLs from plain sight)
     const _D = (s) => atob(s);
 
+    // ✅ SECURE NAMES FOR SERVERS (Logo ko Premium lagega, pata nahi chalega)
     const CHANNELS = {
         star_auto: { 
-            name: "Star Hindi (Auto API)", 
+            name: "Star Hindi (Premium)", 
             icon: "fas fa-bolt", 
             type: "dynamic_api", 
             jsonUrl: _D("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2xpdmU0d2FwL3NreXJlYWxuYW1lL3JlZnMvaGVhZHMvbWFpbi90djR3YXA="),
@@ -219,6 +230,8 @@
     window.onload = () => {
         const grid = document.getElementById("ch-grid");
         const params = new URLSearchParams(window.location.search);
+        
+        // Premium (Auto API) wala by default chalega
         const startId = params.get("id") || "star_auto"; 
 
         Object.keys(CHANNELS).forEach(key => {

@@ -106,8 +106,8 @@
 
         <div class="space-y-3">
             <div class="flex items-center justify-between px-1">
-                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Live Channels</h3>
-                <span class="text-xs text-gray-500"><i class="fas fa-signal text-green-500 mr-1"></i>Stable</span>
+                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Live Channels (Multi-Language)</h3>
+                <span class="text-xs text-gray-500"><i class="fas fa-signal text-green-500 mr-1"></i>13 Servers</span>
             </div>
             <div id="channel-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 </div>
@@ -128,12 +128,20 @@
         // Fake Viewers
         let v = 1238; setInterval(() => { v += Math.floor(Math.random()*10)-4; document.getElementById('v-count').innerText = v; }, 5000);
 
-        // ✅ YOUR PREMIUM CHANNELS DATA
+        // ✅ ALL 13 PREMIUM CHANNELS (JIO + WILLOW)
         const CHANNELS = {
-            SS1H: { name: "Star 1 Hindi", icon: "fas fa-play-circle", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/index.mpd", kid: "400131994b445d8c8817202248760fda", key: "2d56cb6f07a75b9aff165d534ae2bfc4", cookie: "__hdnea__=st=1777815603~exp=1777837203~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=a019653f0d0170eca9b371bcd2dacde9582da043ca8f25574ddecb2d3e05878c" },
-            SS1E: { name: "Star Sports 1", icon: "fas fa-tv", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_BTS/WDVLive/index.mpd", kid: "965dc2ddb1d85138ad787999a7f30ca5", key: "859695076e67fe961836b564db6d689c", cookie: "__hdnea__=st=1777815603~exp=1777837203~acl=/bpk-tv/Star_Sports_HD1_BTS/WDVLive/*~hmac=a81447d576ad4642cb96f0d889f102165e53bf3796d5170c594ed604069fccfb" },
-            SS2H: { name: "Star 2 Hindi", icon: "fas fa-play-circle", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/StarSportsHD2Hin_BTS/WDVLive/index.mpd", kid: "bd1ea6a1c1fb5dcdb709434e0826bbc0", key: "f57f22cba32739ce7beb1fab3f3d060b", cookie: "__hdnea__=st=1777795787~exp=1777817387~acl=/bpk-tv/StarSportsHD2Hin_BTS/WDVLive/*~hmac=588d4e04984fe51a387af59008192efc06d56a1c3ed5e38f69cd13a42f408698" },
-            SS2E: { name: "Star Sports 2", icon: "fas fa-tv", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD2_BTS/WDVLive/index.mpd", kid: "9457eb90129456fa8ea95e10ba4ac51e", key: "e620a970cea474c491ac78ae71a4d764", cookie: "__hdnea__=st=1777795787~exp=1777817387~acl=/bpk-tv/Star_Sports_HD2_BTS/WDVLive/*~hmac=a9d76f0b88e517a8f7c035aa4c08808d0cbcf66d35cacb92c2de244da607d6ae" },
+            STS1H: { name: "Star 1 Hindi", icon: "fas fa-play-circle", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/index.mpd", kid: "400131994b445d8c8817202248760fda", key: "2d56cb6f07a75b9aff165d534ae2bfc4", cookie: "__hdnea__=st=1777895129~exp=1777916729~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=7d030ca1fafff931a36ea83e72380fe963bc2a3fc9e1fb92d9afe29249b03ae3" },
+            STS1: { name: "Star 1 English", icon: "fas fa-tv", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_BTS/WDVLive/index.mpd", kid: "965dc2ddb1d85138ad787999a7f30ca5", key: "859695076e67fe961836b564db6d689c", cookie: "__hdnea__=st=1777893016~exp=1777914616~acl=/bpk-tv/Star_Sports_HD1_BTS/WDVLive/*~hmac=e8fffbbf8504468eebf82192e9c3a1a797c74c6215b49e1fdbaf60fa4d514dd6" },
+            STS1TM: { name: "Star 1 Tamil", icon: "fas fa-language", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_1_Tamil_HD_BTS/WDVLive/index.mpd", kid: "2272c0bc6b2e5cb090b1f55996e0026c", key: "943923934de1d5536ab01c67fca8b337", cookie: "__hdnea__=st=1777898732~exp=1777920332~acl=/bpk-tv/Star_Sports_1_Tamil_HD_BTS/WDVLive/*~hmac=656079001bb40cea6ea01dcbd7c8b90df073b159aab655889a9c737b48f45eeb" },
+            STS1TG: { name: "Star 1 Telugu", icon: "fas fa-language", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_1_Telugu_HD_BTS/WDVLive/index.mpd", kid: "49e84b9edfd85379b90c81b7d2d3d2bf", key: "19c82d3ff094fa06af95820a1572ecb5", cookie: "__hdnea__=st=1777896892~exp=1777918492~acl=/bpk-tv/Star_Sports_1_Telugu_HD_BTS/WDVLive/*~hmac=8b26cc3f166fed8349ea7fe745eeb46b40da31769d1d119728a13756acb3d550" },
+            STS1KN: { name: "Star 1 Kannada", icon: "fas fa-language", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_1_Kannada_BTS/WDVLive/index.mpd", kid: "9a6d058fa40b5460a946178900eb44cb", key: "791d7444110cec32d731ca0c33ac6c15", cookie: "__hdnea__=st=1777907716~exp=1777929316~acl=/bpk-tv/Star_Sports_1_Kannada_BTS/WDVLive/*~hmac=1acbf37406e9aefa4c07cca8c3801f6b58fe8f3b48469e0e1aad989c8bbbaa36" },
+
+            STS2H: { name: "Star 2 Hindi", icon: "fas fa-play-circle", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/StarSportsHD2Hin_BTS/WDVLive/index.mpd", kid: "bd1ea6a1c1fb5dcdb709434e0826bbc0", key: "f57f22cba32739ce7beb1fab3f3d060b", cookie: "__hdnea__=st=1777896838~exp=1777918438~acl=/bpk-tv/StarSportsHD2Hin_BTS/WDVLive/*~hmac=d47468f7822f342fc71c71b796b5eb1154fa9170a506f97dff6ff875808d43eb" },
+            STS2: { name: "Star 2 English", icon: "fas fa-tv", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD2_BTS/WDVLive/index.mpd", kid: "9457eb90129456fa8ea95e10ba4ac51e", key: "e620a970cea474c491ac78ae71a4d764", cookie: "__hdnea__=st=1777893016~exp=1777914616~acl=/bpk-tv/Star_Sports_HD2_BTS/WDVLive/*~hmac=61e1efb0b2b4bab63fd17e9ae959ef98f5cc5c29e95636e3e673ac1273c56a79" },
+            STS2TM: { name: "Star 2 Tamil", icon: "fas fa-language", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports2_Tamil_HD_BTS/WDVLive/index.mpd", kid: "dc44fe6251825774b90d58dcfa7d94e0", key: "63e3ae853f483a86752b5b9e6d61eb20", cookie: "__hdnea__=st=1777896012~exp=1777917612~acl=/bpk-tv/Star_Sports2_Tamil_HD_BTS/WDVLive/*~hmac=bd0200723df5830564a17b359d885f9a4a013b430a7d4df5cc85b585c6426745" },
+            STS2TG: { name: "Star 2 Telugu", icon: "fas fa-language", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports2_Telugu_HD_BTS/WDVLive/index.mpd", kid: "c8a2fb190fc957c1b8333af9a7a39d31", key: "be7497b59d4ce9e33d29bfd1d38bad1d", cookie: "__hdnea__=st=1777878929~exp=1777900529~acl=/bpk-tv/Star_Sports2_Telugu_HD_BTS/WDVLive/*~hmac=43c963b8c2e541eeaaa8fcea75d038bf9f209c72d9561a8a84d26a19f6b83c61" },
+            STS2KN: { name: "Star 2 Kannada", icon: "fas fa-language", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_2_Kannada_BTS/WDVLive/index.mpd", kid: "7af2add2968a56309519ac2680c18f25", key: "f992a14e0def17ccdfe16f58c4ce56c5", cookie: "__hdnea__=st=1777907719~exp=1777929319~acl=/bpk-tv/Star_Sports_2_Kannada_BTS/WDVLive/*~hmac=3efd73dcf5a649680f7e0355d527d8fb4761c2a37d507773e72e55cbfd035fb5" },
+
             CBH: { name: "Willow Hindi", icon: "fas fa-baseball-ball", type: "hls", url: "https://livevideos.cricbuzz.com/hls/live/2123516/WCB-US-HINDI/9241/152009/master.m3u8?hdntl=exp=1777895597~acl=%2f*~id=qa.team%40cricbuzz.com~data=hdntl,flavour%3aCB,matchId%3a65907,country%3aUS~hmac=b6997764845c66b647d773d5bb011f254e8ec632ae6bc24be538b0c873239776" },
             CBE: { name: "Willow English", icon: "fas fa-baseball-ball", type: "hls", url: "https://livevideos.cricbuzz.com/hls/live/2123398/WCB-CA/9241/152009/master.m3u8?hdntl=exp=1777895597~acl=%2f*~id=qa.team%40cricbuzz.com~data=hdntl,flavour%3aCB,matchId%3a65907,country%3aUS~hmac=b6997764845c66b647d773d5bb011f254e8ec632ae6bc24be538b0c873239776" },
             AMAL: { name: "Willow HD", icon: "fas fa-satellite-dish", type: "hls", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" }
@@ -205,20 +213,28 @@
                     }
                 });
 
-                try { await player.load(config.url); loader.style.opacity = "0"; video.play(); video.muted = false; } catch (e) { console.error(e); }
+                try { await player.load(config.url); loader.style.opacity = "0"; video.play(); video.muted = false; } 
+                catch (e) { console.error(e); loader.style.opacity = "0"; }
             }
         }
 
         window.onload = () => {
             const grid = document.getElementById("channel-grid");
             const params = new URLSearchParams(window.location.search);
-            const startId = params.get("id") || "SS1H";
+            const startId = params.get("id") || "STS1H";
 
             Object.keys(CHANNELS).forEach(key => {
+                const config = CHANNELS[key];
                 const card = document.createElement("div");
+                
+                // Color coding based on channel type
+                let iconColor = 'text-blue-400';
+                if(key.includes('STS2')) iconColor = 'text-purple-400';
+                if(key.includes('CB') || key.includes('AMAL')) iconColor = 'text-green-400';
+
                 card.className = `glass-btn p-3 rounded-xl flex flex-col items-center gap-2 group cursor-pointer ${key === startId ? 'active-channel' : ''}`;
-                card.innerHTML = `<i class="${CHANNELS[key].icon} text-2xl ${key.includes('SS') ? 'text-blue-400' : 'text-green-400'}"></i>
-                                  <span class="text-xs font-semibold text-white/90 text-center">${CHANNELS[key].name}</span>`;
+                card.innerHTML = `<i class="${config.icon} text-2xl ${iconColor}"></i>
+                                  <span class="text-xs font-semibold text-white/90 text-center">${config.name}</span>`;
                 card.onclick = () => {
                     window.history.pushState({}, '', `?id=${key}`);
                     document.querySelectorAll('.glass-btn').forEach(c => c.classList.remove('active-channel'));

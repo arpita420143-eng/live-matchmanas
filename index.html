@@ -2,253 +2,249 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MKS Pro Player - Royal Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f172a">
+    <title>MKS STUDY SYSTEM | Live Cricket Stream</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
-    <script>
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.onkeydown = function(e) {
-            if(e.keyCode == 123) return false; // F12
-            if(e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
-            if(e.ctrlKey && (e.keyCode == 'U'.charCodeAt(0) || e.keyCode == 'S'.charCodeAt(0) || e.keyCode == 'P'.charCodeAt(0))) return false;
-        }
-    </script>
-    
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.16.2/dist/shaka-player.ui.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@4.16.2/dist/controls.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
-        /* --- PREMIUM ROYAL NAVY & GOLD THEME --- */
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
-        :root { --bg: #0B132B; --card: #1C2541; --gold: #D4AF37; --gold-l: #FBEA9D; }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+        /* Glassmorphism & Animations */
+        .glass-panel { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); }
+        .glass-btn { background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0)); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .glass-btn:hover { background: rgba(255, 255, 255, 0.1); }
+        .active-channel { background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.1)) !important; border: 1px solid rgba(96, 165, 250, 0.5) !important; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); transform: scale(0.98); }
         
-        .header { background: rgba(11, 19, 43, 0.95); padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-        .logo-text { font-size: 20px; font-weight: 900; background: linear-gradient(to right, var(--gold-l), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
+        body { background: #0f172a; background-image: radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%); background-attachment: fixed; color: white; font-family: 'Segoe UI', sans-serif; }
         
-        .main-container { padding: 15px; width: 100%; max-width: 700px; margin: 0 auto; box-sizing: border-box; }
-        .video-card { background: var(--card); border: 2px solid var(--gold); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; }
-        .shaka-video-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center; }
-        video { width: 100%; height: 100%; }
+        .loader { border: 3px solid rgba(255, 255, 255, 0.1); border-left-color: #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
 
-        /* QUALITY BUTTON FOR WILLOW (HLS) */
-        .settings-btn { position: absolute; top: 12px; right: 12px; z-index: 50; background: rgba(0,0,0,0.6); color: var(--gold); border: 1px solid var(--gold); width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        #quality-menu { position: absolute; top: 52px; right: 12px; z-index: 60; background: var(--card); border-radius: 8px; width: 110px; display: none; border: 1px solid var(--gold); overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        /* Quality Menu */
+        #settings-btn { position: absolute; top: 12px; right: 12px; z-index: 50; background: rgba(0,0,0,0.6); color: #3b82f6; border: 1px solid #3b82f6; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        #quality-menu { position: absolute; top: 52px; right: 12px; z-index: 60; background: #0f172a; border-radius: 8px; width: 110px; display: none; border: 1px solid #3b82f6; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .q-item { padding: 10px; font-size: 12px; font-weight: 700; text-align: center; color: #ccc; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .q-item.active { background: var(--gold); color: #000; }
-
-        .top-badges { position: absolute; top: 12px; left: 12px; z-index: 25; display: flex; gap: 8px; pointer-events: none; }
-        .badge { background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; border: 1px solid rgba(255,255,255,0.2); }
-        .live { border-color: #ff4d4d; color: #ff4d4d; }
-        .live-dot { width: 6px; height: 6px; background: #ff4d4d; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1.2s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-        .controls-box { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
-        .btn-gold { background: linear-gradient(to right, #AA8222, var(--gold)); color: #000; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 900; text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); border:none; cursor:pointer; }
-        
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .s-btn { padding: 12px; border-radius: 8px; color: #fff; font-weight: 700; text-decoration: none; text-align: center; font-size: 13px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; gap: 8px; }
-
-        .ch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .ch-card { background: var(--card); border: 1px solid rgba(212, 175, 55, 0.2); padding: 12px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .ch-card.active { border-color: var(--gold); background: rgba(212, 175, 55, 0.15); }
-        .ch-card i { font-size: 20px; color: var(--gold); display: block; margin-bottom: 5px; }
-        .ch-card span { font-size: 11px; font-weight: 600; color: #ccc; }
-
-        #loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; z-index: 30; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .shaka-current-time, .shaka-text-container { display: none !important; }
+        .q-item:hover { background: rgba(59, 130, 246, 0.2); }
+        .q-item.active { background: #3b82f6; color: #fff; }
+        .shaka-current-time { display: none !important; }
     </style>
 </head>
-<body>
-    <div class="header">
-        <div class="logo-text">MKS STUDY SYSTEM</div>
+
+<body class="min-h-screen flex flex-col items-center pb-10">
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <div id="floating-lock" style="position: fixed; inset: 0; z-index: 2147483647; display: none; align-items: flex-end; justify-content: flex-end; padding: 20px; pointer-events: none;">
+      <div class="glass-panel" style="pointer-events: auto; padding: 25px; border-radius: 20px; width: 100%; max-width: 350px;">
+        <h3 class="text-lg font-bold mb-2">Live Updates 🔔</h3>
+        <p class="text-sm text-gray-300 mb-4">Enable notifications to unlock MKS STUDY SYSTEM streams.</p>
+        <button id="btn-enable" class="w-full bg-white text-black font-bold py-3 rounded-xl">Enable Access</button>
+      </div>
     </div>
-    <div class="main-container">
-        <div class="video-card">
-            <div class="shaka-video-container" id="player-container">
-                <div class="top-badges">
-                    <div class="badge live"><span class="live-dot"></span>LIVE</div>
-                    <div class="badge" style="color:var(--gold)"><i class="fas fa-users"></i> <span id="v-count">1238</span></div>
-                </div>
-                
-                <button id="settings-btn" class="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
-                <div id="quality-menu"><div id="quality-list"></div></div>
-                
-                <video id="video" autoplay muted playsinline></video>
-                <div id="loader"></div>
+
+    <header class="w-full p-4 flex justify-between items-center glass-panel sticky top-0 z-50 rounded-b-xl mb-6 max-w-4xl backdrop-blur-xl bg-black/20">
+        <div class="flex items-center gap-3">
+            <div class="relative">
+                <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+                <i class="fas fa-play-circle text-2xl text-white"></i>
             </div>
-            <div class="controls-box">
-                <button class="btn-gold" onclick="location.reload()"><i class="fas fa-sync-alt"></i> REFRESH STREAM</button>
-                <div class="btn-grid">
-                    <a href="https://t.me/MKSSports_3" class="s-btn" style="background:#0088cc" target="_blank">TELEGRAM</a>
-                    <a href="https://youtube.com/@mkssports3" class="s-btn" style="background:#ff0000" target="_blank">YOUTUBE</a>
-                </div>
+            <h1 class="font-bold text-lg tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 leading-none">MKS STUDY SYSTEM</h1>
+        </div>
+
+        <div class="hidden md:flex items-center gap-2 text-xs font-mono text-blue-300 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+            <i class="fas fa-satellite-dish animate-pulse"></i>
+            <span id="current-channel-name-header">Select Channel</span>
+        </div>
+        
+        <div class="text-[10px] bg-black/40 px-2 py-1 rounded-md text-green-400 font-mono border border-green-500/30 flex items-center">
+            <i class="fas fa-users mr-1"></i> <span id="v-count">1238</span>
+        </div>
+    </header>
+
+    <main class="w-full max-w-4xl px-3 flex flex-col gap-6">
+
+        <div class="glass-panel p-1 rounded-2xl overflow-hidden relative group">
+            <div class="absolute top-4 left-4 z-10 flex items-center gap-2 pointer-events-none">
+                <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-lg uppercase tracking-wider">Live</span>
+                <span id="player-title" class="text-white/80 text-sm font-medium drop-shadow-md">Choose a Stream</span>
+            </div>
+
+            <button id="settings-btn" onclick="toggleQualityMenu()"><i class="fas fa-cog"></i></button>
+            <div id="quality-menu"><div id="quality-list"></div></div>
+
+            <div id="player-loader" class="absolute inset-0 z-20 bg-black/80 flex items-center justify-center transition-opacity duration-300">
+                <div class="loader"></div>
+            </div>
+
+            <div class="aspect-video w-full bg-black rounded-xl overflow-hidden shadow-2xl relative" id="player-container">
+                <video id="video" autoplay muted playsinline class="w-full h-full object-contain"></video>
             </div>
         </div>
-        <div style="font-size: 12px; color: var(--gold); font-weight: 800; text-align: center; margin: 10px 0;">SELECT SERVER</div>
-        <div class="ch-grid" id="ch-grid"></div>
-    </div>
-    <script>
-(function(){
-    let views = 1238;
-    setInterval(() => { views += Math.floor(Math.random()*10)-4; document.getElementById('v-count').innerText = views; }, 5000);
 
-    // 🔒 BASE64 ENCODED STRINGS (To hide URLs from plain sight)
-    const _D = (s) => atob(s);
+        <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-2">
+            <button class="md:w-auto rounded-lg font-bold tracking-wide text-white bg-white/10 hover:bg-white/20 px-4 py-2 transition" onclick="location.reload()">
+                <i class="fas fa-sync-alt mr-2"></i>Fix Lag
+            </button>
+            <div class="flex gap-3 w-full md:w-auto">
+                <a href="https://t.me/MKSSports_3" target="_blank" class="flex-1 md:flex-none glass-btn bg-blue-500/20 border-blue-400/30 py-2 px-6 rounded-lg text-center hover:bg-blue-600/40 text-white no-underline">
+                    <i class="fab fa-telegram-plane mr-2"></i>Telegram
+                </a>
+                <a href="https://youtube.com/@mkssports3" target="_blank" class="flex-1 md:flex-none glass-btn bg-red-500/20 border-red-400/30 py-2 px-6 rounded-lg text-center hover:bg-red-600/40 text-white no-underline">
+                    <i class="fab fa-youtube mr-2"></i>YouTube
+                </a>
+            </div>
+        </div>
 
-    // ✅ SECURE NAMES FOR SERVERS (Logo ko Premium lagega, pata nahi chalega)
-    const CHANNELS = {
-        star_auto: { 
-            name: "Star Hindi (Premium)", 
-            icon: "fas fa-bolt", 
-            type: "dynamic_api", 
-            jsonUrl: _D("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2xpdmU0d2FwL3NreXJlYWxuYW1lL3JlZnMvaGVhZHMvbWFpbi90djR3YXA="),
-            targetId: "ss1h" 
-        },
-        ss1h: { 
-            name: "Star Hindi HD1", 
-            icon: "fas fa-tv", 
-            type: "dash", 
-            url: _D("aHR0cHM6Ly9qaW90dnBsbGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0hpbmRpX0JUUy9XRFZMaXZlL2luZGV4Lm1wZA=="), 
-            kid: "400131994b445d8c8817202248760fda", 
-            key: "2d56cb6f07a75b9aff165d534ae2bfc4", 
-            cookie: "__hdnea__=st=1777895129~exp=1777916729~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=7d030ca1fafff931a36ea83e72380fe963bc2a3fc9e1fb92d9afe29249b03ae3" 
-        },
-        sts1hd: { 
-            name: "Star English HD1", 
-            icon: "fas fa-headset", 
-            type: "dash", 
-            url: _D("aHR0cHM6Ly9qaW90dnBsbGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfSEQxX0JUUy9XRFZMaXZlL2luZGV4Lm1wZA=="), 
-            kid: "965dc2ddb1d85138ad787999a7f30ca5", 
-            key: "859695076e67fe961836b564db6d689c", 
-            cookie: "__hdnea__=st=1777893016~exp=1777914616~acl=/bpk-tv/Star_Sports_HD1_BTS/WDVLive/*~hmac=e8fffbbf8504468eebf82192e9c3a1a797c74c6215b49e1fdbaf60fa4d514dd6" 
-        },
-        sts1tmhd: { 
-            name: "Star Tamil HD", 
-            icon: "fas fa-language", 
-            type: "dash", 
-            url: _D("aHR0cHM6Ly9qaW90dnBsbGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfMV9UYW1pbF9IRF9CVFMvV0RWTGl2ZS9pbmRleC5tcGQ="), 
-            kid: "2272c0bc6b2e5cb090b1f55996e0026c", 
-            key: "943923934de1d5536ab01c67fca8b337", 
-            cookie: "__hdnea__=st=1777898732~exp=1777920332~acl=/bpk-tv/Star_Sports_1_Tamil_HD_BTS/WDVLive/*~hmac=656079001bb40cea6ea01dcbd7c8b90df073b159aab655889a9c737b48f45eeb" 
-        },
-        sts1tghd: { 
-            name: "Star Telugu HD", 
-            icon: "fas fa-language", 
-            type: "dash", 
-            url: _D("aHR0cHM6Ly9qaW90dnBsbGl2ZS5jZG4uamlvLmNvbS9icGstdHYvU3Rhcl9TcG9ydHNfMV9UZWx1Z3VfSERfQlRTL1dEVkxpdmUvaW5kZXgubXBk"), 
-            kid: "49e84b9edfd85379b90c81b7d2d3d2bf", 
-            key: "19c82d3ff094fa06af95820a1572ecb5", 
-            cookie: "__hdnea__=st=1777896892~exp=1777918492~acl=/bpk-tv/Star_Sports_1_Telugu_HD_BTS/WDVLive/*~hmac=8b26cc3f166fed8349ea7fe745eeb46b40da31769d1d119728a13756acb3d550" 
-        }
-    };
+        <div class="space-y-3">
+            <div class="flex items-center justify-between px-1">
+                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Live Channels</h3>
+                <span class="text-xs text-gray-500"><i class="fas fa-signal text-green-500 mr-1"></i>Stable</span>
+            </div>
+            <div id="channel-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                </div>
+        </div>
 
-    let player, ui, hls;
+        <div class="glass-panel rounded-2xl overflow-hidden h-[80vh] w-full mt-4">
+            <div class="bg-black/50 p-2 text-center text-xs text-gray-400 border-b border-white/10 uppercase tracking-widest">Live Scoreboard</div>
+            <embed src="https://we-live-v2.pages.dev/score?tournamentid=17740" class="w-full h-full border-none">
+        </div>
 
-    function toggleQualityMenu() { const m = document.getElementById('quality-menu'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
+    </main>
 
-    function buildQualityMenu() {
-        if (!hls) return;
-        const list = document.getElementById('quality-list'); list.innerHTML = "";
-        let autoBtn = document.createElement('div'); autoBtn.className = 'q-item active'; autoBtn.innerText = 'Auto';
-        autoBtn.onclick = () => { hls.currentLevel = -1; toggleQualityMenu(); };
-        list.appendChild(autoBtn);
-        hls.levels.forEach((lvl, idx) => {
-            let btn = document.createElement('div'); btn.className = 'q-item'; btn.innerText = lvl.height + 'p';
-            btn.onclick = () => { hls.currentLevel = idx; toggleQualityMenu(); };
-            list.appendChild(btn);
-        });
-    }
+    <footer class="mt-8 mb-4 text-center text-xs text-gray-500">
+        <p>&copy; 2026 MKS STUDY SYSTEM. All Rights Reserved.</p>
+    </footer>
+        <script>
+    (function(){
+        // Fake Viewers
+        let v = 1238; setInterval(() => { v += Math.floor(Math.random()*10)-4; document.getElementById('v-count').innerText = v; }, 5000);
 
-    async function initPlayer(id) {
-        let config = CHANNELS[id];
-        const video = document.getElementById("video"), container = document.getElementById("player-container"), loader = document.getElementById("loader"), setBtn = document.getElementById("settings-btn");
-        
-        loader.style.display = "block"; setBtn.style.display = "none";
-        if (hls) { hls.destroy(); hls = null; }
-        if (player) { await player.destroy(); player = null; }
+        // ✅ YOUR PREMIUM CHANNELS DATA
+        const CHANNELS = {
+            SS1H: { name: "Star 1 Hindi", icon: "fas fa-play-circle", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/index.mpd", kid: "400131994b445d8c8817202248760fda", key: "2d56cb6f07a75b9aff165d534ae2bfc4", cookie: "__hdnea__=st=1777815603~exp=1777837203~acl=/bpk-tv/Star_Sports_HD1_Hindi_BTS/WDVLive/*~hmac=a019653f0d0170eca9b371bcd2dacde9582da043ca8f25574ddecb2d3e05878c" },
+            SS1E: { name: "Star Sports 1", icon: "fas fa-tv", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_BTS/WDVLive/index.mpd", kid: "965dc2ddb1d85138ad787999a7f30ca5", key: "859695076e67fe961836b564db6d689c", cookie: "__hdnea__=st=1777815603~exp=1777837203~acl=/bpk-tv/Star_Sports_HD1_BTS/WDVLive/*~hmac=a81447d576ad4642cb96f0d889f102165e53bf3796d5170c594ed604069fccfb" },
+            SS2H: { name: "Star 2 Hindi", icon: "fas fa-play-circle", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/StarSportsHD2Hin_BTS/WDVLive/index.mpd", kid: "bd1ea6a1c1fb5dcdb709434e0826bbc0", key: "f57f22cba32739ce7beb1fab3f3d060b", cookie: "__hdnea__=st=1777795787~exp=1777817387~acl=/bpk-tv/StarSportsHD2Hin_BTS/WDVLive/*~hmac=588d4e04984fe51a387af59008192efc06d56a1c3ed5e38f69cd13a42f408698" },
+            SS2E: { name: "Star Sports 2", icon: "fas fa-tv", type: "dash", url: "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD2_BTS/WDVLive/index.mpd", kid: "9457eb90129456fa8ea95e10ba4ac51e", key: "e620a970cea474c491ac78ae71a4d764", cookie: "__hdnea__=st=1777795787~exp=1777817387~acl=/bpk-tv/Star_Sports_HD2_BTS/WDVLive/*~hmac=a9d76f0b88e517a8f7c035aa4c08808d0cbcf66d35cacb92c2de244da607d6ae" },
+            CBH: { name: "Willow Hindi", icon: "fas fa-baseball-ball", type: "hls", url: "https://livevideos.cricbuzz.com/hls/live/2123516/WCB-US-HINDI/9241/152009/master.m3u8?hdntl=exp=1777895597~acl=%2f*~id=qa.team%40cricbuzz.com~data=hdntl,flavour%3aCB,matchId%3a65907,country%3aUS~hmac=b6997764845c66b647d773d5bb011f254e8ec632ae6bc24be538b0c873239776" },
+            CBE: { name: "Willow English", icon: "fas fa-baseball-ball", type: "hls", url: "https://livevideos.cricbuzz.com/hls/live/2123398/WCB-CA/9241/152009/master.m3u8?hdntl=exp=1777895597~acl=%2f*~id=qa.team%40cricbuzz.com~data=hdntl,flavour%3aCB,matchId%3a65907,country%3aUS~hmac=b6997764845c66b647d773d5bb011f254e8ec632ae6bc24be538b0c873239776" },
+            AMAL: { name: "Willow HD", icon: "fas fa-satellite-dish", type: "hls", url: "https://amg01269-amg01269c1-sportstribal-emea-5204.playouts.now.amagi.tv/ts-eu-w1-n2/playlist/amg01269-willowtvfast-willowplus-sportstribalemea/playlist.m3u8" }
+        };
 
-        if (config.type === "dynamic_api") {
-            try {
-                const res = await fetch(config.jsonUrl);
-                const data = await res.json();
-                const chan = data.find(c => String(c.id) === config.targetId);
-                if (chan) {
-                    config = { type: "dash", url: chan.url, kid: chan.keyId, key: chan.key, cookie: chan.cookie };
-                } else {
-                    alert("Channel data not found in API!"); loader.style.display = "none"; return;
-                }
-            } catch (error) {
-                alert("Failed to fetch dynamic stream data."); loader.style.display = "none"; return;
-            }
+        let player, ui, hls;
+
+        window.toggleQualityMenu = function() {
+            const m = document.getElementById('quality-menu');
+            m.style.display = m.style.display === 'block' ? 'none' : 'block';
+        };
+
+        function buildQualityMenu() {
+            if (!hls) return;
+            const list = document.getElementById('quality-list'); list.innerHTML = "";
+            let autoBtn = document.createElement('div'); autoBtn.className = 'q-item active'; autoBtn.innerText = 'Auto';
+            autoBtn.onclick = () => { hls.currentLevel = -1; toggleQualityMenu(); };
+            list.appendChild(autoBtn);
+            hls.levels.forEach((lvl, idx) => {
+                let btn = document.createElement('div'); btn.className = 'q-item'; btn.innerText = lvl.height + 'p';
+                btn.onclick = () => { hls.currentLevel = idx; toggleQualityMenu(); };
+                list.appendChild(btn);
+            });
         }
 
-        if (config.isIframe) {
-            video.style.display = "none";
-            loader.style.display = "none";
-            container.innerHTML += `<div id="temp-iframe" style="position:absolute;inset:0;z-index:10;"><iframe src="${config.url}" width="100%" height="100%" frameborder="0" allowfullscreen></iframe></div>`;
-        } else if (config.type === "hls") {
-            const temp = document.getElementById("temp-iframe"); if(temp) temp.remove();
-            video.style.display = "block";
-            setBtn.style.display = "flex";
-            if (Hls.isSupported()) {
-                hls = new Hls(); hls.loadSource(config.url); hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => { loader.style.display = "none"; video.play(); buildQualityMenu(); });
-            }
-        } else if (config.type === "dash") {
-            const temp = document.getElementById("temp-iframe"); if(temp) temp.remove();
-            video.style.display = "block";
-            shaka.polyfill.installAll();
-            player = new shaka.Player();
-            await player.attach(video);
-            if (!ui) ui = new shaka.ui.Overlay(player, container, video);
-            ui.configure({ controlPanelElements: ["mute", "play_pause", "spacer", "quality", "fullscreen"] });
+        async function initPlayer(id) {
+            const config = CHANNELS[id];
+            const video = document.getElementById("video");
+            const container = document.getElementById("player-container");
+            const loader = document.getElementById("player-loader");
+            const settingsBtn = document.getElementById("settings-btn");
+
+            document.getElementById("player-title").innerText = config.name;
+            document.getElementById("current-channel-name-header").innerText = config.name;
             
-            player.configure({
-                drm: { clearKeys: { [config.kid]: config.key } },
-                streaming: { lowLatencyMode: true, bufferingGoal: 5 }
-            });
+            loader.style.opacity = "1"; 
+            settingsBtn.style.display = "none";
+            document.getElementById('quality-menu').style.display = 'none';
 
-            player.getNetworkingEngine().registerRequestFilter((type, request) => {
-                request.headers["Referer"] = "https://www.jiotv.com/";
-                request.headers["User-Agent"] = "plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
-                
-                if (config.cookie && (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT)) {
-                    const sep = request.uris[0].includes("?") ? "&" : "?";
-                    request.uris[0] += sep + config.cookie.replace("__hdnea__=", "__hdnea__="); 
+            if (hls) { hls.destroy(); hls = null; }
+            if (player) { await player.destroy(); player = null; }
+
+            if (config.type === "hls") {
+                settingsBtn.style.display = "flex";
+                if (Hls.isSupported()) {
+                    hls = new Hls(); hls.loadSource(config.url); hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => { loader.style.opacity = "0"; video.play(); buildQualityMenu(); });
                 }
-            });
+            } else {
+                shaka.polyfill.installAll();
+                player = new shaka.Player();
+                await player.attach(video);
+                if (!ui) ui = new shaka.ui.Overlay(player, container, video);
+                ui.configure({ controlPanelElements: ["mute", "play_pause", "spacer", "quality", "fullscreen"] });
+                
+                player.configure({
+                    drm: { clearKeys: { [config.kid]: config.key } },
+                    streaming: { lowLatencyMode: false, bufferingGoal: 15 }
+                });
 
-            try { await player.load(config.url); loader.style.display = "none"; video.play(); video.muted = false; } catch (e) { console.error(e); }
+                player.getNetworkingEngine().registerRequestFilter((type, request) => {
+                    request.headers["Referer"] = "https://www.jiotv.com/";
+                    request.headers["User-Agent"] = "plaYtv/7.1.5";
+                    request.headers["Cookie"] = config.cookie;
+                    const urlCookie = config.cookie.replace("__hdnea__=", "");
+                    if ((type === shaka.net.NetworkingEngine.RequestType.MANIFEST || type === shaka.net.NetworkingEngine.RequestType.SEGMENT) && !request.uris[0].includes("__hdnea__")) {
+                        const sep = request.uris[0].includes("?") ? "&" : "?";
+                        request.uris[0] += sep + "__hdnea__=" + urlCookie;
+                    }
+                });
+
+                try { await player.load(config.url); loader.style.opacity = "0"; video.play(); video.muted = false; } catch (e) { console.error(e); }
+            }
         }
-    }
 
-    window.onload = () => {
-        const grid = document.getElementById("ch-grid");
-        const params = new URLSearchParams(window.location.search);
-        
-        // Premium (Auto API) wala by default chalega
-        const startId = params.get("id") || "star_auto"; 
+        window.onload = () => {
+            const grid = document.getElementById("channel-grid");
+            const params = new URLSearchParams(window.location.search);
+            const startId = params.get("id") || "SS1H";
 
-        Object.keys(CHANNELS).forEach(key => {
-            const card = document.createElement("div");
-            card.className = `ch-card ${key === startId ? 'active' : ''}`;
-            card.innerHTML = `<i class="${CHANNELS[key].icon}"></i><span>${CHANNELS[key].name}</span>`;
-            card.onclick = () => {
-                window.history.pushState({}, '', `?id=${key}`);
-                initPlayer(key);
-                document.querySelectorAll('.ch-card').forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-            };
-            grid.appendChild(card);
-        });
-        initPlayer(startId);
-    };
-})();
-</script>
+            Object.keys(CHANNELS).forEach(key => {
+                const card = document.createElement("div");
+                card.className = `glass-btn p-3 rounded-xl flex flex-col items-center gap-2 group cursor-pointer ${key === startId ? 'active-channel' : ''}`;
+                card.innerHTML = `<i class="${CHANNELS[key].icon} text-2xl ${key.includes('SS') ? 'text-blue-400' : 'text-green-400'}"></i>
+                                  <span class="text-xs font-semibold text-white/90 text-center">${CHANNELS[key].name}</span>`;
+                card.onclick = () => {
+                    window.history.pushState({}, '', `?id=${key}`);
+                    document.querySelectorAll('.glass-btn').forEach(c => c.classList.remove('active-channel'));
+                    card.classList.add('active-channel');
+                    initPlayer(key);
+                };
+                grid.appendChild(card);
+            });
+            initPlayer(startId);
+            
+            // OneSignal Logic
+            window.OneSignalDeferred = window.OneSignalDeferred || [];
+            OneSignalDeferred.push(async function(OneSignal) {
+                await OneSignal.init({ appId: "4edcb755-e518-46b8-969e-a6a6c679e7b3", safari_web_id: "web.onesignal.auto.34e4584e-b851-4129-9188-f0d7c790d3df" });
+                const gate = document.getElementById('floating-lock'), btn = document.getElementById('btn-enable');
+                async function check() {
+                    const p = await OneSignal.Notifications.permissionNative, s = await OneSignal.User.PushSubscription.optedIn;
+                    if (p === 'granted' && s) gate.style.display = 'none';
+                }
+                check();
+                setTimeout(async () => { if(await OneSignal.Notifications.permissionNative === 'default') gate.style.display = 'flex'; }, 8000);
+                btn.addEventListener('click', async () => { await OneSignal.Notifications.requestPermission(); check(); });
+                OneSignal.Notifications.addEventListener('permissionChange', check);
+            });
+        };
+    })();
+    </script>
 </body>
 </html>
